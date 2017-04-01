@@ -10,14 +10,32 @@
 #           May need to listen to IDs: None                 #
 #############################################################
 
-MESSAGE_NAME=VCU_HEARTBEAT ID=0x050 FREQ=1HZ
+MESSAGE_NAME=VCU_BMS_HEARTBEAT ID=0x050 FREQ=1HZ
     DATA_NAME=STATE POSITION=0:0
         0x0 STANDBY
         0x1 DISCHARGE
 
-MESSAGE_NAME=VCU_DISCHARGE_REQUEST ID=0x051
+MESSAGE_NAME=VCU_BMS_DISCHARGE_REQUEST ID=0x051
     DATA_NAME=DISCHARGE_REQUEST POSITION=0:0
         0x1 ENTER_DISCHARGE
+
+MESSAGE_NAME=VCU_DASH_HEARTBEAT ID=0x52 FREQ=1HZ
+    DATA_NAME=RTD_LIGHT POSITION=0:7
+        0x0 NO_OP
+        0x1 ON
+        0x2 OFF
+    DATA_NAME=AMS_LIGHT POSITION=8:15
+        0x0 NO_OP
+        0x1 ON
+        0x2 OFF
+    DATA_NAME=IMD_LIGHT POSITION=16:23
+        0x0 NO_OP
+        0x1 ON
+        0x2 OFF
+    DATA_NAME=HV_LIGHT POSITION=24:31
+        0x0 NO_OP
+        0x1 ON
+        0x2 OFF
 
 #############################################################
 #                      BMS SPEC                             #
