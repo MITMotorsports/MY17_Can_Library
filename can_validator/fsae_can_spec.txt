@@ -1,0 +1,122 @@
+# Precision:
+# - pack voltage: 10 bits
+# - pack current: 10 bits
+# - cell voltage: 10 bits
+# - temperate:    8 bits
+# - cell ID:   >= 7 bits
+
+#############################################################
+#                   VCU SPEC                                #
+#           May need to listen to IDs: None                 #
+#############################################################
+
+MESSAGE_NAME=VCU_HEARTBEAT ID=0x050 FREQ=1HZ
+    DATA_NAME=STATE POSITION=0:0
+        0x0 STANDBY
+        0x1 DISCHARGE
+
+MESSAGE_NAME=VCU_DISCHARGE_REQUEST ID=0x051
+    DATA_NAME=DISCHARGE_REQUEST POSITION=0:0
+        0x1 ENTER_DISCHARGE
+
+#############################################################
+#                      BMS SPEC                             #
+#           May need to listen to IDs: None                 #
+#############################################################
+
+MESSAGE_NAME=BMS_HEARTBEAT ID=0x060 FREQ=1HZ
+    DATA_NAME=STATE POSITION=0:2
+        0x0 INIT
+        0x1 STANDBY
+        0x2 CHARGE
+        0x3 BALANCE
+        0x4 DISCHARGE
+        0x5 ERROR
+    DATA_NAME=SOC_PERCENTAGE POSITION=3:12
+        0x000-0x3FF SOC_PERCENTAGE
+
+MESSAGE_NAME=BMS_DISCHARGE_RESPONSE ID=0x061
+    DATA_NAME=DISCHARGE_RESPONSE POSITION=0:0
+        0x0 NOT_READY
+        0x1 READY
+
+MESSAGE_NAME=BMS_PACK_STATUS ID=0x260 FREQ=10HZ
+    DATA_NAME=PACK_VOLTAGE POSITION=0:9
+        0x000-0x3FF PACK_VOLTAGE
+    DATA_NAME=PACK_CURRENT POSITION=10:19
+        0x000-0x3FF PACK_CURRENT
+    DATA_NAME=AVE_CELL_VOLTAGE POSITION=20:29
+        0x000-0x3FF AVE_CELL_VOLTAGE
+    DATA_NAME=MIN_CELL_VOLTAGE POSITION=30:39
+        0x000-0x3FF MIN_CELL_VOLTAGE
+    DATA_NAME=MIN_CELL_VOLTAGE_ID POSITION=40:46
+        0x00-0x7F MIN_CELL_VOLTAGE_ID
+    DATA_NAME=MAX_CELL_VOLTAGE POSITION=47:56
+        0x000-0x3FF MAX_CELL_VOLTAGE
+    DATA_NAME=MAX_CELL_VOLTAGE_ID POSITION=57:63
+        0x00-0x7F MAX_CELL_VOLTAGE_ID
+
+MESSAGE_NAME=BMS_CELL_TEMPS ID=0x261 FREQ=0.1HZ
+    DATA_NAME=AVE_CELL_TEMP POSITION=0:7
+        0x000-0xFF AVE_CELL_TEMP
+    DATA_NAME=MIN_CELL_TEMP POSITION=8:15
+        0x000-0xFF MIN_CELL_TEMP
+    DATA_NAME=MIN_CELL_TEMP_ID POSITION=16:23
+        0x00-0xFF MIN_CELL_TEMP_ID
+    DATA_NAME=MAX_CELL_TEMP POSITION=24:31
+        0x000-0xFF MAX_CELL_TEMP
+    DATA_NAME=MAX_CELL_TEMP_ID POSITION=32:39
+        0x00-0xFF MAX_CELL_TEMP_ID
+
+#LOGGED
+MESSAGE_NAME=BMS_ERRORS ID=0x262 FREQ=0.1HZ
+    DATA_NAME=CELL_UNDER_VOLTAGE_VALUE POSITION=0:9
+        0x000-0x3FF CELL_UNDER_VOLTAGE_VALUE
+    DATA_NAME=CELL_UNDER_VOLTAGE_ID POSITION=10:16
+        0x00-0x7F CELL_UNDER_VOLTAGE_ID
+    DATA_NAME=CELL_OVER_VOLTAGE_VALUE POSITION=17:26
+        0x000-0x3FF CELL_OVER_VOLTAGE_VALUE
+    DATA_NAME=CELL_OVER_VOLTAGE_ID POSITION=27:33
+        0x00-0x7F CELL_OVER_VOLTAGE_ID
+    DATA_NAME=CELL_OVER_TEMP_VALUE POSITION=34:41
+        0x000-0xFF CELL_OVER_TEMP_VALUE
+    DATA_NAME=CELL_OVER_TEMP_ID POSITION=42:48
+        0x00-0x7F CELL_OVER_TEMP_ID
+
+#############################################################
+#                  Front CAN Node SPEC                      #
+#           May need to listen to IDs: None                 #
+#############################################################
+
+MESSAGE_NAME=FRONT_CAN_NODE_DRIVER_OUTPUT ID=0x030 FREQ=50HZ
+    DATA_NAME=RIGHT_ACCEL POSITION=0:7
+        0x000-0xFF RIGHT_ACCEL
+    DATA_NAME=LEFT_ACCEL POSITION=8:15
+        0x000-0xFF LEFT_ACCEL
+    DATA_NAME=FRONT_BRAKE POSITION=16:23
+        0x000-0xFF FRONT_BRAKE
+    DATA_NAME=REAR_BRAKE POSITION=24:31
+        0x000-0xFF REAR_BRAKE
+    DATA_NAME=STEERING POSITION=32:39
+        0x000-0xFF STEERING
+
+MESSAGE_NAME=FRONT_CAN_NODE_WHEEL_SPEED ID=0x130 FREQ=50HZ
+    DATA_NAME=FRONT_RIGHT_WHEEL_SPEED POSITION=0:31
+        0x000-0xFFFFFFFF FRONT_RIGHT_WHEEL_SPEED
+    DATA_NAME=FRONT_LEFT_WHEEL_SPEED POSITION=32:63
+        0x000-0xFFFFFFFF FRONT_LEFT_WHEEL_SPEED
+
+#############################################################
+#                  Current Sensor SPEC                      #
+#           May need to listen to IDs: None                 #
+#############################################################
+
+# Big-endian, units of mA
+MESSAGE_NAME=CURRENT_SENSOR_CURRENT ID=0x521 FREQ=20HZ
+    DATA_NAME=PACK_CURRENT POSITION=16:47
+        0x00000000-0xFFFFFFFF PACK_CURRENT
+
+# Big-endian, units of mV
+MESSAGE_NAME=CURRENT_SENSOR_VOLTAGE ID=0x522 FREQ=20HZ
+    DATA_NAME=PACK_VOLTAGE POSITION=16:47
+        0x000 - 0xFFFFFFFF PACK_VOLTAGE
