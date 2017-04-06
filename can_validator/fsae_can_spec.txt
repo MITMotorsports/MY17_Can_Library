@@ -1,13 +1,52 @@
-# Precision:
-# - pack voltage: 10 bits
-# - pack current: 10 bits
-# - cell voltage: 10 bits
-# - temperate:    8 bits
-# - cell ID:   >= 7 bits
+#############################################################
+#                  CAN Node SPEC                            #
+#           May need to listen to IDs: None                 #
+#############################################################
+
+MESSAGE_NAME=FRONT_CAN_NODE_DRIVER_OUTPUT ID=0x030 FREQ=50HZ
+    DATA_NAME=REQUESTED_TORQUE POSITION=0:15 ENDIAN=BIG
+        0x0000-0x7FFF POSITIVE_TORQUE
+        0x8000-0xFFFF NEGATIVE_TORQUE
+    DATA_NAME=BRAKE_PRESSURE POSITION=16:23
+        0x00-0xFF BRAKE_PRESSURE
+    DATA_NAME=STEERING_POSITION POSITION=24:31
+        0x00-0xFF STEERING_TRAVEL_LEFTWARDS
+    DATA_NAME=THROTTLE_IMPLAUSIBLE POSITION=32:32
+        0x0 PLAUSIBLE
+        0x1 IMPLAUSIBLE
+    DATA_NAME=BRAKE_THROTTLE_CONFLICT POSITION=33:33
+        0x0 NO_CONFLICT
+        0x1 CONFLICT
+
+MESSAGE_NAME=REAR_CAN_NODE_WHEEL_SPEED ID=0x030 FREQ=50HZ
+    DATA_NAME=REAR_RIGHT_WHEEL_SPEED POSITION=0:31
+        0x000-0xFFFFFFFF REAR_RIGHT_WHEEL_SPEED
+    DATA_NAME=REAR_LEFT_WHEEL_SPEED POSITION=32:63
+        0x000-0xFFFFFFFF REAR_LEFT_WHEEL_SPEED
+
+#################### LOGGING_ONLY #########################
+MESSAGE_NAME=FRONT_CAN_NODE_RAW_VALUES ID=0x230 FREQ=10HZ
+    DATA_NAME=RIGHT_THROTTLE_POT POSITION=0:9
+        0x00-0xFF RIGHT_THROTTLE_POT
+    DATA_NAME=LEFT_THROTTLE_POT POSITION=10:19
+        0x00-0xFF LEFT_THROTTLE_POT
+    DATA_NAME=FRONT_BRAKE_PRESSURE POSITION=20:29
+        0x00-0xFF FRONT_BRAKE_PRESSURE
+    DATA_NAME=REAR_BRAKE_PRESSURE POSITION=30:39
+        0x00-0xFF REAR_BRAKE_PRESSURE
+    DATA_NAME=STEERING_POT POSITION=40:49
+        0x00-0xFF STEERING_POT
+
+#################### LOGGING_ONLY #########################
+MESSAGE_NAME=FRONT_CAN_NODE_WHEEL_SPEED ID=0x231 FREQ=10HZ
+    DATA_NAME=FRONT_RIGHT_WHEEL_SPEED POSITION=0:31
+        0x000-0xFFFFFFFF FRONT_RIGHT_WHEEL_SPEED
+    DATA_NAME=FRONT_LEFT_WHEEL_SPEED POSITION=32:63
+        0x000-0xFFFFFFFF FRONT_LEFT_WHEEL_SPEED
 
 #############################################################
 #                   VCU SPEC                                #
-#           May need to listen to IDs: None                 #
+#           May need to listen to IDs: TODO                 #
 #############################################################
 
 MESSAGE_NAME=VCU_BMS_HEARTBEAT ID=0x050 FREQ=1HZ
@@ -15,11 +54,7 @@ MESSAGE_NAME=VCU_BMS_HEARTBEAT ID=0x050 FREQ=1HZ
         0x0 STANDBY
         0x1 DISCHARGE
 
-MESSAGE_NAME=VCU_BMS_DISCHARGE_REQUEST ID=0x051
-    DATA_NAME=DISCHARGE_REQUEST POSITION=0:0
-        0x1 ENTER_DISCHARGE
-
-MESSAGE_NAME=VCU_DASH_HEARTBEAT ID=0x52 FREQ=1HZ
+MESSAGE_NAME=VCU_DASH_LED ID=0x52 FREQ=1HZ
     DATA_NAME=RTD_LIGHT POSITION=0:7
         0x0 NO_OP
         0x1 ON
@@ -37,10 +72,30 @@ MESSAGE_NAME=VCU_DASH_HEARTBEAT ID=0x52 FREQ=1HZ
         0x1 ON
         0x2 OFF
 
+MESSAGE_NAME=VCU_MC_MESSAGE ID=0x53
+    DATA_NAME=REG_ID POSITION=0:7
+        0x3D MSG_REQUEST
+        0x51 MSG_EVENT_REQUEST
+        0x90 TORQUE_CMD
+    DATA_NAME=DATA_1 POSITION=8:15
+        0x00-0xFF DATA_LOW_BYTE
+    DATA_NAME=DATA_2 POSITION=16:23
+        0x00-0xFF DATA_HIGH_BYTE
+
+MESSAGE_NAME=DASH_LCD_MESSAGE_1 ID=0x150 FREQ=1HZ
+    DATA_NAME=FLAGS
+
 #############################################################
 #                      BMS SPEC                             #
 #           May need to listen to IDs: None                 #
 #############################################################
+
+# Precision:
+# - pack voltage: 10 bits
+# - pack current: 10 bits
+# - cell voltage: 10 bits
+# - temperate:    8 bits
+# - cell ID:   >= 7 bits
 
 MESSAGE_NAME=BMS_HEARTBEAT ID=0x060 FREQ=1HZ
     DATA_NAME=STATE POSITION=0:2
@@ -49,7 +104,8 @@ MESSAGE_NAME=BMS_HEARTBEAT ID=0x060 FREQ=1HZ
         0x2 CHARGE
         0x3 BALANCE
         0x4 DISCHARGE
-        0x5 ERROR
+        0x5 BATTERY_FAULT
+        0x6 BMS_FAULT
     DATA_NAME=SOC_PERCENTAGE POSITION=3:12
         0x000-0x3FF SOC_PERCENTAGE
 
@@ -58,6 +114,7 @@ MESSAGE_NAME=BMS_DISCHARGE_RESPONSE ID=0x061
         0x0 NOT_READY
         0x1 READY
 
+#################### LOGGING_ONLY #########################
 MESSAGE_NAME=BMS_PACK_STATUS ID=0x260 FREQ=10HZ
     DATA_NAME=PACK_VOLTAGE POSITION=0:9
         0x000-0x3FF PACK_VOLTAGE
@@ -74,6 +131,7 @@ MESSAGE_NAME=BMS_PACK_STATUS ID=0x260 FREQ=10HZ
     DATA_NAME=MAX_CELL_VOLTAGE_ID POSITION=57:63
         0x00-0x7F MAX_CELL_VOLTAGE_ID
 
+#################### LOGGING_ONLY #########################
 MESSAGE_NAME=BMS_CELL_TEMPS ID=0x261 FREQ=0.1HZ
     DATA_NAME=AVE_CELL_TEMP POSITION=0:7
         0x000-0xFF AVE_CELL_TEMP
@@ -86,43 +144,73 @@ MESSAGE_NAME=BMS_CELL_TEMPS ID=0x261 FREQ=0.1HZ
     DATA_NAME=MAX_CELL_TEMP_ID POSITION=32:39
         0x00-0xFF MAX_CELL_TEMP_ID
 
-#LOGGED
+#################### LOGGING_ONLY #########################
 MESSAGE_NAME=BMS_ERRORS ID=0x262 FREQ=0.1HZ
-    DATA_NAME=CELL_UNDER_VOLTAGE_VALUE POSITION=0:9
-        0x000-0x3FF CELL_UNDER_VOLTAGE_VALUE
-    DATA_NAME=CELL_UNDER_VOLTAGE_ID POSITION=10:16
-        0x00-0x7F CELL_UNDER_VOLTAGE_ID
-    DATA_NAME=CELL_OVER_VOLTAGE_VALUE POSITION=17:26
-        0x000-0x3FF CELL_OVER_VOLTAGE_VALUE
-    DATA_NAME=CELL_OVER_VOLTAGE_ID POSITION=27:33
-        0x00-0x7F CELL_OVER_VOLTAGE_ID
-    DATA_NAME=CELL_OVER_TEMP_VALUE POSITION=34:41
-        0x000-0xFF CELL_OVER_TEMP_VALUE
-    DATA_NAME=CELL_OVER_TEMP_ID POSITION=42:48
-        0x00-0x7F CELL_OVER_TEMP_ID
+    DATA_NAME=ERROR_TYPE
+        0x0 NO_ERROR
+        0x1 LTC6804_PEC
+        0x2 LTC6804_CVST
+        0x3 LTC6804_OWT
+        0x4 EEPROM
+        0x5 CELL_UNDER_VOLTAGE
+        0x6 CELL_OVER_VOLTAGE
+        0x7 CELL_OVER_TEMP
+        0x8 OVER_CURRENT
+        0x9 CAN
+        0x10 CONFLICTING_MODE_REQUESTS
 
 #############################################################
-#                  Front CAN Node SPEC                      #
+#                      Dash SPEC                             #
 #           May need to listen to IDs: None                 #
 #############################################################
 
-MESSAGE_NAME=FRONT_CAN_NODE_DRIVER_OUTPUT ID=0x030 FREQ=50HZ
-    DATA_NAME=RIGHT_ACCEL POSITION=0:7
-        0x000-0xFF RIGHT_ACCEL
-    DATA_NAME=LEFT_ACCEL POSITION=8:15
-        0x000-0xFF LEFT_ACCEL
-    DATA_NAME=FRONT_BRAKE POSITION=16:23
-        0x000-0xFF FRONT_BRAKE
-    DATA_NAME=REAR_BRAKE POSITION=24:31
-        0x000-0xFF REAR_BRAKE
-    DATA_NAME=STEERING POSITION=32:39
-        0x000-0xFF STEERING
+MESSAGE_NAME=DASH_HEARTBEAT ID=0x70 FREQ=1HZ
+    DATA_NAME=HEARTBEAT_ON POSITION=0:0
+        0x1 ON
+        0x0 OFF
 
-MESSAGE_NAME=FRONT_CAN_NODE_WHEEL_SPEED ID=0x130 FREQ=50HZ
-    DATA_NAME=FRONT_RIGHT_WHEEL_SPEED POSITION=0:31
-        0x000-0xFFFFFFFF FRONT_RIGHT_WHEEL_SPEED
-    DATA_NAME=FRONT_LEFT_WHEEL_SPEED POSITION=32:63
-        0x000-0xFFFFFFFF FRONT_LEFT_WHEEL_SPEED
+MESSAGE_NAME=DASH_REQUEST ID=0x71
+    DATA_NAME=ENABLE_DISABLE POSITION=0:7
+        0x0 NO_OP
+        0x1 ENABLE
+        0x2 DISABLE
+    DATA_NAME=LIMP_MODE POSITION=8:15
+        0x0 NO_OP
+        0x1 ENABLE
+        0x2 DISABLE
+    DATA_NAME=DATA_FLAG POSITION=16:23
+        0x0 NO_OP
+        0x1 FLAG
+
+#############################################################
+#                   MC SPEC                                 #
+#           May need to listen to IDs: TODO                 #
+#############################################################
+
+#################### LOGGING_ONLY #########################
+MESSAGE_NAME=MC_RESPONSE ID=0x310
+    DATA_NAME=REG_ID POSITION=0:7
+        0x26 CURRENT_CMD
+        0x22 CURRENT_CMD_AFTER_RAMP
+        0x20 CURRENT_ACTUAL
+
+        0x48 CURRENT_LIMIT_ACTUAL
+        0xA2 CURRENT_LIMIT_MOTOR_TEMP
+        0x58 CURRENT_LIMIT_IGBT_TEMP
+
+        0x90 TORQUE_CMD
+
+        0x30 SPEED_ACTUAL_RPM
+        0xC8 SPEED_MAX_RPM
+
+        0x49 MOTOR_TEMP
+        0x4A IGBT_TEMP
+        0x4B AIR_TEMP
+
+        0x40 STATE
+        0x8F ERRORS_AND_WARNINGS
+    DATA_NAME=DATA POSITION=8:39
+        0x00000000-0xFFFFFFFF DATA
 
 #############################################################
 #                  Current Sensor SPEC                      #
