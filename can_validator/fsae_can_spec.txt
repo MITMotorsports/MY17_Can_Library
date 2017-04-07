@@ -176,7 +176,7 @@ MESSAGE_NAME=BMS_PACK_STATUS ID=0x161 FREQ=10HZ
 #################### LOGGING_ONLY #########################
 MESSAGE_NAME=BMS_ERRORS ID=0x260 FREQ=0.1HZ
     DATA_NAME=ERROR_TYPE POSITION=0:3
-        0x0 NO_ERROR
+        0x0 NONE
         0x1 LTC6804_PEC
         0x2 LTC6804_CVST
         0x3 LTC6804_OWT
@@ -200,17 +200,13 @@ MESSAGE_NAME=DASH_HEARTBEAT ID=0x70 FREQ=1HZ
         0x0 OFF
 
 MESSAGE_NAME=DASH_REQUEST ID=0x71
-    DATA_NAME=ENABLE_DISABLE POSITION=0:7
-        0x0 NO_OP
-        0x1 ENABLE
-        0x2 DISABLE
-    DATA_NAME=LIMP_MODE POSITION=8:15
-        0x0 NO_OP
-        0x1 ENABLE
-        0x2 DISABLE
-    DATA_NAME=DATA_FLAG POSITION=16:23
-        0x0 NO_OP
-        0x1 FLAG
+    DATA_NAME=REQUEST_TYPE POSITION=0:7
+        0x0 NO_REQUEST
+        0x1 RTD_ENABLE
+        0x2 RTD_DISABLE
+        0x3 LIMP_MODE_ENABLE
+        0x4 LIMP_MODE_DISABLE
+        0x5 DATA_FLAG
 
 #############################################################
 #                   MC SPEC                                 #
@@ -239,8 +235,8 @@ MESSAGE_NAME=MC_RESPONSE ID=0x310
 
         0x40 STATE
         0x8F ERRORS_AND_WARNINGS
-    DATA_NAME=DATA POSITION=8:39
-        0x00000000-0xFFFFFFFF DATA
+    DATA_NAME=DATA POSITION=8:23
+        0x0000-0xFFFF DATA
 
 #############################################################
 #                  Current Sensor SPEC                      #
