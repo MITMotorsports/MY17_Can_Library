@@ -592,6 +592,9 @@ if __name__ == "__main__":
             if errors.startswith('No errors in'):
                 message_types = parse_spec_file(spec_file)
                 with open(output_file, 'w') as f:
+                    clean_output_file = re.sub('[^A-Za-z0-9_]+', '_', output_file).upper()
+                    f.write('#ifndef ____' + clean_output_file + '\n')
+                    f.write('#define ____' + clean_output_file + '\n\n')
                     for message_id, message_type in message_types.items():
                         message_name = rh(message_type.name)
                         f.write('#define ' + message_name + '__id ' + str(message_type.can_id) + '\n')
@@ -615,6 +618,7 @@ if __name__ == "__main__":
 
 
                         f.write('\n')
+                    f.write('#endif // ____' + clean_output_file + '\n')
         finally:
             spec_file.close()
 
