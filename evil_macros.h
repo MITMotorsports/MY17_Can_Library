@@ -1,13 +1,10 @@
 #include <stdint.h>
+#include <stdbool.h>
 
-typedef struct {
-  uint16_t id;
-  uint8_t len;
-  uint8_t data[8];
-} Frame;
+#include "MY17_Can_Library.h"
 
-void Can_Raw_Write(Frame *frame);
-void Can_Raw_Read(Frame *frame);
+static bool unread;
+static Frame lastMessage;
 
 #define TO_CAN(name) \
   void name ## _ToCan(name ## _T *type_in, Frame *can_out)
@@ -19,11 +16,15 @@ void Can_Raw_Read(Frame *frame);
   void name ##_Write(name ## _T *type) { \
     Frame frame; \
     name ## _ToCan(type, &frame); \
-    Can_Raw_Write(&frame); \
+    Can_RawWrite(&frame); \
   } \
-  void name ##_Read(name ## _T *type) { \
-    Frame frame; \
-    Can_Raw_Read(&frame); \
-    name ## _FromCan(type, &frame); \
+  bool name ##_Read(name ## _T *type) { \
+    if (unread) { \
+      name ## _FromCan(type, &lastMessage); \
+      unread = false; \
+      return true; \
+    } else { \
+      return false; \
+    } \
   }
 

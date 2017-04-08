@@ -13,6 +13,8 @@
 
 // @see each individual header file for all message types.
 typedef enum {
+  Can_No_Msg,
+
   Can_FrontCanNode_DriverOutput_Msg,
   Can_FrontCanNode_RawValues_Msg,
   Can_FrontCanNode_WheelSpeed_Msg,
@@ -41,12 +43,16 @@ typedef enum {
   Can_CurrentSensor_Energy_Msg,
 } Can_MsgID_T;
 
-bool Can_MsgAvailable();
-Can_MsgID_T Can_MsgType();
+Can_MsgID_T Can_MsgType(void);
+
+#include "can_raw.h"
 
 #define DECLARE(name) \
-  void name ##_Read(name ## _T *out); \
-  void name ##_Write(name ## _T *in);
+  bool name ##_Read(name ## _T *type); \
+  void name ##_Write(name ## _T *type);
+
+//ex. Can_FrontCanNode_DriverOutput_Read(Can_FrontCanNode_DriverOutput_T *data);
+
 
 /******************************************************************************
  * Messages from CAN Node
