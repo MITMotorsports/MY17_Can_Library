@@ -5,43 +5,13 @@
 #include <stdbool.h>
 
 /******************************************************************************
- * Messages from CAN Node
+ * Enum of all message types!
+ *
+ * Remember to change this enum if any new message types are added,
+ * and to add a DECLARE and implementation for them.
 ******************************************************************************/
-
-#include "can_node.h"
-
-/******************************************************************************
- * Messages from VCU
-******************************************************************************/
-
-#include "vcu.h"
-
-/******************************************************************************
- * Messages from BMS
-******************************************************************************/
-
-#include "bms.h"
-
-/******************************************************************************
- * Messages from Dash
-******************************************************************************/
-
-#include "dash.h"
-
-/******************************************************************************
- * Messages from Motor Controller
-******************************************************************************/
-
-#include "mc.h"
-
-/******************************************************************************
- * Messages from Current Sensor
-******************************************************************************/
-
-#include "current_sensor.h"
 
 // @see each individual header file for all message types.
-// TODO make a super dank macro that generates this from the type names
 typedef enum {
   Can_FrontCanNode_DriverOutput_Msg,
   Can_FrontCanNode_RawValues_Msg,
@@ -69,6 +39,78 @@ typedef enum {
   Can_CurrentSensor_Voltage_Msg,
   Can_CurrentSensor_Power_Msg,
   Can_CurrentSensor_Energy_Msg,
-} Can_Msg_T;
+} Can_MsgID_T;
+
+bool Can_MsgAvailable();
+Can_MsgID_T Can_MsgType();
+
+#define DECLARE(name) \
+  void name ##_Read(name ## _T *out); \
+  void name ##_Write(name ## _T *in);
+
+/******************************************************************************
+ * Messages from CAN Node
+******************************************************************************/
+
+#include "can_node.h"
+
+DECLARE(Can_FrontCanNode_DriverOutput)
+DECLARE(Can_FrontCanNode_RawValues)
+DECLARE(Can_FrontCanNode_WheelSpeed)
+DECLARE(Can_RearCanNode_WheelSpeed)
+
+/******************************************************************************
+ * Messages from VCU
+******************************************************************************/
+
+#include "vcu.h"
+
+DECLARE(Can_Vcu_BmsHeartbeat);
+DECLARE(Can_Vcu_DashHeartbeat);
+DECLARE(Can_Vcu_MCRequest);
+DECLARE(Can_Vcu_MCTorque);
+
+/******************************************************************************
+ * Messages from BMS
+******************************************************************************/
+
+#include "bms.h"
+
+DECLARE(Can_Bms_Heartbeat);
+DECLARE(Can_Bms_CellTemps);
+DECLARE(Can_Bms_PackStatus);
+DECLARE(Can_Bms_Error);
+
+/******************************************************************************
+ * Messages from Dash
+******************************************************************************/
+
+#include "dash.h"
+
+DECLARE(Can_Dash_Heartbeat)
+DECLARE(Can_Dash_Request)
+
+/******************************************************************************
+ * Messages from Motor Controller
+******************************************************************************/
+
+#include "mc.h"
+
+DECLARE(Can_MC_DataReading)
+DECLARE(Can_MC_ErrorAndWarning)
+DECLARE(Can_MC_State)
+
+/******************************************************************************
+ * Messages from Current Sensor
+******************************************************************************/
+
+#include "current_sensor.h"
+
+DECLARE(Can_CurrentSensor_Energy)
+DECLARE(Can_CurrentSensor_Voltage)
+DECLARE(Can_CurrentSensor_Power)
+DECLARE(Can_CurrentSensor_Energy)
+
+#undef DECLARE
 
 #endif // _MY17_CAN_LIBRARY_H
