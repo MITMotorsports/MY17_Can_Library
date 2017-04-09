@@ -1,3 +1,6 @@
+#ifndef _MY17_CAN_LIBRARY_CAN_RAW_H
+#define _MY17_CAN_LIBRARY_CAN_RAW_H
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -11,4 +14,4 @@ void Can_Init(uint32_t baudrate);
 void Can_RawWrite(Frame *frame);
 bool Can_RawRead(Frame *frame);
 
-
+#endif // _MY17_CAN_LIBRARY_CAN_RAW_H

@@ -1,3 +1,6 @@
+#ifndef _MY17_CAN_LIBRARY_EVIL_MACROS_H
+#define _MY17_CAN_LIBRARY_EVIL_MACROS_H
+
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -28,3 +31,13 @@ static Frame lastMessage;
     } \
   }
 
+#define TOGGLE(input, test, idx) \
+  if (test) {\
+    ((input) |= (1 << (7 - (idx)))); \
+  } else { \
+    ((input) &= ~(1 << (7 - (idx)))); \
+  } \
+
+#define CHECK(a,b) (((a) & (1<<(7- (b)))) != 0)
+
+#endif // _MY17_CAN_LIBRARY_EVIL_MACROS_H

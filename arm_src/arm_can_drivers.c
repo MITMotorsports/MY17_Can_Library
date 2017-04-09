@@ -15,7 +15,8 @@ void Can_RawWrite(Frame *frame) {
   const uint8_t can_out_bytes = frame->len;
   uint8_t data[can_out_bytes];
 
-  for (uint8_t i = 0; i < can_out_bytes; i++) {
+  uint8_t i;
+  for (i = 0; i < can_out_bytes; i++) {
     data[i] = frame->data[i];
   }
 
@@ -31,7 +32,8 @@ bool Can_RawRead(Frame *frame) {
   if (ret == NO_CAN_ERROR) {
     frame->id = rx_msg.mode_id;
     frame->len = rx_msg.dlc;
-    for (uint8_t i = 0; i < frame->len; i++) {
+    uint8_t i;
+    for (i = 0; i < frame->len; i++) {
       frame->data[i] = rx_msg.data[i];
     }
     return true;
