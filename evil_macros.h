@@ -9,6 +9,11 @@
 static bool unread;
 static Frame lastMessage;
 
+typedef union {
+  uint8_t byte[8];
+  uint64_t bitstring;
+} DATA_T;
+
 #define TO_CAN(name) \
   void name ## _ToCan(name ## _T *type_in, Frame *can_out)
 
@@ -39,5 +44,27 @@ static Frame lastMessage;
   } \
 
 #define CHECK(a,b) (((a) & (1<<(7- (b)))) != 0)
+
+#define ONES(len) \
+  ((1ULL << (len)) - 1)
+
+#define START_IDX(start, len) \
+  (64 - (start) - (len))
+
+#define ZEROES_MASK(start, len) \
+  (~(ONES(len) << START_IDX(start, len)))
+
+#define INPUT_MASK(input, start, len) \
+  (((input) & ONES(len)) << START_IDX(start, len))
+
+#define INSERT(input, output, start, len) \
+  (((output) & (ZEROES_MASK(start, len))) | INPUT_MASK(input, start, len))
+
+#define EXTRACT(input, start, len) \
+  (((input) >> START_IDX(start, len)) & ONES(len))
+
+void data_transfer(DATA_T *in, DATA_T *out);
+inline void to_bitstring(uint8_t in[], uint64_t *out);
+inline void from_bitstring(uint64_t *in, uint8_t out[]);
 
 #endif // _MY17_CAN_LIBRARY_EVIL_MACROS_H

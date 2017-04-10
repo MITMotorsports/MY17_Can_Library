@@ -11,8 +11,27 @@ typedef enum {
 #include "arm_src/arm_can_drivers.c"
 #elif CAN_ARCHITECTURE_AVR
 #include "avr_src/avr_can_drivers.c"
+#elif CAN_ARCHITECTURE_TEST
+
+void Can_Init(uint32_t baudrate) {
+  // TODO test harness
+}
+
+void Can_RawWrite(Frame *frame) {
+  // TODO test harness
+}
+
+bool Can_RawRead(Frame *frame) {
+  // TODO test harness
+  return false;
+}
+
+int main(void) {
+  // TODO test harness
+}
+
 #else
-  // TODO Define nothing so that there is a linker error!
+  // Define nothing so that there is a linker error!
 #endif
 
 Can_MsgID_T Can_MsgType(void) {
@@ -33,6 +52,7 @@ Can_MsgID_T Can_MsgType(void) {
       return Can_No_Msg;
   }
 }
+
 TO_CAN(Can_FrontCanNode_DriverOutput) {
   can_out->id = FRONT_CAN_NODE_DRIVER_OUTPUT__id;
   can_out->len = 5;
