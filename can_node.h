@@ -21,6 +21,7 @@ typedef struct {
   uint16_t accel_2_raw;
   uint16_t brake_1_raw;
   uint16_t brake_2_raw;
+  uint16_t steering_raw;
 } Can_FrontCanNode_RawValues_T;
 
 typedef struct {

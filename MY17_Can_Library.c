@@ -1,5 +1,4 @@
 #include "MY17_Can_Library.h"
-
 #include "evil_macros.h"
 
 typedef enum {
@@ -26,10 +25,6 @@ bool Can_RawRead(Frame *frame) {
   return false;
 }
 
-int main(void) {
-  // TODO test harness
-}
-
 #else
   // Define nothing so that there is a linker error!
 #endif
@@ -54,47 +49,47 @@ Can_MsgID_T Can_MsgType(void) {
 }
 
 TO_CAN(Can_FrontCanNode_DriverOutput) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->torque, bitstring, 0, 16);
+  bitstring = INSERT(type_in->brake_pressure, bitstring, 16, 8);
+  bitstring = INSERT(type_in->steering_position, bitstring, 24, 8);
+  bitstring = INSERT(type_in->throttle_implausible, bitstring, 32, 1);
+  bitstring = INSERT(type_in->brake_throttle_conflict, bitstring, 33, 1);
+  from_bitstring(&bitstring, can_out->data);
   can_out->id = FRONT_CAN_NODE_DRIVER_OUTPUT__id;
   can_out->len = 5;
-  can_out->data[0] = type_in->torque & 0xFF;
-  can_out->data[1] = (type_in->torque & 0xFF00) >> 8;
-  can_out->data[2] = type_in->brake_pressure;
-  can_out->data[3] = type_in->steering_position;
-  can_out->data[4] = 0;
-  TOGGLE(can_out->data[4], type_in->throttle_implausible, 0);
-  TOGGLE(can_out->data[4], type_in->brake_throttle_conflict, 1);
 }
 
 FROM_CAN(Can_FrontCanNode_DriverOutput) {
-  type_out->torque = can_in->data[0] + (can_in->data[1] << 8);
-  type_out->brake_pressure = can_in->data[2];
-  type_out->steering_position = can_in->data[3];
-  type_out->throttle_implausible = CHECK(can_in->data[4], 0);
-  type_out->brake_throttle_conflict = CHECK(can_in->data[4], 1);
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->torque = EXTRACT(bitstring, 0, 16);
+  type_out->brake_pressure = EXTRACT(bitstring, 16, 8);
+  type_out->steering_position = EXTRACT(bitstring, 24, 8);
+  type_out->throttle_implausible = EXTRACT(bitstring, 32, 1);
+  type_out->brake_throttle_conflict = EXTRACT(bitstring, 33, 1);
 }
 
 TO_CAN(Can_FrontCanNode_RawValues) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->accel_1_raw, bitstring, 0, 10);
+  bitstring = INSERT(type_in->accel_2_raw, bitstring, 10, 10);
+  bitstring = INSERT(type_in->brake_1_raw, bitstring, 20, 10);
+  bitstring = INSERT(type_in->brake_2_raw, bitstring, 30, 10);
+  bitstring = INSERT(type_in->steering_raw, bitstring, 40, 10);
+  from_bitstring(&bitstring, can_out->data);
   can_out->id = FRONT_CAN_NODE_RAW_VALUES__id;
   can_out->len = 8;
-  can_out->data[0] = type_in->accel_1_raw & 0xFF;
-  can_out->data[1] = (type_in->accel_1_raw & 0xFF00) >> 8;
-  can_out->data[2] = type_in->accel_2_raw & 0xFF;
-  can_out->data[3] = (type_in->accel_2_raw & 0xFF00) >> 8;
-  can_out->data[4] = type_in->brake_1_raw & 0xFF;
-  can_out->data[5] = (type_in->brake_1_raw & 0xFF00) >> 8;
-  can_out->data[6] = type_in->brake_2_raw & 0xFF;
-  can_out->data[7] = (type_in->brake_2_raw & 0xFF00) >> 8;
 }
 
 FROM_CAN(Can_FrontCanNode_RawValues) {
-  type_out->accel_1_raw =
-    (can_in->data[0] & 0x00FF) | (can_in->data[1] << 8);
-  type_out->accel_2_raw =
-    (can_in->data[2] & 0x00FF) | (can_in->data[3] << 8);
-  type_out->brake_1_raw =
-    (can_in->data[4] & 0x00FF) | (can_in->data[5] << 8);
-  type_out->brake_2_raw =
-    (can_in->data[6] & 0x00FF) | (can_in->data[7] << 8);
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->accel_1_raw = EXTRACT(bitstring, 0, 10);
+  type_out->accel_2_raw = EXTRACT(bitstring, 10, 10);
+  type_out->brake_1_raw = EXTRACT(bitstring, 20, 10);
+  type_out->brake_2_raw = EXTRACT(bitstring, 30, 10);
+  type_out->steering_raw = EXTRACT(bitstring, 40, 10);
 }
 
 // Needed for actual implementation of the evil macros

@@ -47,9 +47,17 @@ Can_MsgID_T Can_MsgType(void);
 
 #include "can_raw.h"
 
+#define TO_CAN(name) \
+  void name ## _ToCan(name ## _T *type_in, Frame *can_out)
+
+#define FROM_CAN(name) \
+  void name ## _FromCan(Frame *can_in, name ## _T *type_out)
+
 #define DECLARE(name) \
   bool name ##_Read(name ## _T *type); \
-  void name ##_Write(name ## _T *type);
+  void name ##_Write(name ## _T *type); \
+  TO_CAN(name); \
+  FROM_CAN(name);
 
 //ex. Can_FrontCanNode_DriverOutput_Read(Can_FrontCanNode_DriverOutput_T *data);
 

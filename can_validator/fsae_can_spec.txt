@@ -3,7 +3,7 @@
 #           May need to listen to IDs: None                 #
 #############################################################
 
-# ENDIAN=BIG
+# ENDIAN=LITTLE
 MESSAGE_NAME=FRONT_CAN_NODE_DRIVER_OUTPUT ID=0x030 FREQ=50HZ
     DATA_NAME=REQUESTED_TORQUE POSITION=0:15
         0x0000-0x7FFF POSITIVE_TORQUE

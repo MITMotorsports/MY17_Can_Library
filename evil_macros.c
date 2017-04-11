@@ -6,11 +6,11 @@ void data_transfer(DATA_T *in, DATA_T *out) {
   }
 }
 
-inline void to_bitstring(uint8_t in[], uint64_t *out) {
+void to_bitstring(uint8_t in[], uint64_t *out) {
   data_transfer((DATA_T*)in, (DATA_T*)out);
 }
 
-inline void from_bitstring(uint64_t *in, uint8_t out[]) {
+void from_bitstring(uint64_t *in, uint8_t out[]) {
   data_transfer((DATA_T*)in, (DATA_T*)out);
 }
 

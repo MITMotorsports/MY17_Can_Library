@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "MY17_Can_Library.h"
+#include "can_raw.h"
 
 static bool unread;
 static Frame lastMessage;
@@ -14,26 +14,20 @@ typedef union {
   uint64_t bitstring;
 } DATA_T;
 
-#define TO_CAN(name) \
-  void name ## _ToCan(name ## _T *type_in, Frame *can_out)
-
-#define FROM_CAN(name) \
-  void name ## _FromCan(name ## _T *type_out, Frame *can_in)
-
 #define DEFINE(name) \
-  void name ##_Write(name ## _T *type) { \
-    Frame frame; \
-    name ## _ToCan(type, &frame); \
-    Can_RawWrite(&frame); \
-  } \
   bool name ##_Read(name ## _T *type) { \
     if (unread) { \
-      name ## _FromCan(type, &lastMessage); \
+      name ## _FromCan(&lastMessage, type); \
       unread = false; \
       return true; \
     } else { \
       return false; \
     } \
+  } \
+  void name ##_Write(name ## _T *type) { \
+    Frame frame; \
+    name ## _ToCan(type, &frame); \
+    Can_RawWrite(&frame); \
   }
 
 #define TOGGLE(input, test, idx) \
@@ -64,7 +58,7 @@ typedef union {
   (((input) >> START_IDX(start, len)) & ONES(len))
 
 void data_transfer(DATA_T *in, DATA_T *out);
-inline void to_bitstring(uint8_t in[], uint64_t *out);
-inline void from_bitstring(uint64_t *in, uint8_t out[]);
+void to_bitstring(uint8_t in[], uint64_t *out);
+void from_bitstring(uint64_t *in, uint8_t out[]);
 
 #endif // _MY17_CAN_LIBRARY_EVIL_MACROS_H
