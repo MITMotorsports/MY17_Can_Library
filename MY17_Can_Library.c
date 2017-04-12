@@ -1,6 +1,25 @@
 #include "MY17_Can_Library.h"
 #include "evil_macros.h"
 
+static bool unread;
+static Frame lastMessage;
+
+#define DEFINE(name) \
+  bool name ##_Read(name ## _T *type) { \
+    if (unread) { \
+      name ## _FromCan(&lastMessage, type); \
+      unread = false; \
+      return true; \
+    } else { \
+      return false; \
+    } \
+  } \
+  void name ##_Write(name ## _T *type) { \
+    Frame frame; \
+    name ## _ToCan(type, &frame); \
+    Can_RawWrite(&frame); \
+  }
+
 typedef enum {
   LITTLE,
   BIG,

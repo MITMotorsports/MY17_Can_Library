@@ -6,29 +6,10 @@
 
 #include "can_raw.h"
 
-static bool unread;
-static Frame lastMessage;
-
 typedef union {
   uint8_t byte[8];
   uint64_t bitstring;
 } DATA_T;
-
-#define DEFINE(name) \
-  bool name ##_Read(name ## _T *type) { \
-    if (unread) { \
-      name ## _FromCan(&lastMessage, type); \
-      unread = false; \
-      return true; \
-    } else { \
-      return false; \
-    } \
-  } \
-  void name ##_Write(name ## _T *type) { \
-    Frame frame; \
-    name ## _ToCan(type, &frame); \
-    Can_RawWrite(&frame); \
-  }
 
 #define TOGGLE(input, test, idx) \
   if (test) {\
