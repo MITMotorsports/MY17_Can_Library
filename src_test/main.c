@@ -12,7 +12,7 @@ void binaryPrint(uint64_t out, uint8_t len) {
   }
 }
 
-void Driver_Output_Test(void) {
+void FrontCanNode_DriverOutput_Test(void) {
   Can_FrontCanNode_DriverOutput_T begin;
   begin.torque = -10000;
   begin.brake_pressure = 200;
@@ -34,10 +34,10 @@ void Driver_Output_Test(void) {
       begin.steering_position == end.steering_position &&
       begin.throttle_implausible == end.throttle_implausible &&
       begin.brake_throttle_conflict == end.brake_throttle_conflict);
-  printf("%s \n", equal ? "DRIVER_OUTPUT_PASS" : "DRIVER_OUTPUT_FAIL");
+  printf("%s \n", equal ? "FrontCanNode_DriverOutput_PASS" : "FrontCanNode_DriverOutput_FAIL");
 }
 
-void Raw_Values_Test(void) {
+void FrontCanNode_RawValues_Test(void) {
   Can_FrontCanNode_RawValues_T begin;
   begin.accel_1_raw = 100;
   begin.accel_2_raw = 200;
@@ -58,7 +58,28 @@ void Raw_Values_Test(void) {
       begin.brake_1_raw == end.brake_1_raw &&
       begin.brake_2_raw == end.brake_2_raw &&
       begin.steering_raw == end.steering_raw);
-  printf("%s \n", equal ? "RAW_VALUES_PASS" : "RAW_VALUES_FAIL");
+  printf("%s \n", equal ? "FrontCanNode_RawValues_PASS" : "FrontCanNode_RawValues_FAIL");
+}
+
+void FrontCanNode_WheelSpeed_Test(void) {
+  Can_FrontCanNode_WheelSpeed_T begin;
+  begin.front_right_wheel_speed = 100000;
+  begin.front_left_wheel_speed = 3000000000;
+
+  Frame mid;
+  Can_FrontCanNode_WheelSpeed_ToCan(&begin, &mid);
+  uint64_t end_bitstring = 0;
+  to_bitstring(mid.data, &end_bitstring);
+
+  Can_FrontCanNode_WheelSpeed_T end;
+  Can_FrontCanNode_WheelSpeed_FromCan(&mid, &end);
+
+  bool equal = (
+      begin.front_right_wheel_speed == end.front_right_wheel_speed &&
+      begin.front_left_wheel_speed == end.front_left_wheel_speed);
+
+  printf("%s \n", equal ? "FrontCanNode_WheelSpeed_PASS" : "FrontCanNode_WheelSpeed_FAIL");
+
 }
 
 void Vcu_BmsHeartbeat_Test(void) {
@@ -74,7 +95,65 @@ void Vcu_BmsHeartbeat_Test(void) {
   Can_Vcu_BmsHeartbeat_FromCan(&mid, &end);
 
   bool equal = begin.alwaysTrue == end.alwaysTrue;
-  printf("%s \n", equal ? "VCU_BMSHEARTBEAT_PASS" : "VCU_BMSHEARTBEAT_FAIL");
+  printf("%s \n", equal ? "Vcu_BmsHeartbeat_PASS" : "Vcu_BmsHeartbeat_FAIL");
+
+}
+
+void Vcu_DashHeartbeat_Test(void) {
+  Can_Vcu_DashHeartbeat_T begin;
+
+  begin.rtd_light = true;
+  begin.ams_light = false;
+  begin.imd_light = false;
+  begin.hv_light = true;
+
+  begin.traction_control = true;
+  begin.limp_mode = true;
+  begin.lv_warning = false;
+  begin.active_aero = true;
+
+  begin.regen = true;
+  begin.shutdown_esd_drain = false;
+  begin.shutdown_bms = true;
+  begin.shutdown_imd = true;
+
+  begin.shutdown_bspd = false;
+  begin.shutdown_vcu = false;
+  begin.shutdown_precharge = false;
+  begin.shutdown_master_reset = true;
+
+  begin.shutdown_driver_reset = false;
+
+  begin.lv_battery_voltage = 138;
+
+  Frame mid;
+  Can_Vcu_DashHeartbeat_ToCan(&begin, &mid);
+  uint64_t end_bitstring = 0;
+  to_bitstring(mid.data, &end_bitstring);
+
+  Can_Vcu_DashHeartbeat_T end;
+  Can_Vcu_DashHeartbeat_FromCan(&mid, &end);
+
+  bool equal = (
+      begin.rtd_light == end.rtd_light &&
+      begin.ams_light == end.ams_light &&
+      begin.imd_light == end.imd_light &&
+      begin.hv_light == end.hv_light &&
+      begin.traction_control == end.traction_control &&
+      begin.limp_mode == end.limp_mode &&
+      begin.lv_warning == end.lv_warning &&
+      begin.active_aero == end.active_aero &&
+      begin.regen == end.regen &&
+      begin.shutdown_esd_drain == end.shutdown_esd_drain &&
+      begin.shutdown_bms == end.shutdown_bms &&
+      begin.shutdown_imd == end.shutdown_imd &&
+      begin.shutdown_bspd == end.shutdown_bspd &&
+      begin.shutdown_vcu == end.shutdown_vcu &&
+      begin.shutdown_precharge == end.shutdown_precharge &&
+      begin.shutdown_master_reset == end.shutdown_master_reset &&
+      begin.shutdown_driver_reset == end.shutdown_driver_reset &&
+      begin.lv_battery_voltage == end.lv_battery_voltage);
+  printf("%s \n", equal ? "Vcu_DashHeartbeat_PASS" : "Vcu_DashHeartbeat_FAIL");
 
 }
 
@@ -94,7 +173,7 @@ void Bms_Heartbeat_Test(void) {
   bool equal = (
       begin.state == end.state &&
       begin.soc == end.soc);
-  printf("%s \n", equal ? "BMS_HEARTBEAT_PASS" : "BMS_HEARTBEAT_FAIL");
+  printf("%s \n", equal ? "Bms_Heartbeat_PASS" : "Bms_Heartbeat_FAIL");
 }
 
 void Bms_CellTemps_Test() {
@@ -119,7 +198,7 @@ void Bms_CellTemps_Test() {
       begin.id_min_cell_temp == end.id_min_cell_temp &&
       begin.max_cell_temp == end.max_cell_temp &&
       begin.id_max_cell_temp == end.id_max_cell_temp);
-  printf("%s \n", equal ? "BMS_CELLTEMPS_PASS" : "BMS_CELLTEMPS_FAIL");
+  printf("%s \n", equal ? "Bms_CellTemps_PASS" : "Bms_CellTemps_FAIL");
 }
 
 void Bms_PackStatus_Test() {
@@ -148,7 +227,7 @@ void Bms_PackStatus_Test() {
       begin.id_min_cell_voltage == end.id_min_cell_voltage &&
       begin.max_cell_voltage == end.max_cell_voltage &&
       begin.id_max_cell_voltage == end.id_max_cell_voltage);
-  printf("%s \n", equal ? "BMS_PACKSTATUS_PASS" : "BMS_PACKSTATUS_FAIL");
+  printf("%s \n", equal ? "Bms_PackStatus_PASS" : "Bms_PackStatus_FAIL");
 }
 
 void Bms_Error_Test(void) {
@@ -164,13 +243,16 @@ void Bms_Error_Test(void) {
   Can_Bms_Error_FromCan(&mid, &end);
 
   bool equal = begin.type == end.type;
-  printf("%s \n", equal ? "BMS_ERROR_PASS" : "BMS_ERROR_FAIL");
+  printf("%s \n", equal ? "Bms_Error_PASS" : "Bms_Error_FAIL");
 }
 
 int main(void) {
-  Driver_Output_Test();
-  Raw_Values_Test();
+  printf("\n*********TEST RESULTS **************\n\n");
+  FrontCanNode_DriverOutput_Test();
+  FrontCanNode_RawValues_Test();
+  FrontCanNode_WheelSpeed_Test();
   Vcu_BmsHeartbeat_Test();
+  Vcu_DashHeartbeat_Test();
   Bms_Heartbeat_Test();
   Bms_CellTemps_Test();
   Bms_PackStatus_Test();

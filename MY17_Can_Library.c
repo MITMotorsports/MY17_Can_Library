@@ -111,6 +111,22 @@ FROM_CAN(Can_FrontCanNode_RawValues) {
   type_out->steering_raw = EXTRACT(bitstring, 40, 10);
 }
 
+TO_CAN(Can_FrontCanNode_WheelSpeed) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->front_right_wheel_speed, bitstring, 0, 32);
+  bitstring = INSERT(type_in->front_left_wheel_speed, bitstring, 32, 32);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = FRONT_CAN_NODE_WHEEL_SPEED__id;
+  can_out->len = 8;
+}
+
+FROM_CAN(Can_FrontCanNode_WheelSpeed) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->front_right_wheel_speed = EXTRACT(bitstring, 0, 32);
+  type_out->front_left_wheel_speed = EXTRACT(bitstring, 32, 32);
+}
+
 TO_CAN(Can_Vcu_BmsHeartbeat) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->alwaysTrue, bitstring, 0, 1);
@@ -123,6 +139,54 @@ FROM_CAN(Can_Vcu_BmsHeartbeat) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
   type_out->alwaysTrue = EXTRACT(bitstring, 0, 1);
+}
+
+TO_CAN(Can_Vcu_DashHeartbeat) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->rtd_light, bitstring, 0, 1);
+  bitstring = INSERT(type_in->ams_light, bitstring, 1, 1);
+  bitstring = INSERT(type_in->imd_light, bitstring, 2, 1);
+  bitstring = INSERT(type_in->hv_light, bitstring, 3, 1);
+  bitstring = INSERT(type_in->traction_control, bitstring, 4, 1);
+  bitstring = INSERT(type_in->limp_mode, bitstring, 5, 1);
+  bitstring = INSERT(type_in->lv_warning, bitstring, 6, 1);
+  bitstring = INSERT(type_in->active_aero, bitstring, 7, 1);
+  bitstring = INSERT(type_in->regen, bitstring, 8, 1);
+  bitstring = INSERT(type_in->shutdown_esd_drain, bitstring, 9, 1);
+  bitstring = INSERT(type_in->shutdown_bms, bitstring, 10, 1);
+  bitstring = INSERT(type_in->shutdown_imd, bitstring, 11, 1);
+  bitstring = INSERT(type_in->shutdown_bspd, bitstring, 12, 1);
+  bitstring = INSERT(type_in->shutdown_vcu, bitstring, 13, 1);
+  bitstring = INSERT(type_in->shutdown_precharge, bitstring, 14, 1);
+  bitstring = INSERT(type_in->shutdown_master_reset, bitstring, 15, 1);
+  bitstring = INSERT(type_in->shutdown_driver_reset, bitstring, 16, 1);
+  bitstring = INSERT(type_in->lv_battery_voltage, bitstring, 17, 8);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = VCU_DASH_HEARTBEAT__id;
+  can_out->len = 1;
+}
+
+FROM_CAN(Can_Vcu_DashHeartbeat) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->rtd_light = EXTRACT(bitstring, 0, 1);
+  type_out->ams_light = EXTRACT(bitstring, 1, 1);
+  type_out->imd_light = EXTRACT(bitstring, 2, 1);
+  type_out->hv_light = EXTRACT(bitstring, 3, 1);
+  type_out->traction_control = EXTRACT(bitstring, 4, 1);
+  type_out->limp_mode = EXTRACT(bitstring, 5, 1);
+  type_out->lv_warning = EXTRACT(bitstring, 6, 1);
+  type_out->active_aero = EXTRACT(bitstring, 7, 1);
+  type_out->regen = EXTRACT(bitstring, 8, 1);
+  type_out->shutdown_esd_drain = EXTRACT(bitstring, 9, 1);
+  type_out->shutdown_bms = EXTRACT(bitstring, 10, 1);
+  type_out->shutdown_imd = EXTRACT(bitstring, 11, 1);
+  type_out->shutdown_bspd = EXTRACT(bitstring, 12, 1);
+  type_out->shutdown_vcu = EXTRACT(bitstring, 13, 1);
+  type_out->shutdown_precharge = EXTRACT(bitstring, 14, 1);
+  type_out->shutdown_master_reset = EXTRACT(bitstring, 15, 1);
+  type_out->shutdown_driver_reset = EXTRACT(bitstring, 16, 1);
+  type_out->lv_battery_voltage = EXTRACT(bitstring, 17, 8);
 }
 
 TO_CAN(Can_Bms_Heartbeat) {
@@ -193,7 +257,7 @@ TO_CAN(Can_Bms_Error) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->type, bitstring, 0, 4);
   from_bitstring(&bitstring, can_out->data);
-  can_out->id = BMS_HEARTBEAT__id;
+  can_out->id = BMS_ERRORS__id;
   can_out->len = 1;
 }
 
@@ -206,7 +270,11 @@ FROM_CAN(Can_Bms_Error) {
 // Needed for actual implementation of the evil macros
 DEFINE(Can_FrontCanNode_DriverOutput)
 DEFINE(Can_FrontCanNode_RawValues)
+DEFINE(Can_FrontCanNode_WheelSpeed)
 DEFINE(Can_Vcu_BmsHeartbeat)
+DEFINE(Can_Vcu_DashHeartbeat)
+/* DEFINE(Can_Vcu_MCRequest) */
+/* DEFINE(Can_Vcu_MCTorque) */
 DEFINE(Can_Bms_Heartbeat)
 DEFINE(Can_Bms_CellTemps)
 DEFINE(Can_Bms_PackStatus)
