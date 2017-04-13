@@ -111,6 +111,20 @@ FROM_CAN(Can_FrontCanNode_RawValues) {
   type_out->steering_raw = EXTRACT(bitstring, 40, 10);
 }
 
+TO_CAN(Can_Vcu_BmsHeartbeat) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->alwaysTrue, bitstring, 0, 1);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = VCU_BMS_HEARTBEAT__id;
+  can_out->len = 1;
+}
+
+FROM_CAN(Can_Vcu_BmsHeartbeat) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->alwaysTrue = EXTRACT(bitstring, 0, 1);
+}
+
 TO_CAN(Can_Bms_Heartbeat) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->state, bitstring, 0, 3);
@@ -192,6 +206,7 @@ FROM_CAN(Can_Bms_Error) {
 // Needed for actual implementation of the evil macros
 DEFINE(Can_FrontCanNode_DriverOutput)
 DEFINE(Can_FrontCanNode_RawValues)
+DEFINE(Can_Vcu_BmsHeartbeat)
 DEFINE(Can_Bms_Heartbeat)
 DEFINE(Can_Bms_CellTemps)
 DEFINE(Can_Bms_PackStatus)

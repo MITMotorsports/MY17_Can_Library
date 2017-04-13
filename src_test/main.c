@@ -61,6 +61,23 @@ void Raw_Values_Test(void) {
   printf("%s \n", equal ? "RAW_VALUES_PASS" : "RAW_VALUES_FAIL");
 }
 
+void Vcu_BmsHeartbeat_Test(void) {
+  Can_Vcu_BmsHeartbeat_T begin;
+  begin.alwaysTrue = true;
+
+  Frame mid;
+  Can_Vcu_BmsHeartbeat_ToCan(&begin, &mid);
+  uint64_t end_bitstring = 0;
+  to_bitstring(mid.data, &end_bitstring);
+
+  Can_Vcu_BmsHeartbeat_T end;
+  Can_Vcu_BmsHeartbeat_FromCan(&mid, &end);
+
+  bool equal = begin.alwaysTrue == end.alwaysTrue;
+  printf("%s \n", equal ? "VCU_BMSHEARTBEAT_PASS" : "VCU_BMSHEARTBEAT_FAIL");
+
+}
+
 void Bms_Heartbeat_Test(void) {
   Can_Bms_Heartbeat_T begin;
   begin.state = CAN_BMS_STATE_BATTERY_FAULT;
@@ -153,6 +170,7 @@ void Bms_Error_Test(void) {
 int main(void) {
   Driver_Output_Test();
   Raw_Values_Test();
+  Vcu_BmsHeartbeat_Test();
   Bms_Heartbeat_Test();
   Bms_CellTemps_Test();
   Bms_PackStatus_Test();
