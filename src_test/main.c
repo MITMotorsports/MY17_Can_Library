@@ -157,6 +157,24 @@ void Vcu_DashHeartbeat_Test(void) {
 
 }
 
+void Vcu_MCRequest_Test(void) {
+  Can_Vcu_MCRequest_T begin;
+  begin.requestType = CAN_MC_REG_REQUEST;
+  begin.period = 100;
+
+  Frame mid;
+  Can_Vcu_MCRequest_ToCan(&begin, &mid);
+  uint64_t end_bitstring = 0;
+  to_bitstring(mid.data, &end_bitstring);
+
+  Can_Vcu_MCRequest_T end;
+  Can_Vcu_MCRequest_FromCan(&mid, &end);
+
+  bool equal = (
+      begin.requestType == end.requestType &&
+      begin.period == end.period);
+  printf("%s \n", equal ? "Vcu_MCRequest_PASS" : "Vcu_MCRequest_FAIL");
+}
 void Bms_Heartbeat_Test(void) {
   Can_Bms_Heartbeat_T begin;
   begin.state = CAN_BMS_STATE_BATTERY_FAULT;
@@ -253,6 +271,7 @@ int main(void) {
   FrontCanNode_WheelSpeed_Test();
   Vcu_BmsHeartbeat_Test();
   Vcu_DashHeartbeat_Test();
+  Vcu_MCRequest_Test();
   Bms_Heartbeat_Test();
   Bms_CellTemps_Test();
   Bms_PackStatus_Test();

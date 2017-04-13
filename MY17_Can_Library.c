@@ -189,7 +189,7 @@ TO_CAN(Can_Vcu_DashHeartbeat) {
   bitstring = INSERT(type_in->lv_battery_voltage, bitstring, 17, 8);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_DASH_HEARTBEAT__id;
-  can_out->len = 1;
+  can_out->len = 4;
 }
 
 FROM_CAN(Can_Vcu_DashHeartbeat) {
@@ -213,6 +213,22 @@ FROM_CAN(Can_Vcu_DashHeartbeat) {
   type_out->shutdown_master_reset = EXTRACT(bitstring, 15, 1);
   type_out->shutdown_driver_reset = EXTRACT(bitstring, 16, 1);
   type_out->lv_battery_voltage = EXTRACT(bitstring, 17, 8);
+}
+
+TO_CAN(Can_Vcu_MCRequest) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->requestType, bitstring, 0, 8);
+  bitstring = INSERT(type_in->period, bitstring, 8, 8);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = VCU_MC_MESSAGE__id;
+  can_out->len = 3;
+}
+
+FROM_CAN(Can_Vcu_MCRequest) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->requestType = (Can_MC_RegID_T) (EXTRACT(bitstring, 0, 8));
+  type_out->period = EXTRACT(bitstring, 8, 8);
 }
 
 TO_CAN(Can_Bms_Heartbeat) {
@@ -299,7 +315,7 @@ DEFINE(Can_FrontCanNode_RawValues)
 DEFINE(Can_FrontCanNode_WheelSpeed)
 DEFINE(Can_Vcu_BmsHeartbeat)
 DEFINE(Can_Vcu_DashHeartbeat)
-/* DEFINE(Can_Vcu_MCRequest) */
+DEFINE(Can_Vcu_MCRequest)
 /* DEFINE(Can_Vcu_MCTorque) */
 DEFINE(Can_Bms_Heartbeat)
 DEFINE(Can_Bms_CellTemps)
