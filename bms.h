@@ -14,16 +14,16 @@ typedef struct {
 } Can_Bms_Heartbeat_T;
 
 typedef struct {
-  uint8_t avg_cell_Temp;
-  uint8_t min_cell_Temp;
-  uint8_t max_cell_Temp;
-  uint8_t id_min_cell_Temp;
-  uint8_t id_max_cell_Temp;
+  uint8_t avg_cell_temp;
+  uint8_t min_cell_temp;
+  uint8_t max_cell_temp;
+  uint8_t id_min_cell_temp;
+  uint8_t id_max_cell_temp;
 } Can_Bms_CellTemps_T;
 
 typedef struct {
   uint16_t pack_voltage;
-  uint16_t pack_current;
+  int16_t pack_current;
   uint16_t avg_cell_voltage;
   uint16_t min_cell_voltage;
   uint8_t id_min_cell_voltage;

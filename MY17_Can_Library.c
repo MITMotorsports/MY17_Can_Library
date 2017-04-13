@@ -82,7 +82,7 @@ TO_CAN(Can_FrontCanNode_DriverOutput) {
 FROM_CAN(Can_FrontCanNode_DriverOutput) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->torque = EXTRACT(bitstring, 0, 16);
+  type_out->torque = SIGN(EXTRACT(bitstring, 0, 16), 16);
   type_out->brake_pressure = EXTRACT(bitstring, 16, 8);
   type_out->steering_position = EXTRACT(bitstring, 24, 8);
   type_out->throttle_implausible = EXTRACT(bitstring, 32, 1);
@@ -111,6 +111,88 @@ FROM_CAN(Can_FrontCanNode_RawValues) {
   type_out->steering_raw = EXTRACT(bitstring, 40, 10);
 }
 
+TO_CAN(Can_Bms_Heartbeat) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->state, bitstring, 0, 3);
+  bitstring = INSERT(type_in->soc, bitstring, 3, 10);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = BMS_HEARTBEAT__id;
+  can_out->len = 8;
+}
+
+FROM_CAN(Can_Bms_Heartbeat) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->state = (Can_Bms_StateID_T)(EXTRACT(bitstring, 0, 3));
+  type_out->soc = EXTRACT(bitstring, 3, 10);
+}
+
+TO_CAN(Can_Bms_CellTemps) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->avg_cell_temp, bitstring, 0, 8);
+  bitstring = INSERT(type_in->min_cell_temp, bitstring, 8, 8);
+  bitstring = INSERT(type_in->id_min_cell_temp, bitstring, 16, 8);
+  bitstring = INSERT(type_in->max_cell_temp, bitstring, 24, 8);
+  bitstring = INSERT(type_in->id_max_cell_temp, bitstring, 32, 8);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = BMS_CELL_TEMPS__id;
+  can_out->len = 8;
+}
+
+FROM_CAN(Can_Bms_CellTemps) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->avg_cell_temp = EXTRACT(bitstring, 0, 8);
+  type_out->min_cell_temp = EXTRACT(bitstring, 8, 8);
+  type_out->id_min_cell_temp = EXTRACT(bitstring, 16, 8);
+  type_out->max_cell_temp = EXTRACT(bitstring, 24, 8);
+  type_out->id_max_cell_temp = EXTRACT(bitstring, 32, 8);
+}
+
+TO_CAN(Can_Bms_PackStatus) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->pack_voltage, bitstring, 0, 9);
+  bitstring = INSERT(type_in->pack_current, bitstring, 9, 11);
+  bitstring = INSERT(type_in->avg_cell_voltage, bitstring, 20, 10);
+  bitstring = INSERT(type_in->min_cell_voltage, bitstring, 30, 10);
+  bitstring = INSERT(type_in->id_min_cell_voltage, bitstring, 40, 7);
+  bitstring = INSERT(type_in->max_cell_voltage, bitstring, 47, 10);
+  bitstring = INSERT(type_in->id_max_cell_voltage, bitstring, 57, 7);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = BMS_PACK_STATUS__id;
+  can_out->len = 8;
+}
+
+FROM_CAN(Can_Bms_PackStatus) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->pack_voltage = EXTRACT(bitstring, 0, 9);
+  type_out->pack_current = SIGN(EXTRACT(bitstring, 9, 11), 11);
+  type_out->avg_cell_voltage = EXTRACT(bitstring, 20, 10);
+  type_out->min_cell_voltage = EXTRACT(bitstring, 30, 10);
+  type_out->id_min_cell_voltage = EXTRACT(bitstring, 40, 7);
+  type_out->max_cell_voltage = EXTRACT(bitstring, 47, 10);
+  type_out->id_max_cell_voltage = EXTRACT(bitstring, 57, 7);
+}
+
+TO_CAN(Can_Bms_Error) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->type, bitstring, 0, 4);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = BMS_HEARTBEAT__id;
+  can_out->len = 1;
+}
+
+FROM_CAN(Can_Bms_Error) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->type = (Can_Bms_ErrorID_T)(EXTRACT(bitstring, 0, 4));
+}
+
 // Needed for actual implementation of the evil macros
 DEFINE(Can_FrontCanNode_DriverOutput)
 DEFINE(Can_FrontCanNode_RawValues)
+DEFINE(Can_Bms_Heartbeat)
+DEFINE(Can_Bms_CellTemps)
+DEFINE(Can_Bms_PackStatus)
+DEFINE(Can_Bms_Error)

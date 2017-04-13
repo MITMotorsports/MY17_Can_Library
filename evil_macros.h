@@ -35,6 +35,12 @@ typedef union {
 #define INSERT(input, output, start, len) \
   (((output) & (ZEROES_MASK(start, len))) | INPUT_MASK(input, start, len))
 
+#define SIGN(input, data_width) \
+  ( \
+   ((int64_t)((input) << (64 - (data_width)))) >> \
+   (64 - (data_width)) \
+  )
+
 #define EXTRACT(input, start, len) \
   (((input) >> START_IDX(start, len)) & ONES(len))
 

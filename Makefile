@@ -8,8 +8,8 @@ obj/evil_macros.o: evil_macros.c $(HEADERS)
 obj/MY17_Can_Library.o: MY17_Can_Library.c $(HEADERS)
 	gcc -c MY17_Can_Library.c -o obj/MY17_Can_Library.o -DCAN_ARCHITECTURE_TEST
 
-obj/main.o: main.c $(HEADERS)
-	gcc -c main.c -o obj/main.o -DCAN_ARCHITECTURE_TEST
+obj/main.o: src_test/main.c $(HEADERS)
+	gcc -c src_test/main.c -o obj/main.o -DCAN_ARCHITECTURE_TEST
 
 main: obj/main.o obj/MY17_Can_Library.o obj/evil_macros.o
 	gcc -o obj/main obj/main.o obj/MY17_Can_Library.o obj/evil_macros.o -DCAN_ARCHITECTURE_TEST
