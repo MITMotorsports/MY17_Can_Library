@@ -184,11 +184,12 @@ MESSAGE_NAME=BMS_ERRORS ID=0x260 FREQ=0.1HZ
         0x4 EEPROM
         0x5 CELL_UNDER_VOLTAGE
         0x6 CELL_OVER_VOLTAGE
-        0x7 CELL_OVER_TEMP
-        0x8 OVER_CURRENT
-        0x9 CAN
-        0xA CONFLICTING_MODE_REQUESTS
-        0xB VCU_DEAD
+        0x7 CELL_UNDER_TEMP
+        0x8 CELL_OVER_TEMP
+        0x9 OVER_CURRENT
+        0xA CAN
+        0xB CONFLICTING_MODE_REQUESTS
+        0xC VCU_DEAD
 
 #############################################################
 #                      Dash SPEC                             #
