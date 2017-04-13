@@ -6,11 +6,6 @@
 
 #include "can_raw.h"
 
-typedef union {
-  uint8_t byte[8];
-  uint64_t bitstring;
-} DATA_T;
-
 #define TOGGLE(input, test, idx) \
   if (test) {\
     ((input) |= (1 << (7 - (idx)))); \
@@ -43,9 +38,5 @@ typedef union {
 
 #define EXTRACT(input, start, len) \
   (((input) >> START_IDX(start, len)) & ONES(len))
-
-void data_transfer(DATA_T *in, DATA_T *out);
-void to_bitstring(uint8_t in[], uint64_t *out);
-void from_bitstring(uint64_t *in, uint8_t out[]);
 
 #endif // _MY17_CAN_LIBRARY_EVIL_MACROS_H

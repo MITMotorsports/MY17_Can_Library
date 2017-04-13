@@ -60,6 +60,9 @@ Can_MsgID_T Can_MsgType(void);
   TO_CAN(name); \
   FROM_CAN(name);
 
+void to_bitstring(uint8_t in[], uint64_t *out);
+void from_bitstring(uint64_t *in, uint8_t out[]);
+
 //ex. Can_FrontCanNode_DriverOutput_Read(Can_FrontCanNode_DriverOutput_T *data);
 
 
