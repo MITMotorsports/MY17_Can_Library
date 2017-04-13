@@ -14,6 +14,7 @@
 // @see each individual header file for all message types.
 typedef enum {
   Can_No_Msg,
+  Can_Unknown_Msg,
 
   Can_FrontCanNode_DriverOutput_Msg,
   Can_FrontCanNode_RawValues_Msg,

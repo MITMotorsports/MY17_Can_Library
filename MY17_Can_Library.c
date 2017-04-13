@@ -57,11 +57,37 @@ Can_MsgID_T Can_MsgType(void) {
   unread = true;
 
   uint16_t id = lastMessage.id;
+  uint16_t first_byte = lastMessage.data[0];
   switch(id) {
     case FRONT_CAN_NODE_DRIVER_OUTPUT__id:
       return Can_FrontCanNode_DriverOutput_Msg;
     case FRONT_CAN_NODE_RAW_VALUES__id:
       return Can_FrontCanNode_RawValues_Msg;
+    case FRONT_CAN_NODE_WHEEL_SPEED__id:
+      return Can_FrontCanNode_WheelSpeed_Msg;
+
+    case VCU_BMS_HEARTBEAT__id:
+      return Can_Vcu_BmsHeartbeat_Msg;
+    case VCU_DASH_HEARTBEAT__id:
+      return Can_Vcu_DashHeartbeat_Msg;
+    case VCU_MC_MESSAGE__id:
+      if (first_byte == ____VCU_MC_MESSAGE__REG_ID__MSG_REQUEST) {
+        return Can_Vcu_MCRequest_Msg;
+      } else if (first_byte == ____VCU_MC_MESSAGE__REG_ID__TORQUE_CMD) {
+        return Can_Vcu_MCTorque_Msg;
+      } else {
+        return Can_Unknown_Msg;
+      }
+
+    case BMS_HEARTBEAT__id:
+      return Can_Bms_Heartbeat_Msg;
+    case BMS_CELL_TEMPS__id:
+      return Can_Bms_CellTemps_Msg;
+    case BMS_PACK_STATUS__id:
+      return Can_Bms_PackStatus_Msg;
+    case BMS_ERRORS__id:
+      return Can_Bms_Error_Msg;
+
     default:
       return Can_No_Msg;
   }
