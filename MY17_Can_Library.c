@@ -71,9 +71,9 @@ Can_MsgID_T Can_MsgType(void) {
     case VCU_DASH_HEARTBEAT__id:
       return Can_Vcu_DashHeartbeat_Msg;
     case VCU_MC_MESSAGE__id:
-      if (first_byte == ____VCU_MC_MESSAGE__REG_ID__MSG_REQUEST) {
+      if (first_byte == CAN_MC_REG_MSG_REQUEST || first_byte == CAN_MC_REG_MSG_EVENT_REQUEST) {
         return Can_Vcu_MCRequest_Msg;
-      } else if (first_byte == ____VCU_MC_MESSAGE__REG_ID__TORQUE_CMD) {
+      } else if (first_byte == CAN_MC_REG_TORQUE_CMD) {
         return Can_Vcu_MCTorque_Msg;
       } else {
         return Can_Unknown_Msg;

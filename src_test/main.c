@@ -159,7 +159,7 @@ void Vcu_DashHeartbeat_Test(void) {
 
 void Vcu_MCRequest_Test(void) {
   Can_Vcu_MCRequest_T begin;
-  begin.requestType = CAN_MC_REG_REQUEST;
+  begin.requestType = CAN_MC_REG_MSG_REQUEST;
   begin.period = 100;
 
   Frame mid;
