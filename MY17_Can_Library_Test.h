@@ -17,4 +17,6 @@ void Can_Bms_CellTemps_Test(PRINT print);
 void Can_Bms_PackStatus_Test(PRINT print);
 void Can_Bms_Error_Test(PRINT print);
 
+void Can_All_Tests(PRINT print);
+
 #endif // _MY17_CAN_LIBRARY_TEST_H

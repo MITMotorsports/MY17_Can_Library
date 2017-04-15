@@ -251,6 +251,20 @@ FROM_CAN(Can_Vcu_MCRequest) {
   type_out->period = EXTRACT(bitstring, 8, 8);
 }
 
+TO_CAN(Can_Vcu_MCTorque) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->torque_cmd, bitstring, 0, 16);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = VCU_MC_MESSAGE__id;
+  can_out->len = 3;
+}
+
+FROM_CAN(Can_Vcu_MCTorque) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->torque_cmd = SIGN((EXTRACT(bitstring, 0, 16)), 16);
+}
+
 TO_CAN(Can_Bms_Heartbeat) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->state, bitstring, 0, 3);
@@ -336,7 +350,7 @@ DEFINE(Can_FrontCanNode_WheelSpeed)
 DEFINE(Can_Vcu_BmsHeartbeat)
 DEFINE(Can_Vcu_DashHeartbeat)
 DEFINE(Can_Vcu_MCRequest)
-/* DEFINE(Can_Vcu_MCTorque) */
+DEFINE(Can_Vcu_MCTorque)
 DEFINE(Can_Bms_Heartbeat)
 DEFINE(Can_Bms_CellTemps)
 DEFINE(Can_Bms_PackStatus)

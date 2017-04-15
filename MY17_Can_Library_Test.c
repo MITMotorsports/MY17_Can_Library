@@ -4,6 +4,15 @@
 
 typedef void (*PRINT)(const char *);
 
+#define BOILERPLATE(typename) \
+  Frame mid; \
+  typename ## _ToCan(&begin, &mid); \
+  uint64_t end_bitstring = 0; \
+  to_bitstring(mid.data, &end_bitstring); \
+  typename ## _T end; \
+  typename ## _FromCan(&mid, &end)
+
+
 void Can_BinaryPrint(PRINT print, uint64_t out, uint8_t len) {
   int8_t i;
   for (i = len - 1; i >= 0; i--) {
@@ -20,13 +29,7 @@ void Can_FrontCanNode_DriverOutput_Test(PRINT print) {
   begin.throttle_implausible = true;
   begin.brake_throttle_conflict = false;
 
-  Frame mid;
-  Can_FrontCanNode_DriverOutput_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_FrontCanNode_DriverOutput_T end;
-  Can_FrontCanNode_DriverOutput_FromCan(&mid, &end);
+  BOILERPLATE(Can_FrontCanNode_DriverOutput);
 
   bool equal = (
       begin.torque == end.torque &&
@@ -45,13 +48,8 @@ void Can_FrontCanNode_RawValues_Test(PRINT print) {
   begin.brake_2_raw = 400;
   begin.steering_raw = 500;
 
-  Frame mid;
-  Can_FrontCanNode_RawValues_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
+  BOILERPLATE(Can_FrontCanNode_RawValues);
 
-  Can_FrontCanNode_RawValues_T end;
-  Can_FrontCanNode_RawValues_FromCan(&mid, &end);
   bool equal = (
       begin.accel_1_raw == end.accel_1_raw &&
       begin.accel_2_raw == end.accel_2_raw &&
@@ -66,13 +64,7 @@ void Can_FrontCanNode_WheelSpeed_Test(PRINT print) {
   begin.front_right_wheel_speed = 100000;
   begin.front_left_wheel_speed = 3000000000UL;
 
-  Frame mid;
-  Can_FrontCanNode_WheelSpeed_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_FrontCanNode_WheelSpeed_T end;
-  Can_FrontCanNode_WheelSpeed_FromCan(&mid, &end);
+  BOILERPLATE(Can_FrontCanNode_WheelSpeed);
 
   bool equal = (
       begin.front_right_wheel_speed == end.front_right_wheel_speed &&
@@ -86,13 +78,7 @@ void Can_Vcu_BmsHeartbeat_Test(PRINT print) {
   Can_Vcu_BmsHeartbeat_T begin;
   begin.alwaysTrue = true;
 
-  Frame mid;
-  Can_Vcu_BmsHeartbeat_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_Vcu_BmsHeartbeat_T end;
-  Can_Vcu_BmsHeartbeat_FromCan(&mid, &end);
+  BOILERPLATE(Can_Vcu_BmsHeartbeat);
 
   bool equal = begin.alwaysTrue == end.alwaysTrue;
   print(equal ? "Vcu_BmsHeartbeat_PASS\r\n" : "Vcu_BmsHeartbeat_FAIL\r\n");
@@ -126,13 +112,7 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
 
   begin.lv_battery_voltage = 138;
 
-  Frame mid;
-  Can_Vcu_DashHeartbeat_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_Vcu_DashHeartbeat_T end;
-  Can_Vcu_DashHeartbeat_FromCan(&mid, &end);
+  BOILERPLATE(Can_Vcu_DashHeartbeat);
 
   bool equal = (
       begin.rtd_light == end.rtd_light &&
@@ -162,13 +142,7 @@ void Can_Vcu_MCRequest_Test(PRINT print) {
   begin.requestType = CAN_MC_REG_MSG_REQUEST;
   begin.period = 100;
 
-  Frame mid;
-  Can_Vcu_MCRequest_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_Vcu_MCRequest_T end;
-  Can_Vcu_MCRequest_FromCan(&mid, &end);
+  BOILERPLATE(Can_Vcu_MCRequest);
 
   bool equal = (
       begin.requestType == end.requestType &&
@@ -176,18 +150,22 @@ void Can_Vcu_MCRequest_Test(PRINT print) {
   print(equal ? "Vcu_MCRequest_PASS\r\n" : "Vcu_MCRequest_FAIL\r\n");
 }
 
+void Can_Vcu_MCTorque_Test(PRINT print) {
+  Can_Vcu_MCTorque_T begin;
+  begin.torque_cmd = 5000;
+
+  BOILERPLATE(Can_Vcu_MCTorque);
+
+  bool equal = begin.torque_cmd == end.torque_cmd;
+  print(equal ? "Vcu_MCTorque_PASS\r\n" : "Vcu_MCTorque_FAIL\r\n");
+}
+
 void Can_Bms_Heartbeat_Test(PRINT print) {
   Can_Bms_Heartbeat_T begin;
   begin.state = CAN_BMS_STATE_BATTERY_FAULT;
   begin.soc = 90;
 
-  Frame mid;
-  Can_Bms_Heartbeat_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_Bms_Heartbeat_T end;
-  Can_Bms_Heartbeat_FromCan(&mid, &end);
+  BOILERPLATE(Can_Bms_Heartbeat);
 
   bool equal = (
       begin.state == end.state &&
@@ -203,13 +181,7 @@ void Can_Bms_CellTemps_Test(PRINT print) {
   begin.max_cell_temp = 60;
   begin.id_max_cell_temp = 60;
 
-  Frame mid;
-  Can_Bms_CellTemps_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_Bms_CellTemps_T end;
-  Can_Bms_CellTemps_FromCan(&mid, &end);
+  BOILERPLATE(Can_Bms_CellTemps);
 
   bool equal = (
       begin.avg_cell_temp == end.avg_cell_temp &&
@@ -230,13 +202,7 @@ void Can_Bms_PackStatus_Test(PRINT print) {
   begin.max_cell_voltage = 400;
   begin.id_max_cell_voltage = 40;
 
-  Frame mid;
-  Can_Bms_PackStatus_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_Bms_PackStatus_T end;
-  Can_Bms_PackStatus_FromCan(&mid, &end);
+  BOILERPLATE(Can_Bms_PackStatus);
 
   bool equal = (
       begin.pack_voltage == end.pack_voltage &&
@@ -253,15 +219,24 @@ void Can_Bms_Error_Test(PRINT print) {
   Can_Bms_Error_T begin;
   begin.type = CAN_BMS_ERROR_CONFLICTING_MODE_REQUESTS;
 
-  Frame mid;
-  Can_Bms_Error_ToCan(&begin, &mid);
-  uint64_t end_bitstring = 0;
-  to_bitstring(mid.data, &end_bitstring);
-
-  Can_Bms_Error_T end;
-  Can_Bms_Error_FromCan(&mid, &end);
+  BOILERPLATE(Can_Bms_Error);
 
   bool equal = begin.type == end.type;
   print(equal ? "Bms_Error_PASS\r\n" : "Bms_Error_FAIL\r\n");
+}
+
+void Can_All_Tests(PRINT print) {
+  print("\n*********TEST RESULTS **************\n\n");
+  Can_FrontCanNode_DriverOutput_Test(print);
+  Can_FrontCanNode_RawValues_Test(print);
+  Can_FrontCanNode_WheelSpeed_Test(print);
+  Can_Vcu_BmsHeartbeat_Test(print);
+  Can_Vcu_DashHeartbeat_Test(print);
+  Can_Vcu_MCRequest_Test(print);
+  Can_Vcu_MCTorque_Test(print);
+  Can_Bms_Heartbeat_Test(print);
+  Can_Bms_CellTemps_Test(print);
+  Can_Bms_PackStatus_Test(print);
+  Can_Bms_Error_Test(print);
 }
 
