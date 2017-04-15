@@ -175,11 +175,11 @@ void Can_Bms_Heartbeat_Test(PRINT print) {
 
 void Can_Bms_CellTemps_Test(PRINT print) {
   Can_Bms_CellTemps_T begin;
-  begin.avg_cell_temp = 45;
-  begin.min_cell_temp = 30;
-  begin.id_min_cell_temp = 10;
-  begin.max_cell_temp = 60;
-  begin.id_max_cell_temp = 60;
+  begin.avg_cell_temp = -10520;
+  begin.min_cell_temp = 356;
+  begin.id_min_cell_temp = 1;
+  begin.max_cell_temp = 0;
+  begin.id_max_cell_temp = 6;
 
   BOILERPLATE(Can_Bms_CellTemps);
 

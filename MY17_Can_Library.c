@@ -283,11 +283,11 @@ FROM_CAN(Can_Bms_Heartbeat) {
 
 TO_CAN(Can_Bms_CellTemps) {
   uint64_t bitstring = 0;
-  bitstring = INSERT(type_in->avg_cell_temp, bitstring, 0, 8);
-  bitstring = INSERT(type_in->min_cell_temp, bitstring, 8, 8);
-  bitstring = INSERT(type_in->id_min_cell_temp, bitstring, 16, 8);
-  bitstring = INSERT(type_in->max_cell_temp, bitstring, 24, 8);
-  bitstring = INSERT(type_in->id_max_cell_temp, bitstring, 32, 8);
+  bitstring = INSERT(type_in->avg_cell_temp, bitstring, 0, 16);
+  bitstring = INSERT(type_in->min_cell_temp, bitstring, 16, 16);
+  bitstring = INSERT(type_in->id_min_cell_temp, bitstring, 32, 8);
+  bitstring = INSERT(type_in->max_cell_temp, bitstring, 40, 16);
+  bitstring = INSERT(type_in->id_max_cell_temp, bitstring, 56, 8);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = BMS_CELL_TEMPS__id;
   can_out->len = 8;
@@ -296,11 +296,11 @@ TO_CAN(Can_Bms_CellTemps) {
 FROM_CAN(Can_Bms_CellTemps) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->avg_cell_temp = EXTRACT(bitstring, 0, 8);
-  type_out->min_cell_temp = EXTRACT(bitstring, 8, 8);
-  type_out->id_min_cell_temp = EXTRACT(bitstring, 16, 8);
-  type_out->max_cell_temp = EXTRACT(bitstring, 24, 8);
-  type_out->id_max_cell_temp = EXTRACT(bitstring, 32, 8);
+  type_out->avg_cell_temp = SIGN(EXTRACT(bitstring, 0, 16), 16);
+  type_out->min_cell_temp = SIGN(EXTRACT(bitstring, 16, 16), 16);
+  type_out->id_min_cell_temp = EXTRACT(bitstring, 32, 8);
+  type_out->max_cell_temp = SIGN(EXTRACT(bitstring, 40, 16), 16);
+  type_out->id_max_cell_temp = EXTRACT(bitstring, 56, 8);
 }
 
 TO_CAN(Can_Bms_PackStatus) {

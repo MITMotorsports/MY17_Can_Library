@@ -14,9 +14,9 @@ typedef struct {
 } Can_Bms_Heartbeat_T;
 
 typedef struct {
-  uint8_t avg_cell_temp;
-  uint8_t min_cell_temp;
-  uint8_t max_cell_temp;
+  int16_t avg_cell_temp;
+  int16_t min_cell_temp;
+  int16_t max_cell_temp;
   uint8_t id_min_cell_temp;
   uint8_t id_max_cell_temp;
 } Can_Bms_CellTemps_T;
