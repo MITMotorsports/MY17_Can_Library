@@ -190,6 +190,8 @@ MESSAGE_NAME=BMS_ERRORS ID=0x260 FREQ=0.1HZ
         0xA CAN
         0xB CONFLICTING_MODE_REQUESTS
         0xC VCU_DEAD
+        0xD CONTROL_FLOW
+        0xE OTHER
 
 #############################################################
 #                      Dash SPEC                             #
