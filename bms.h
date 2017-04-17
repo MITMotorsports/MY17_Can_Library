@@ -17,8 +17,8 @@ typedef struct {
   int16_t avg_cell_temp;
   int16_t min_cell_temp;
   int16_t max_cell_temp;
-  uint8_t id_min_cell_temp;
-  uint8_t id_max_cell_temp;
+  uint16_t id_min_cell_temp;
+  uint16_t id_max_cell_temp;
 } Can_Bms_CellTemps_T;
 
 typedef struct {
