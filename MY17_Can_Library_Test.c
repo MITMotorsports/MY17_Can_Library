@@ -225,18 +225,44 @@ void Can_Bms_Error_Test(PRINT print) {
   print(equal ? "Bms_Error_PASS\r\n" : "Bms_Error_FAIL\r\n");
 }
 
+void Can_Dash_Heartbeat_Test(PRINT print) {
+  Can_Dash_Heartbeat_T begin;
+  begin.ok = true;
+
+  BOILERPLATE(Can_Dash_Heartbeat);
+
+  bool equal = begin.ok == end.ok;
+  print(equal ? "Dash_Heartbeat_PASS\r\n" : "Dash_Heartbeat_FAIL\r\n");
+}
+
+void Can_Dash_Request_Test(PRINT print) {
+  Can_Dash_Request_T begin;
+  begin.type = CAN_DASH_REQUEST_DATA_FLAG;
+
+  BOILERPLATE(Can_Dash_Request);
+
+  bool equal = begin.type == end.type;
+  print(equal ? "Dash_Request_PASS\r\n" : "Dash_Request_FAIL\r\n");
+}
+
 void Can_All_Tests(PRINT print) {
   print("\n*********TEST RESULTS **************\n\n");
+
   Can_FrontCanNode_DriverOutput_Test(print);
   Can_FrontCanNode_RawValues_Test(print);
   Can_FrontCanNode_WheelSpeed_Test(print);
+
   Can_Vcu_BmsHeartbeat_Test(print);
   Can_Vcu_DashHeartbeat_Test(print);
   Can_Vcu_MCRequest_Test(print);
   Can_Vcu_MCTorque_Test(print);
+
   Can_Bms_Heartbeat_Test(print);
   Can_Bms_CellTemps_Test(print);
   Can_Bms_PackStatus_Test(print);
   Can_Bms_Error_Test(print);
+
+  Can_Dash_Heartbeat_Test(print);
+  Can_Dash_Request_Test(print);
 }
 
