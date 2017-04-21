@@ -387,6 +387,20 @@ FROM_CAN(Can_MC_DataReading) {
   type_out->value = SIGN(EXTRACT(bitstring, 8, 16), 16);
 }
 
+TO_CAN(Can_CurrentSensor_Voltage) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->voltage_mV, bitstring, 16, 32);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = CURRENT_SENSOR_VOLTAGE__id;
+  can_out->len = 6;
+}
+
+FROM_CAN(Can_CurrentSensor_Voltage) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->voltage_mV = SIGN((EXTRACT(bitstring, 16, 32)), 32);
+}
+
 // Needed for actual implementation of the evil macros
 DEFINE(Can_FrontCanNode_DriverOutput)
 DEFINE(Can_FrontCanNode_RawValues)
@@ -409,6 +423,6 @@ DEFINE(Can_MC_DataReading)
 //TODO errors, warnings, state for motor controller
 
 /* DEFINE(Can_CurrentSensor_Current) */
-/* DEFINE(Can_CurrentSensor_Voltage) */
+DEFINE(Can_CurrentSensor_Voltage)
 /* DEFINE(Can_CurrentSensor_Power) */
 /* DEFINE(Can_CurrentSensor_Energy) */

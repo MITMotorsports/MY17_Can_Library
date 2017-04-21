@@ -258,6 +258,16 @@ void Can_MC_DataReading_Test(PRINT print) {
   print(equal ? "MC_DataReading_PASS\r\n" : "MC_DataReading_FAIL\r\n");
 }
 
+void Can_CurrentSensor_Voltage_Test(PRINT print) {
+  Can_CurrentSensor_Voltage_T begin;
+  begin.voltage_mV = 300000;
+
+  BOILERPLATE(Can_CurrentSensor_Voltage);
+
+  bool equal = begin.voltage_mV == end.voltage_mV;
+  print(equal ? "CurrentSensor_Voltage_PASS\r\n" : "CurrentSensor_Voltage_FAIL\r\n");
+}
+
 void Can_All_Tests(PRINT print) {
   print("\n*********TEST RESULTS **************\n\n");
 
@@ -279,5 +289,7 @@ void Can_All_Tests(PRINT print) {
   Can_Dash_Request_Test(print);
 
   Can_MC_DataReading_Test(print);
+
+  Can_CurrentSensor_Voltage_Test(print);
 }
 
