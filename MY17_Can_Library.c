@@ -361,7 +361,7 @@ TO_CAN(Can_Dash_Request) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->type, bitstring, 0, 3);
   from_bitstring(&bitstring, can_out->data);
-  can_out->id = BMS_ERRORS__id;
+  can_out->id = DASH_REQUEST__id;
   can_out->len = 1;
 }
 
@@ -369,6 +369,22 @@ FROM_CAN(Can_Dash_Request) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
   type_out->type = (Can_Dash_RequestID_T)(EXTRACT(bitstring, 0, 3));
+}
+
+TO_CAN(Can_MC_DataReading) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->type, bitstring, 0, 8);
+  bitstring = INSERT(type_in->value, bitstring, 8, 16);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = MC_RESPONSE__id;
+  can_out->len = 3;
+}
+
+FROM_CAN(Can_MC_DataReading) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->type = (Can_MC_RegID_T)(EXTRACT(bitstring, 0, 8));
+  type_out->value = SIGN(EXTRACT(bitstring, 8, 16), 16);
 }
 
 // Needed for actual implementation of the evil macros
@@ -388,3 +404,11 @@ DEFINE(Can_Bms_Error)
 
 DEFINE(Can_Dash_Heartbeat)
 DEFINE(Can_Dash_Request)
+
+DEFINE(Can_MC_DataReading)
+//TODO errors, warnings, state for motor controller
+
+/* DEFINE(Can_CurrentSensor_Current) */
+/* DEFINE(Can_CurrentSensor_Voltage) */
+/* DEFINE(Can_CurrentSensor_Power) */
+/* DEFINE(Can_CurrentSensor_Energy) */

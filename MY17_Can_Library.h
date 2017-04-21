@@ -124,7 +124,7 @@ DECLARE(Can_MC_State)
 
 #include "current_sensor.h"
 
-DECLARE(Can_CurrentSensor_Energy)
+DECLARE(Can_CurrentSensor_Current)
 DECLARE(Can_CurrentSensor_Voltage)
 DECLARE(Can_CurrentSensor_Power)
 DECLARE(Can_CurrentSensor_Energy)

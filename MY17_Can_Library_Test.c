@@ -245,6 +245,19 @@ void Can_Dash_Request_Test(PRINT print) {
   print(equal ? "Dash_Request_PASS\r\n" : "Dash_Request_FAIL\r\n");
 }
 
+void Can_MC_DataReading_Test(PRINT print) {
+  Can_MC_DataReading_T begin;
+  begin.type = CAN_MC_REG_CURRENT_LIMIT_ACTUAL;
+  begin.value = -6000;
+
+  BOILERPLATE(Can_MC_DataReading);
+
+  bool equal = (
+      begin.type == end.type &&
+      begin.value == end.value);
+  print(equal ? "MC_DataReading_PASS\r\n" : "MC_DataReading_FAIL\r\n");
+}
+
 void Can_All_Tests(PRINT print) {
   print("\n*********TEST RESULTS **************\n\n");
 
@@ -264,5 +277,7 @@ void Can_All_Tests(PRINT print) {
 
   Can_Dash_Heartbeat_Test(print);
   Can_Dash_Request_Test(print);
+
+  Can_MC_DataReading_Test(print);
 }
 
