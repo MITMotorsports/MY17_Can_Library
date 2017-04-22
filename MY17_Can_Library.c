@@ -237,8 +237,9 @@ FROM_CAN(Can_Vcu_DashHeartbeat) {
 
 TO_CAN(Can_Vcu_MCRequest) {
   uint64_t bitstring = 0;
-  bitstring = INSERT(type_in->requestType, bitstring, 0, 8);
-  bitstring = INSERT(type_in->period, bitstring, 8, 8);
+  bitstring = INSERT(CAN_MC_REG_MSG_REQUEST, bitstring, 0, 8);
+  bitstring = INSERT(type_in->requestType, bitstring, 8, 8);
+  bitstring = INSERT(type_in->period, bitstring, 16, 8);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_MC_MESSAGE__id;
   can_out->len = 3;
@@ -247,13 +248,14 @@ TO_CAN(Can_Vcu_MCRequest) {
 FROM_CAN(Can_Vcu_MCRequest) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->requestType = (Can_MC_RegID_T) (EXTRACT(bitstring, 0, 8));
-  type_out->period = EXTRACT(bitstring, 8, 8);
+  type_out->requestType = (Can_MC_RegID_T) (EXTRACT(bitstring, 8, 8));
+  type_out->period = EXTRACT(bitstring, 16, 8);
 }
 
 TO_CAN(Can_Vcu_MCTorque) {
   uint64_t bitstring = 0;
-  bitstring = INSERT(type_in->torque_cmd, bitstring, 0, 16);
+  bitstring = INSERT(CAN_MC_REG_TORQUE_CMD, bitstring, 0, 8);
+  bitstring = INSERT(type_in->torque_cmd, bitstring, 8, 16);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_MC_MESSAGE__id;
   can_out->len = 3;
@@ -262,7 +264,7 @@ TO_CAN(Can_Vcu_MCTorque) {
 FROM_CAN(Can_Vcu_MCTorque) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->torque_cmd = SIGN((EXTRACT(bitstring, 0, 16)), 16);
+  type_out->torque_cmd = SIGN((EXTRACT(bitstring, 8, 16)), 16);
 }
 
 TO_CAN(Can_Bms_Heartbeat) {
