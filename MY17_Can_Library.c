@@ -85,6 +85,8 @@ Can_MsgID_T Can_MsgType(void) {
       return Can_FrontCanNode_RawValues_Msg;
     case FRONT_CAN_NODE_WHEEL_SPEED__id:
       return Can_FrontCanNode_WheelSpeed_Msg;
+    case REAR_CAN_NODE_WHEEL_SPEED__id:
+      return Can_RearCanNode_WheelSpeed_Msg;
 
     case VCU_BMS_HEARTBEAT__id:
       return Can_Vcu_BmsHeartbeat_Msg;
@@ -107,6 +109,29 @@ Can_MsgID_T Can_MsgType(void) {
       return Can_Bms_PackStatus_Msg;
     case BMS_ERRORS__id:
       return Can_Bms_Error_Msg;
+
+    case DASH_HEARTBEAT__id:
+      return Can_Dash_Heartbeat_Msg;
+    case DASH_REQUEST__id:
+      return Can_Dash_Request_Msg;
+
+    case MC_RESPONSE__id:
+      if (first_byte == CAN_MC_REG_ERRORS_AND_WARNINGS) {
+        return Can_MC_ErrorAndWarning_Msg;
+      } else if (first_byte == CAN_MC_REG_STATE) {
+        return Can_MC_State_Msg;
+      } else {
+        return Can_MC_DataReading_Msg;
+      }
+
+    case CURRENT_SENSOR_VOLTAGE__id:
+      return Can_CurrentSensor_Voltage_Msg;
+    case CURRENT_SENSOR_CURRENT__id:
+      return Can_CurrentSensor_Current_Msg;
+    case CURRENT_SENSOR_POWER__id:
+      return Can_CurrentSensor_Power_Msg;
+    case CURRENT_SENSOR_ENERGY__id:
+      return Can_CurrentSensor_Energy_Msg;
 
     default:
       return Can_Unknown_Msg;
