@@ -17,23 +17,24 @@ void Can_Init(uint32_t baudrate) {
   }
 }
 
-void Can_RawWrite(Frame *frame) {
+CAN_ERROR_T Can_RawWrite(Frame *frame) {
   uint8_t response = delegate.sendMsgBuf(frame->id, 0, frame->len, frame->data);
   if (response != CAN_OK) {
     // TODO handle error
+    return Can_Error_UNRECOGNIZED_ERROR;
   }
-  
+  return Can_Error_NONE;
 }
 
-bool Can_RawRead(Frame *frame) {
+CAN_ERROR_T Can_RawRead(Frame *frame) {
   if (delegate.checkReceive() != CAN_MSGAVAIL) {
-    return false;
+    return Can_Error_NO_RX;
   }
   uint8_t response = delegate.readMsgBuf(&(frame->len), frame->data);
   if (frame->len == 0 || response != CAN_OK) {
     // TODO handle error
-    return false;
+    return Can_Error_UNRECOGNIZED_ERROR;
   }
   frame->id = delegate.getCanId();
-  return true;
+  return Can_Error_NONE;
 }

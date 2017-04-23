@@ -10,37 +10,28 @@ void Can_Init(uint32_t baudrate) {
   CAN_Init(baudrate);
 }
 
-void Can_RawWrite(Frame *frame) {
+Can_ErrorID_T Can_RawWrite(Frame *frame) {
   const uint32_t can_out_id = (uint32_t) (frame->id);
   const uint8_t can_out_bytes = frame->len;
-  uint8_t data[can_out_bytes];
 
-  uint8_t i;
-  for (i = 0; i < can_out_bytes; i++) {
-    data[i] = frame->data[i];
-  }
-
-  uint32_t ret = CAN_Transmit(can_out_id, data, can_out_bytes);
-  if (ret != NO_CAN_ERROR) {
-    // TODO handle error
-  }
+  // TODO actually convert this later, for now just hackily cast it
+  return (Can_ErrorID_T) CAN_Transmit(can_out_id, frame->data, can_out_bytes);
 }
 
-bool Can_RawRead(Frame *frame) {
+Can_ErrorID_T Can_RawRead(Frame *frame) {
   CCAN_MSG_OBJ_T rx_msg;
-  CAN_ERROR_T ret = CAN_Receive(&rx_msg);
-  if (ret == NO_CAN_ERROR) {
+
+  // TODO actually convert this later, for now just hackily cast it
+  Can_ErrorID_T err = (Can_ErrorID_T) CAN_Receive(&rx_msg);
+
+  if (err == Can_Error_NONE) {
     frame->id = rx_msg.mode_id;
     frame->len = rx_msg.dlc;
+
     uint8_t i;
     for (i = 0; i < frame->len; i++) {
       frame->data[i] = rx_msg.data[i];
     }
-    return true;
-  } else if (ret != NO_RX_CAN_MESSAGE) {
-    // TODO handle error
-    return false;
-  } else {
-    return false;
   }
+  return err;
 }

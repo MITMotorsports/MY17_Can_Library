@@ -1,23 +1,23 @@
 #include "MY17_Can_Library.h"
 #include "evil_macros.h"
 
-static bool unread;
 static Frame lastMessage;
+static Can_ErrorID_T lastError = Can_Error_NO_RX;
 
 #define DEFINE(name) \
-  bool name ##_Read(name ## _T *type) { \
-    if (unread) { \
+  Can_ErrorID_T name ##_Read(name ## _T *type) { \
+    if (lastError == Can_Error_NONE) { \
       name ## _FromCan(&lastMessage, type); \
-      unread = false; \
-      return true; \
+      lastError = Can_Error_NO_RX; \
+      return Can_Error_NONE; \
     } else { \
-      return false; \
+      return lastError; \
     } \
   } \
-  void name ##_Write(name ## _T *type) { \
+  Can_ErrorID_T name ##_Write(name ## _T *type) { \
     Frame frame; \
     name ## _ToCan(type, &frame); \
-    Can_RawWrite(&frame); \
+    return Can_RawWrite(&frame); \
   }
 
 typedef enum {
@@ -55,13 +55,14 @@ void Can_Init(uint32_t baudrate) {
   // TODO test harness
 }
 
-void Can_RawWrite(Frame *frame) {
+Can_ErrorID_T Can_RawWrite(Frame *frame) {
   // TODO test harness
+  return 0;
 }
 
-bool Can_RawRead(Frame *frame) {
+Can_ErrorID_T Can_RawRead(Frame *frame) {
   // TODO test harness
-  return false;
+  return 0;
 }
 
 #else
@@ -69,12 +70,10 @@ bool Can_RawRead(Frame *frame) {
 #endif
 
 Can_MsgID_T Can_MsgType(void) {
-  bool result = Can_RawRead(&lastMessage);
-  if (!result) {
-    unread = false;
+  lastError = Can_RawRead(&lastMessage);
+  if (lastError != Can_Error_NONE) {
     return Can_No_Msg;
   }
-  unread = true;
 
   uint16_t id = lastMessage.id;
   uint16_t first_byte = lastMessage.data[0];

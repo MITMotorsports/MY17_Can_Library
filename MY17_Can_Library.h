@@ -55,8 +55,8 @@ Can_MsgID_T Can_MsgType(void);
   void name ## _FromCan(Frame *can_in, name ## _T *type_out)
 
 #define DECLARE(name) \
-  bool name ##_Read(name ## _T *type); \
-  void name ##_Write(name ## _T *type); \
+  Can_ErrorID_T name ##_Read(name ## _T *type); \
+  Can_ErrorID_T name ##_Write(name ## _T *type); \
   TO_CAN(name); \
   FROM_CAN(name);
 
