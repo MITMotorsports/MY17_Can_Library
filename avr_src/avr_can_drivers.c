@@ -17,7 +17,7 @@ void Can_Init(uint32_t baudrate) {
   }
 }
 
-CAN_ERROR_T Can_RawWrite(Frame *frame) {
+Can_ErrorID_T Can_RawWrite(Frame *frame) {
   uint8_t response = delegate.sendMsgBuf(frame->id, 0, frame->len, frame->data);
   if (response != CAN_OK) {
     // TODO handle error
@@ -26,7 +26,7 @@ CAN_ERROR_T Can_RawWrite(Frame *frame) {
   return Can_Error_NONE;
 }
 
-CAN_ERROR_T Can_RawRead(Frame *frame) {
+Can_ErrorID_T Can_RawRead(Frame *frame) {
   if (delegate.checkReceive() != CAN_MSGAVAIL) {
     return Can_Error_NO_RX;
   }
