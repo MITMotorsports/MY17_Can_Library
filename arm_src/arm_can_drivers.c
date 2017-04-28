@@ -15,7 +15,12 @@ Can_ErrorID_T Can_RawWrite(Frame *frame) {
   const uint8_t can_out_bytes = frame->len;
 
   // TODO actually convert this later, for now just hackily cast it
-  return (Can_ErrorID_T) CAN_Transmit(can_out_id, frame->data, can_out_bytes);
+  Can_ErrorID_T err =  (Can_ErrorID_T) CAN_Transmit(can_out_id, frame->data, can_out_bytes);
+  if (err != Can_Error_NONE) {
+    CAN_ResetPeripheral();
+    CAN_Init(500000);
+  }
+  return err;
 }
 
 Can_ErrorID_T Can_RawRead(Frame *frame) {
