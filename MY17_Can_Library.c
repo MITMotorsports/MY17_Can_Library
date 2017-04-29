@@ -71,8 +71,13 @@ Can_ErrorID_T Can_RawRead(Frame *frame) {
 
 Can_MsgID_T Can_MsgType(void) {
   lastError = Can_RawRead(&lastMessage);
-  if (lastError != Can_Error_NONE) {
+  if (lastError == Can_Error_NO_RX) {
     return Can_No_Msg;
+  } else if (lastError != Can_Error_NONE) {
+    // Somewhat of a hack...this encourages clients to read the message
+    // and thus receive the actual error. TBH this interface should probably
+    // be rethought a bit to better handle errors...
+    return Can_Unknown_Msg;
   }
 
   uint16_t id = lastMessage.id;
