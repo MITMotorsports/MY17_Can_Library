@@ -15,6 +15,7 @@
 typedef enum {
   Can_No_Msg,
   Can_Unknown_Msg,
+  Can_Error_Msg,
 
   Can_FrontCanNode_DriverOutput_Msg,
   Can_FrontCanNode_RawValues_Msg,
@@ -61,7 +62,8 @@ Can_MsgID_T Can_MsgType(void);
   FROM_CAN(name);
 
 // TODO this is a bit hacky
-Can_ErrorID_T Can_UnknownRead(Frame *frame);
+Can_ErrorID_T Can_Unknown_Read(Frame *frame);
+Can_ErrorID_T Can_Error_Read(void);
 
 void to_bitstring(uint8_t in[], uint64_t *out);
 void from_bitstring(uint64_t *in, uint8_t out[]);

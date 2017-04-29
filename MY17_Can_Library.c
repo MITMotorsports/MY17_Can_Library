@@ -74,10 +74,7 @@ Can_MsgID_T Can_MsgType(void) {
   if (lastError == Can_Error_NO_RX) {
     return Can_No_Msg;
   } else if (lastError != Can_Error_NONE) {
-    // Somewhat of a hack...this encourages clients to read the message
-    // and thus receive the actual error. TBH this interface should probably
-    // be rethought a bit to better handle errors...
-    return Can_Unknown_Msg;
+    return Can_Error_Msg;
   }
 
   uint16_t id = lastMessage.id;
@@ -144,7 +141,7 @@ Can_MsgID_T Can_MsgType(void) {
 
 // TODO this is a bit of a hack...unknown reads should follow same as regular reads
 // and use of Can_RawRead must be banned.
-Can_ErrorID_T Can_UnknownRead(Frame *frame) {
+Can_ErrorID_T Can_Unknown_Read(Frame *frame) {
   if (lastError == Can_Error_NONE) {
     frame->id = lastMessage.id;
     frame->len = lastMessage.len;
@@ -157,6 +154,12 @@ Can_ErrorID_T Can_UnknownRead(Frame *frame) {
   } else {
     return lastError;
   }
+}
+
+Can_ErrorID_T Can_Error_Read() {
+  Can_ErrorID_T cachedError = lastError;
+  lastError = Can_Error_NO_RX;
+  return cachedError;
 }
 
 TO_CAN(Can_FrontCanNode_DriverOutput) {
