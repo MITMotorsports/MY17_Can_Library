@@ -60,6 +60,9 @@ Can_MsgID_T Can_MsgType(void);
   TO_CAN(name); \
   FROM_CAN(name);
 
+// TODO this is a bit hacky
+Can_ErrorID_T Can_UnknownRead(Frame *frame);
+
 void to_bitstring(uint8_t in[], uint64_t *out);
 void from_bitstring(uint64_t *in, uint8_t out[]);
 

@@ -137,6 +137,23 @@ Can_MsgID_T Can_MsgType(void) {
   }
 }
 
+// TODO this is a bit of a hack...unknown reads should follow same as regular reads
+// and use of Can_RawRead must be banned.
+Can_ErrorID_T Can_UnknownRead(Frame *frame) {
+  if (lastError == Can_Error_NONE) {
+    frame->id = lastMessage.id;
+    frame->len = lastMessage.len;
+    uint8_t i;
+    for (i = 0; i < 8; i++) {
+      frame->data[i] = lastMessage.data[i];
+    }
+    lastError = Can_Error_NO_RX;
+    return Can_Error_NONE;
+  } else {
+    return lastError;
+  }
+}
+
 TO_CAN(Can_FrontCanNode_DriverOutput) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->torque, bitstring, 0, 16);
