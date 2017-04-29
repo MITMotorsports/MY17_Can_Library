@@ -156,7 +156,7 @@ Can_ErrorID_T Can_Unknown_Read(Frame *frame) {
   }
 }
 
-Can_ErrorID_T Can_Error_Read() {
+Can_ErrorID_T Can_Error_Read(void) {
   Can_ErrorID_T cachedError = lastError;
   lastError = Can_Error_NO_RX;
   return cachedError;
