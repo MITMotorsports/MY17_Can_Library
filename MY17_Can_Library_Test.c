@@ -258,6 +258,17 @@ void Can_MC_DataReading_Test(PRINT print) {
   print(equal ? "MC_DataReading_PASS\r\n" : "MC_DataReading_FAIL\r\n");
 }
 
+void Can_CurrentSensor_Current_Test(PRINT print) {
+  Can_CurrentSensor_Current_T begin;
+  begin.current_mA = -15000;
+
+  BOILERPLATE(Can_CurrentSensor_Current);
+
+  bool equal = begin.current_mA == end.current_mA;
+  print(equal ? "CurrentSensor_Current_PASS\r\n" : "CurrentSensor_Current_FAIL\r\n");
+}
+
+
 void Can_CurrentSensor_Voltage_Test(PRINT print) {
   Can_CurrentSensor_Voltage_T begin;
   begin.voltage_mV = 300000;
@@ -266,6 +277,26 @@ void Can_CurrentSensor_Voltage_Test(PRINT print) {
 
   bool equal = begin.voltage_mV == end.voltage_mV;
   print(equal ? "CurrentSensor_Voltage_PASS\r\n" : "CurrentSensor_Voltage_FAIL\r\n");
+}
+
+void Can_CurrentSensor_Power_Test(PRINT print) {
+  Can_CurrentSensor_Power_T begin;
+  begin.power_W = 80000;
+
+  BOILERPLATE(Can_CurrentSensor_Power);
+
+  bool equal = begin.power_W == end.power_W;
+  print(equal ? "CurrentSensor_Power_PASS\r\n" : "CurrentSensor_Power_FAIL\r\n");
+}
+
+void Can_CurrentSensor_Energy_Test(PRINT print) {
+  Can_CurrentSensor_Energy_T begin;
+  begin.energy_Wh = 10000;
+
+  BOILERPLATE(Can_CurrentSensor_Energy);
+
+  bool equal = begin.energy_Wh == end.energy_Wh;
+  print(equal ? "CurrentSensor_Energy_PASS\r\n" : "CurrentSensor_Energy_FAIL\r\n");
 }
 
 void Can_All_Tests(PRINT print) {
@@ -290,6 +321,9 @@ void Can_All_Tests(PRINT print) {
 
   Can_MC_DataReading_Test(print);
 
+  Can_CurrentSensor_Current_Test(print);
   Can_CurrentSensor_Voltage_Test(print);
+  Can_CurrentSensor_Power_Test(print);
+  Can_CurrentSensor_Energy_Test(print);
 }
 

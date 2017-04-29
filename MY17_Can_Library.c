@@ -450,6 +450,20 @@ FROM_CAN(Can_MC_DataReading) {
   type_out->value = SIGN(EXTRACT(bitstring, 8, 16), 16);
 }
 
+TO_CAN(Can_CurrentSensor_Current) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->current_mA, bitstring, 16, 32);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = CURRENT_SENSOR_CURRENT__id;
+  can_out->len = 6;
+}
+
+FROM_CAN(Can_CurrentSensor_Current) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->current_mA = SIGN((EXTRACT(bitstring, 16, 32)), 32);
+}
+
 TO_CAN(Can_CurrentSensor_Voltage) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->voltage_mV, bitstring, 16, 32);
@@ -462,6 +476,34 @@ FROM_CAN(Can_CurrentSensor_Voltage) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
   type_out->voltage_mV = SIGN((EXTRACT(bitstring, 16, 32)), 32);
+}
+
+TO_CAN(Can_CurrentSensor_Power) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->power_W, bitstring, 16, 32);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = CURRENT_SENSOR_POWER__id;
+  can_out->len = 6;
+}
+
+FROM_CAN(Can_CurrentSensor_Power) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->power_W = SIGN((EXTRACT(bitstring, 16, 32)), 32);
+}
+
+TO_CAN(Can_CurrentSensor_Energy) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->energy_Wh, bitstring, 16, 32);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = CURRENT_SENSOR_ENERGY__id;
+  can_out->len = 6;
+}
+
+FROM_CAN(Can_CurrentSensor_Energy) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->energy_Wh = SIGN((EXTRACT(bitstring, 16, 32)), 32);
 }
 
 // Needed for actual implementation of the evil macros
@@ -485,7 +527,7 @@ DEFINE(Can_Dash_Request)
 DEFINE(Can_MC_DataReading)
 //TODO errors, warnings, state for motor controller
 
-/* DEFINE(Can_CurrentSensor_Current) */
+DEFINE(Can_CurrentSensor_Current)
 DEFINE(Can_CurrentSensor_Voltage)
-/* DEFINE(Can_CurrentSensor_Power) */
-/* DEFINE(Can_CurrentSensor_Energy) */
+DEFINE(Can_CurrentSensor_Power)
+DEFINE(Can_CurrentSensor_Energy)
