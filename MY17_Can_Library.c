@@ -296,7 +296,13 @@ FROM_CAN(Can_Vcu_MCRequest) {
 TO_CAN(Can_Vcu_MCTorque) {
   uint64_t bitstring = 0;
   bitstring = INSERT(CAN_MC_REG_TORQUE_CMD, bitstring, 0, 8);
-  bitstring = INSERT(type_in->torque_cmd, bitstring, 8, 16);
+  // TODO all other devices are big endian except motor controllers,
+  // so we want to reverse the endianness
+  uint64_t temp_torque_cmd = type_in->torque_cmd;
+  uint8_t high_byte = EXTRACT(temp_torque_cmd, 48, 8);
+  uint8_t low_byte = EXTRACT(temp_torque_cmd, 56, 8);
+  bitstring = INSERT(low_byte, bitstring, 8, 8);
+  bitstring = INSERT(high_byte, bitstring, 16, 8);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_MC_MESSAGE__id;
   can_out->len = 3;
@@ -305,7 +311,13 @@ TO_CAN(Can_Vcu_MCTorque) {
 FROM_CAN(Can_Vcu_MCTorque) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->torque_cmd = SIGN((EXTRACT(bitstring, 8, 16)), 16);
+  // TODO all other devices are big endian except motor controllers,
+  // so we want to reverse the endianness
+  uint8_t low_byte = EXTRACT(bitstring, 8, 8);
+  uint8_t high_byte = EXTRACT(bitstring, 16, 8);
+  int16_t low_word = (int16_t) low_byte;
+  int16_t high_word = (int16_t) (high_byte << 8);
+  type_out->torque_cmd = low_word | high_word;
 }
 
 TO_CAN(Can_Bms_Heartbeat) {
