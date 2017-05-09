@@ -74,6 +74,21 @@ void Can_FrontCanNode_WheelSpeed_Test(PRINT print) {
 
 }
 
+void Can_RearCanNode_WheelSpeed_Test(PRINT print) {
+  Can_RearCanNode_WheelSpeed_T begin;
+  begin.rear_right_wheel_speed = 1000000;
+  begin.rear_left_wheel_speed = 30000000UL;
+
+  BOILERPLATE(Can_RearCanNode_WheelSpeed);
+
+  bool equal = (
+      begin.rear_right_wheel_speed == end.rear_right_wheel_speed &&
+      begin.rear_left_wheel_speed == end.rear_left_wheel_speed);
+
+  print(equal ? "RearCanNode_WheelSpeed_PASS\r\n" : "RearCanNode_WheelSpeed_FAIL\r\n");
+
+}
+
 void Can_Vcu_BmsHeartbeat_Test(PRINT print) {
   Can_Vcu_BmsHeartbeat_T begin;
   begin.alwaysTrue = true;
@@ -305,6 +320,7 @@ void Can_All_Tests(PRINT print) {
   Can_FrontCanNode_DriverOutput_Test(print);
   Can_FrontCanNode_RawValues_Test(print);
   Can_FrontCanNode_WheelSpeed_Test(print);
+  Can_RearCanNode_WheelSpeed_Test(print);
 
   Can_Vcu_BmsHeartbeat_Test(print);
   Can_Vcu_DashHeartbeat_Test(print);

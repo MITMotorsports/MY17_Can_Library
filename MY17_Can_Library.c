@@ -222,6 +222,22 @@ FROM_CAN(Can_FrontCanNode_WheelSpeed) {
   type_out->front_left_wheel_speed = EXTRACT(bitstring, 32, 32);
 }
 
+TO_CAN(Can_RearCanNode_WheelSpeed) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->rear_right_wheel_speed, bitstring, 0, 32);
+  bitstring = INSERT(type_in->rear_left_wheel_speed, bitstring, 32, 32);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = REAR_CAN_NODE_WHEEL_SPEED__id;
+  can_out->len = 8;
+}
+
+FROM_CAN(Can_RearCanNode_WheelSpeed) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->rear_right_wheel_speed = EXTRACT(bitstring, 0, 32);
+  type_out->rear_left_wheel_speed = EXTRACT(bitstring, 32, 32);
+}
+
 TO_CAN(Can_Vcu_BmsHeartbeat) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->alwaysTrue, bitstring, 0, 1);
@@ -510,6 +526,7 @@ FROM_CAN(Can_CurrentSensor_Energy) {
 DEFINE(Can_FrontCanNode_DriverOutput)
 DEFINE(Can_FrontCanNode_RawValues)
 DEFINE(Can_FrontCanNode_WheelSpeed)
+DEFINE(Can_RearCanNode_WheelSpeed)
 
 DEFINE(Can_Vcu_BmsHeartbeat)
 DEFINE(Can_Vcu_DashHeartbeat)
