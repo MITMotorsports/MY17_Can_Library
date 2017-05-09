@@ -30,6 +30,10 @@ typedef struct {
 } Can_FrontCanNode_WheelSpeed_T;
 
 typedef struct {
+  bool is_alive;
+} Can_RearCanNode_Heartbeat_T;
+
+typedef struct {
   uint32_t rear_right_wheel_speed;
   uint32_t rear_left_wheel_speed;
 } Can_RearCanNode_WheelSpeed_T;

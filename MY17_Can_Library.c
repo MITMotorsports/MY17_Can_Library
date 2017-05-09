@@ -86,6 +86,8 @@ Can_MsgID_T Can_MsgType(void) {
       return Can_FrontCanNode_RawValues_Msg;
     case FRONT_CAN_NODE_WHEEL_SPEED__id:
       return Can_FrontCanNode_WheelSpeed_Msg;
+    case REAR_CAN_NODE_HEARTBEAT__id:
+      return Can_RearCanNode_Heartbeat_Msg;
     case REAR_CAN_NODE_WHEEL_SPEED__id:
       return Can_RearCanNode_WheelSpeed_Msg;
 
@@ -220,6 +222,20 @@ FROM_CAN(Can_FrontCanNode_WheelSpeed) {
   to_bitstring(can_in->data, &bitstring);
   type_out->front_right_wheel_speed = EXTRACT(bitstring, 0, 32);
   type_out->front_left_wheel_speed = EXTRACT(bitstring, 32, 32);
+}
+
+TO_CAN(Can_RearCanNode_Heartbeat) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->is_alive, bitstring, 0, 1);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = REAR_CAN_NODE_HEARTBEAT__id;
+  can_out->len = 1;
+}
+
+FROM_CAN(Can_RearCanNode_Heartbeat) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->is_alive = EXTRACT(bitstring, 0, 1);
 }
 
 TO_CAN(Can_RearCanNode_WheelSpeed) {
@@ -526,6 +542,7 @@ FROM_CAN(Can_CurrentSensor_Energy) {
 DEFINE(Can_FrontCanNode_DriverOutput)
 DEFINE(Can_FrontCanNode_RawValues)
 DEFINE(Can_FrontCanNode_WheelSpeed)
+DEFINE(Can_RearCanNode_Heartbeat)
 DEFINE(Can_RearCanNode_WheelSpeed)
 
 DEFINE(Can_Vcu_BmsHeartbeat)

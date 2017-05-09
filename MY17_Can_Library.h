@@ -20,6 +20,7 @@ typedef enum {
   Can_FrontCanNode_DriverOutput_Msg,
   Can_FrontCanNode_RawValues_Msg,
   Can_FrontCanNode_WheelSpeed_Msg,
+  Can_RearCanNode_Heartbeat_Msg,
   Can_RearCanNode_WheelSpeed_Msg,
 
   Can_Vcu_BmsHeartbeat_Msg,
@@ -80,6 +81,7 @@ void from_bitstring(uint64_t *in, uint8_t out[]);
 DECLARE(Can_FrontCanNode_DriverOutput)
 DECLARE(Can_FrontCanNode_RawValues)
 DECLARE(Can_FrontCanNode_WheelSpeed)
+DECLARE(Can_RearCanNode_Heartbeat)
 DECLARE(Can_RearCanNode_WheelSpeed)
 
 /******************************************************************************
