@@ -37,7 +37,7 @@ void Can_FrontCanNode_DriverOutput_Test(PRINT print) {
       begin.steering_position == end.steering_position &&
       begin.throttle_implausible == end.throttle_implausible &&
       begin.brake_throttle_conflict == end.brake_throttle_conflict);
-  print(equal ? "FrontCanNode_DriverOutput_PASS\r\n" : "FrontCanNode_DriverOutput_FAIL\r\n");
+  print(equal ? "FrontCanNode_DriverOutput_PASS\r\n" : "FrontCanNode_DriverOutput_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_FrontCanNode_RawValues_Test(PRINT print) {
@@ -56,7 +56,7 @@ void Can_FrontCanNode_RawValues_Test(PRINT print) {
       begin.brake_1_raw == end.brake_1_raw &&
       begin.brake_2_raw == end.brake_2_raw &&
       begin.steering_raw == end.steering_raw);
-  print(equal ? "FrontCanNode_RawValues_PASS\r\n" : "FrontCanNode_RawValues_FAIL\r\n");
+  print(equal ? "FrontCanNode_RawValues_PASS\r\n" : "FrontCanNode_RawValues_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_FrontCanNode_WheelSpeed_Test(PRINT print) {
@@ -70,7 +70,7 @@ void Can_FrontCanNode_WheelSpeed_Test(PRINT print) {
       begin.front_right_wheel_speed == end.front_right_wheel_speed &&
       begin.front_left_wheel_speed == end.front_left_wheel_speed);
 
-  print(equal ? "FrontCanNode_WheelSpeed_PASS\r\n" : "FrontCanNode_WheelSpeed_FAIL\r\n");
+  print(equal ? "FrontCanNode_WheelSpeed_PASS\r\n" : "FrontCanNode_WheelSpeed_FAIL!!!!!!!!!!!!!!!!\r\n");
 
 }
 
@@ -82,7 +82,7 @@ void Can_RearCanNode_Heartbeat_Test(PRINT print) {
 
   bool equal = begin.is_alive == end.is_alive;
 
-  print(equal ? "RearCanNode_Heartbeat_PASS\r\n" : "RearCanNode_Heartbeat_FAIL\r\n");
+  print(equal ? "RearCanNode_Heartbeat_PASS\r\n" : "RearCanNode_Heartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 
 }
 
@@ -97,7 +97,7 @@ void Can_RearCanNode_WheelSpeed_Test(PRINT print) {
       begin.rear_right_wheel_speed == end.rear_right_wheel_speed &&
       begin.rear_left_wheel_speed == end.rear_left_wheel_speed);
 
-  print(equal ? "RearCanNode_WheelSpeed_PASS\r\n" : "RearCanNode_WheelSpeed_FAIL\r\n");
+  print(equal ? "RearCanNode_WheelSpeed_PASS\r\n" : "RearCanNode_WheelSpeed_FAIL!!!!!!!!!!!!!!!!\r\n");
 
 }
 
@@ -108,7 +108,7 @@ void Can_Vcu_BmsHeartbeat_Test(PRINT print) {
   BOILERPLATE(Can_Vcu_BmsHeartbeat);
 
   bool equal = begin.alwaysTrue == end.alwaysTrue;
-  print(equal ? "Vcu_BmsHeartbeat_PASS\r\n" : "Vcu_BmsHeartbeat_FAIL\r\n");
+  print(equal ? "Vcu_BmsHeartbeat_PASS\r\n" : "Vcu_BmsHeartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 
 }
 
@@ -139,6 +139,17 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
 
   begin.lv_battery_voltage = 138;
 
+  begin.heartbeat_front_can_node_dead = false;
+  begin.heartbeat_rear_can_node_dead = false;
+  begin.heartbeat_bms_dead = true;
+  begin.heartbeat_dash_dead = false;
+  begin.heartbeat_mc_dead = true;
+  begin.heartbeat_current_sensor_dead = false;
+
+  begin.tsms_off = false;
+  begin.reset_latch_open = true;
+  begin.precharge_running = true;
+
   BOILERPLATE(Can_Vcu_DashHeartbeat);
 
   bool equal = (
@@ -159,8 +170,18 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
       begin.shutdown_precharge == end.shutdown_precharge &&
       begin.shutdown_master_reset == end.shutdown_master_reset &&
       begin.shutdown_driver_reset == end.shutdown_driver_reset &&
-      begin.lv_battery_voltage == end.lv_battery_voltage);
-  print(equal ? "Vcu_DashHeartbeat_PASS\r\n" : "Vcu_DashHeartbeat_FAIL\r\n");
+      begin.lv_battery_voltage == end.lv_battery_voltage &&
+      begin.heartbeat_front_can_node_dead == end.heartbeat_front_can_node_dead &&
+      begin.heartbeat_rear_can_node_dead == end.heartbeat_rear_can_node_dead &&
+      begin.heartbeat_bms_dead == end.heartbeat_bms_dead &&
+      begin.heartbeat_dash_dead == end.heartbeat_dash_dead &&
+      begin.heartbeat_mc_dead == end.heartbeat_mc_dead &&
+      begin.heartbeat_current_sensor_dead == end.heartbeat_current_sensor_dead &&
+      begin.tsms_off == end.tsms_off &&
+      begin.reset_latch_open == end. reset_latch_open &&
+      begin.precharge_running == end.precharge_running);
+
+  print(equal ? "Vcu_DashHeartbeat_PASS\r\n" : "Vcu_DashHeartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 
 }
 
@@ -174,7 +195,7 @@ void Can_Vcu_MCRequest_Test(PRINT print) {
   bool equal = (
       begin.requestType == end.requestType &&
       begin.period == end.period);
-  print(equal ? "Vcu_MCRequest_PASS\r\n" : "Vcu_MCRequest_FAIL\r\n");
+  print(equal ? "Vcu_MCRequest_PASS\r\n" : "Vcu_MCRequest_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_Vcu_MCTorque_Test(PRINT print) {
@@ -184,7 +205,7 @@ void Can_Vcu_MCTorque_Test(PRINT print) {
   BOILERPLATE(Can_Vcu_MCTorque);
 
   bool equal = begin.torque_cmd == end.torque_cmd;
-  print(equal ? "Vcu_MCTorque_PASS\r\n" : "Vcu_MCTorque_FAIL\r\n");
+  print(equal ? "Vcu_MCTorque_PASS\r\n" : "Vcu_MCTorque_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_Bms_Heartbeat_Test(PRINT print) {
@@ -197,7 +218,7 @@ void Can_Bms_Heartbeat_Test(PRINT print) {
   bool equal = (
       begin.state == end.state &&
       begin.soc == end.soc);
-  print(equal ? "Bms_Heartbeat_PASS\r\n" : "Bms_Heartbeat_FAIL\r\n");
+  print(equal ? "Bms_Heartbeat_PASS\r\n" : "Bms_Heartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_Bms_CellTemps_Test(PRINT print) {
@@ -216,7 +237,7 @@ void Can_Bms_CellTemps_Test(PRINT print) {
       begin.id_min_cell_temp == end.id_min_cell_temp &&
       begin.max_cell_temp == end.max_cell_temp &&
       begin.id_max_cell_temp == end.id_max_cell_temp);
-  print(equal ? "Bms_CellTemps_PASS\r\n" : "Bms_CellTemps_FAIL\r\n");
+  print(equal ? "Bms_CellTemps_PASS\r\n" : "Bms_CellTemps_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_Bms_PackStatus_Test(PRINT print) {
@@ -239,7 +260,7 @@ void Can_Bms_PackStatus_Test(PRINT print) {
       begin.id_min_cell_voltage == end.id_min_cell_voltage &&
       begin.max_cell_voltage == end.max_cell_voltage &&
       begin.id_max_cell_voltage == end.id_max_cell_voltage);
-  print(equal ? "Bms_PackStatus_PASS\r\n" : "Bms_PackStatus_FAIL\r\n");
+  print(equal ? "Bms_PackStatus_PASS\r\n" : "Bms_PackStatus_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_Bms_Error_Test(PRINT print) {
@@ -249,7 +270,7 @@ void Can_Bms_Error_Test(PRINT print) {
   BOILERPLATE(Can_Bms_Error);
 
   bool equal = begin.type == end.type;
-  print(equal ? "Bms_Error_PASS\r\n" : "Bms_Error_FAIL\r\n");
+  print(equal ? "Bms_Error_PASS\r\n" : "Bms_Error_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_Dash_Heartbeat_Test(PRINT print) {
@@ -259,7 +280,7 @@ void Can_Dash_Heartbeat_Test(PRINT print) {
   BOILERPLATE(Can_Dash_Heartbeat);
 
   bool equal = begin.ok == end.ok;
-  print(equal ? "Dash_Heartbeat_PASS\r\n" : "Dash_Heartbeat_FAIL\r\n");
+  print(equal ? "Dash_Heartbeat_PASS\r\n" : "Dash_Heartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_Dash_Request_Test(PRINT print) {
@@ -269,7 +290,7 @@ void Can_Dash_Request_Test(PRINT print) {
   BOILERPLATE(Can_Dash_Request);
 
   bool equal = begin.type == end.type;
-  print(equal ? "Dash_Request_PASS\r\n" : "Dash_Request_FAIL\r\n");
+  print(equal ? "Dash_Request_PASS\r\n" : "Dash_Request_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_MC_DataReading_Test(PRINT print) {
@@ -282,7 +303,7 @@ void Can_MC_DataReading_Test(PRINT print) {
   bool equal = (
       begin.type == end.type &&
       begin.value == end.value);
-  print(equal ? "MC_DataReading_PASS\r\n" : "MC_DataReading_FAIL\r\n");
+  print(equal ? "MC_DataReading_PASS\r\n" : "MC_DataReading_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_CurrentSensor_Current_Test(PRINT print) {
@@ -292,7 +313,7 @@ void Can_CurrentSensor_Current_Test(PRINT print) {
   BOILERPLATE(Can_CurrentSensor_Current);
 
   bool equal = begin.current_mA == end.current_mA;
-  print(equal ? "CurrentSensor_Current_PASS\r\n" : "CurrentSensor_Current_FAIL\r\n");
+  print(equal ? "CurrentSensor_Current_PASS\r\n" : "CurrentSensor_Current_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 
@@ -303,7 +324,7 @@ void Can_CurrentSensor_Voltage_Test(PRINT print) {
   BOILERPLATE(Can_CurrentSensor_Voltage);
 
   bool equal = begin.voltage_mV == end.voltage_mV;
-  print(equal ? "CurrentSensor_Voltage_PASS\r\n" : "CurrentSensor_Voltage_FAIL\r\n");
+  print(equal ? "CurrentSensor_Voltage_PASS\r\n" : "CurrentSensor_Voltage_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_CurrentSensor_Power_Test(PRINT print) {
@@ -313,7 +334,7 @@ void Can_CurrentSensor_Power_Test(PRINT print) {
   BOILERPLATE(Can_CurrentSensor_Power);
 
   bool equal = begin.power_W == end.power_W;
-  print(equal ? "CurrentSensor_Power_PASS\r\n" : "CurrentSensor_Power_FAIL\r\n");
+  print(equal ? "CurrentSensor_Power_PASS\r\n" : "CurrentSensor_Power_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_CurrentSensor_Energy_Test(PRINT print) {
@@ -323,7 +344,7 @@ void Can_CurrentSensor_Energy_Test(PRINT print) {
   BOILERPLATE(Can_CurrentSensor_Energy);
 
   bool equal = begin.energy_Wh == end.energy_Wh;
-  print(equal ? "CurrentSensor_Energy_PASS\r\n" : "CurrentSensor_Energy_FAIL\r\n");
+  print(equal ? "CurrentSensor_Energy_PASS\r\n" : "CurrentSensor_Energy_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
 void Can_All_Tests(PRINT print) {
