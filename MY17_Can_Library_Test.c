@@ -28,6 +28,7 @@ void Can_FrontCanNode_DriverOutput_Test(PRINT print) {
   begin.steering_position = 100;
   begin.throttle_implausible = true;
   begin.brake_throttle_conflict = false;
+  begin.brake_engaged = true;
 
   BOILERPLATE(Can_FrontCanNode_DriverOutput);
 
@@ -36,7 +37,8 @@ void Can_FrontCanNode_DriverOutput_Test(PRINT print) {
       begin.brake_pressure == end.brake_pressure &&
       begin.steering_position == end.steering_position &&
       begin.throttle_implausible == end.throttle_implausible &&
-      begin.brake_throttle_conflict == end.brake_throttle_conflict);
+      begin.brake_throttle_conflict == end.brake_throttle_conflict &&
+      begin.brake_engaged == end.brake_engaged);
   print(equal ? "FrontCanNode_DriverOutput_PASS\r\n" : "FrontCanNode_DriverOutput_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
@@ -150,6 +152,9 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
   begin.reset_latch_open = true;
   begin.precharge_running = true;
 
+  begin.master_reset_not_initialized = false;
+  begin.driver_reset_not_initialized = true;
+
   BOILERPLATE(Can_Vcu_DashHeartbeat);
 
   bool equal = (
@@ -179,7 +184,9 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
       begin.heartbeat_current_sensor_dead == end.heartbeat_current_sensor_dead &&
       begin.tsms_off == end.tsms_off &&
       begin.reset_latch_open == end. reset_latch_open &&
-      begin.precharge_running == end.precharge_running);
+      begin.precharge_running == end.precharge_running &&
+      begin.master_reset_not_initialized == end.master_reset_not_initialized &&
+      begin.driver_reset_not_initialized == end.driver_reset_not_initialized);
 
   print(equal ? "Vcu_DashHeartbeat_PASS\r\n" : "Vcu_DashHeartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 

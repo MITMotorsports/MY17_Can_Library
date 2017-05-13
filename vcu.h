@@ -40,6 +40,8 @@ typedef struct {
   bool tsms_off;
   bool reset_latch_open;
   bool precharge_running;
+  bool master_reset_not_initialized;
+  bool driver_reset_not_initialized;
 } Can_Vcu_DashHeartbeat_T;
 
 typedef struct {

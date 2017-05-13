@@ -14,6 +14,7 @@ typedef struct {
   uint8_t steering_position;
   bool throttle_implausible;
   bool brake_throttle_conflict;
+  bool brake_engaged;
 } Can_FrontCanNode_DriverOutput_T;
 
 typedef struct {

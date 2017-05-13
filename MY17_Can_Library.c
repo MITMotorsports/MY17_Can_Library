@@ -171,6 +171,7 @@ TO_CAN(Can_FrontCanNode_DriverOutput) {
   bitstring = INSERT(type_in->steering_position, bitstring, 24, 8);
   bitstring = INSERT(type_in->throttle_implausible, bitstring, 32, 1);
   bitstring = INSERT(type_in->brake_throttle_conflict, bitstring, 33, 1);
+  bitstring = INSERT(type_in->brake_engaged, bitstring, 34, 1);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = FRONT_CAN_NODE_DRIVER_OUTPUT__id;
   can_out->len = 5;
@@ -184,6 +185,7 @@ FROM_CAN(Can_FrontCanNode_DriverOutput) {
   type_out->steering_position = EXTRACT(bitstring, 24, 8);
   type_out->throttle_implausible = EXTRACT(bitstring, 32, 1);
   type_out->brake_throttle_conflict = EXTRACT(bitstring, 33, 1);
+  type_out->brake_engaged = EXTRACT(bitstring, 34, 1);
 }
 
 TO_CAN(Can_FrontCanNode_RawValues) {
@@ -297,6 +299,8 @@ TO_CAN(Can_Vcu_DashHeartbeat) {
   bitstring = INSERT(type_in->tsms_off, bitstring, 31, 1);
   bitstring = INSERT(type_in->reset_latch_open, bitstring, 32, 1);
   bitstring = INSERT(type_in->precharge_running, bitstring, 33, 1);
+  bitstring = INSERT(type_in->master_reset_not_initialized, bitstring, 34, 1);
+  bitstring = INSERT(type_in->driver_reset_not_initialized, bitstring, 35, 1);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_DASH_HEARTBEAT__id;
   can_out->len = 5;
@@ -332,6 +336,8 @@ FROM_CAN(Can_Vcu_DashHeartbeat) {
   type_out->tsms_off = EXTRACT(bitstring, 31, 1);
   type_out->reset_latch_open = EXTRACT(bitstring, 32, 1);
   type_out->precharge_running = EXTRACT(bitstring, 33, 1);
+  type_out->master_reset_not_initialized = EXTRACT(bitstring, 34, 1);
+  type_out->driver_reset_not_initialized = EXTRACT(bitstring, 35, 1);
 }
 
 TO_CAN(Can_Vcu_MCRequest) {
