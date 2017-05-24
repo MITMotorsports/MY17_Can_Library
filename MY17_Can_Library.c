@@ -493,7 +493,13 @@ FROM_CAN(Can_Dash_Request) {
 TO_CAN(Can_MC_DataReading) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->type, bitstring, 0, 8);
-  bitstring = INSERT(type_in->value, bitstring, 8, 16);
+  // TODO all other devices are big endian except motor controllers,
+  // so we want to reverse the endianness
+  uint64_t temp_value = type_in->value;
+  uint8_t high_byte = EXTRACT(temp_value, 48, 8);
+  uint8_t low_byte = EXTRACT(temp_value, 56, 8);
+  bitstring = INSERT(low_byte, bitstring, 8, 8);
+  bitstring = INSERT(high_byte, bitstring, 16, 8);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = MC_RESPONSE__id;
   can_out->len = 3;
@@ -503,7 +509,15 @@ FROM_CAN(Can_MC_DataReading) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
   type_out->type = (Can_MC_RegID_T)(EXTRACT(bitstring, 0, 8));
-  type_out->value = SIGN(EXTRACT(bitstring, 8, 16), 16);
+
+  // TODO all other devices are big endian except motor controllers,
+  // so we want to reverse the endianness
+  uint8_t low_byte = EXTRACT(bitstring, 8, 8);
+  uint8_t high_byte = EXTRACT(bitstring, 16, 8);
+  int16_t low_word = (int16_t) low_byte;
+  int16_t high_word = (int16_t) (high_byte << 8);
+
+  type_out->value = low_word | high_word;
 }
 
 TO_CAN(Can_CurrentSensor_Current) {
