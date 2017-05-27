@@ -313,6 +313,125 @@ void Can_MC_DataReading_Test(PRINT print) {
   print(equal ? "MC_DataReading_PASS\r\n" : "MC_DataReading_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
+void Can_MC_ErrorAndWarning_Test(PRINT print) {
+  Can_MC_ErrorAndWarning_T begin;
+
+  begin.error_parameter_damaged = true;
+  begin.error_output_stage_fault = true;
+  begin.error_rfe_fault = true;
+  begin.error_bus_fault = false;
+  begin.error_faulty_encoder = false;
+  begin.error_power_voltage_missing = true;
+  begin.error_motor_temp_high = false;
+  begin.error_device_temp_high = false;
+  begin.error_over_voltage = true;
+  begin.error_over_current = false;
+  begin.error_raceaway = true;
+  begin.error_user_selected_fault = false;
+  begin.error_i2r_overload = false;
+  begin.error_incompatible_firmware = true;
+  begin.error_ballast_overload = false;
+
+  begin.warning_inconsistent_device = true;
+  begin.warning_illegal_status_emi = false;
+  begin.warning_rfe_signal_inactive = true;
+  begin.warning_power_voltage_low = true;
+  begin.warning_device_temp_high = false;
+  begin.warning_over_voltage = true;
+  begin.warning_over_current = false;
+  begin.warning_i2r_overload = false;
+  begin.warning_ballast_overload = true;
+
+  BOILERPLATE(Can_MC_ErrorAndWarning);
+
+  bool equal = (
+      begin.error_parameter_damaged == end.error_parameter_damaged &&
+      begin.error_output_stage_fault == end.error_output_stage_fault &&
+      begin.error_rfe_fault == end.error_rfe_fault &&
+      begin.error_bus_fault == end.error_bus_fault &&
+      begin.error_faulty_encoder == end.error_faulty_encoder &&
+      begin.error_power_voltage_missing == end.error_power_voltage_missing &&
+      begin.error_motor_temp_high == end.error_motor_temp_high &&
+      begin.error_device_temp_high == end.error_device_temp_high &&
+      begin.error_over_voltage == end.error_over_voltage &&
+      begin.error_over_current == end.error_over_current &&
+      begin.error_raceaway == end.error_raceaway &&
+      begin.error_user_selected_fault == end.error_user_selected_fault &&
+      begin.error_i2r_overload == end.error_i2r_overload &&
+      begin.error_incompatible_firmware == end.error_incompatible_firmware &&
+      begin.error_ballast_overload == end.error_ballast_overload &&
+
+      begin.warning_inconsistent_device == end.warning_inconsistent_device &&
+      begin.warning_illegal_status_emi == end.warning_illegal_status_emi &&
+      begin.warning_rfe_signal_inactive == end.warning_rfe_signal_inactive &&
+      begin.warning_power_voltage_low == end.warning_power_voltage_low &&
+      begin.warning_device_temp_high == end.warning_device_temp_high &&
+      begin.warning_over_voltage == end.warning_over_voltage &&
+      begin.warning_over_current == end.warning_over_current &&
+      begin.warning_i2r_overload == end.warning_i2r_overload &&
+      begin.warning_ballast_overload == end.warning_ballast_overload);
+  print(equal ? "MC_ErrorAndWarning_PASS\r\n" : "MC_ErrorAndWarning_FAIL!!!!!!!!!!!!!!!!\r\n");
+}
+
+void Can_MC_State_Test(PRINT print) {
+  Can_MC_State_T begin;
+
+      begin.hardware_enable = true;
+      begin.drive_stopped = false;
+      begin.lim_plus_assigned = true;
+      begin.lim_minus_assigned = false;
+      begin.drive_ok = false;
+      begin.current_limit_to_continuous = true;
+      begin.speed_limited_torque_mode = false;
+      begin.position_control_mode = true;
+      begin.speed_control_mode = true;
+      begin.low_speed = false;
+      begin.btb_rdy = true;
+      begin.regen_active = false;
+      begin.inverted_command = true;
+      begin.speed_limited_via_switch = false;
+      begin.current_limited_via_switch = false;
+      begin.active_current_reduction = true;
+      begin.current_limited_via_speed = false;
+      begin.current_limited_via_igbt_temp = true;
+      begin.current_reduction_low_frequency = true;
+      begin.current_reduction_via_motor_temp = false;
+      begin.current_reduction_via_analog_input = false;
+      begin.handwheel_input_selected = true;
+
+  BOILERPLATE(Can_MC_State);
+
+  bool equal = (
+      begin.hardware_enable == end.hardware_enable &&
+      begin.drive_stopped == end.drive_stopped &&
+      begin.lim_plus_assigned == end.lim_plus_assigned &&
+      begin.lim_minus_assigned == end.lim_minus_assigned &&
+      begin.drive_ok == end.drive_ok &&
+      begin.current_limit_to_continuous == end.current_limit_to_continuous &&
+      begin.speed_limited_torque_mode == end.speed_limited_torque_mode &&
+      begin.position_control_mode == end.position_control_mode &&
+      begin.speed_control_mode == end.speed_control_mode &&
+      begin.low_speed == end.low_speed &&
+      begin.btb_rdy == end.btb_rdy &&
+      begin.regen_active == end.regen_active &&
+      begin.inverted_command == end.inverted_command &&
+      begin.speed_limited_via_switch == end.speed_limited_via_switch &&
+      begin.current_limited_via_switch == end.current_limited_via_switch &&
+      begin.active_current_reduction == end.active_current_reduction &&
+      begin.current_limited_via_speed == end.current_limited_via_speed &&
+      begin.current_limited_via_igbt_temp
+        == end.current_limited_via_igbt_temp &&
+      begin.current_reduction_low_frequency
+        == end.current_reduction_low_frequency &&
+      begin.current_reduction_via_motor_temp
+        == end.current_reduction_via_motor_temp &&
+      begin.current_reduction_via_analog_input
+        == end.current_reduction_via_analog_input &&
+      begin.handwheel_input_selected == end.handwheel_input_selected);
+
+  print(equal ? "MC_State_PASS\r\n" : "MC_State_FAIL!!!!!!!!!!!!!!!!\r\n");
+}
+
 void Can_CurrentSensor_Current_Test(PRINT print) {
   Can_CurrentSensor_Current_T begin;
   begin.current_mA = -15000;
@@ -377,6 +496,8 @@ void Can_All_Tests(PRINT print) {
   Can_Dash_Request_Test(print);
 
   Can_MC_DataReading_Test(print);
+  Can_MC_ErrorAndWarning_Test(print);
+  Can_MC_State_Test(print);
 
   Can_CurrentSensor_Current_Test(print);
   Can_CurrentSensor_Voltage_Test(print);
