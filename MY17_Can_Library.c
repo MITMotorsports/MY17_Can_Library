@@ -309,7 +309,6 @@ TO_CAN(Can_Vcu_DashHeartbeat) {
   bitstring = INSERT(type_in->shutdown_precharge, bitstring, 14, 1);
   bitstring = INSERT(type_in->shutdown_master_reset, bitstring, 15, 1);
   bitstring = INSERT(type_in->shutdown_driver_reset, bitstring, 16, 1);
-  bitstring = INSERT(type_in->lv_battery_voltage, bitstring, 17, 8);
   bitstring = INSERT(type_in->heartbeat_front_can_node_dead, bitstring, 25, 1);
   bitstring = INSERT(type_in->heartbeat_rear_can_node_dead, bitstring, 26, 1);
   bitstring = INSERT(type_in->heartbeat_bms_dead, bitstring, 27, 1);
@@ -321,6 +320,7 @@ TO_CAN(Can_Vcu_DashHeartbeat) {
   bitstring = INSERT(type_in->precharge_running, bitstring, 33, 1);
   bitstring = INSERT(type_in->master_reset_not_initialized, bitstring, 34, 1);
   bitstring = INSERT(type_in->driver_reset_not_initialized, bitstring, 35, 1);
+  bitstring = INSERT(type_in->lv_battery_voltage, bitstring, 40, 10);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_DASH_HEARTBEAT__id;
   can_out->len = 5;
@@ -346,7 +346,6 @@ FROM_CAN(Can_Vcu_DashHeartbeat) {
   type_out->shutdown_precharge = EXTRACT(bitstring, 14, 1);
   type_out->shutdown_master_reset = EXTRACT(bitstring, 15, 1);
   type_out->shutdown_driver_reset = EXTRACT(bitstring, 16, 1);
-  type_out->lv_battery_voltage = EXTRACT(bitstring, 17, 8);
   type_out->heartbeat_front_can_node_dead = EXTRACT(bitstring, 25, 1);
   type_out->heartbeat_rear_can_node_dead = EXTRACT(bitstring, 26, 1);
   type_out->heartbeat_bms_dead = EXTRACT(bitstring, 27, 1);
@@ -358,6 +357,7 @@ FROM_CAN(Can_Vcu_DashHeartbeat) {
   type_out->precharge_running = EXTRACT(bitstring, 33, 1);
   type_out->master_reset_not_initialized = EXTRACT(bitstring, 34, 1);
   type_out->driver_reset_not_initialized = EXTRACT(bitstring, 35, 1);
+  type_out->lv_battery_voltage = EXTRACT(bitstring, 40, 10);
 }
 
 TO_CAN(Can_Vcu_MCRequest) {
@@ -445,7 +445,7 @@ FROM_CAN(Can_Bms_CellTemps) {
 TO_CAN(Can_Bms_PackStatus) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->pack_voltage, bitstring, 0, 9);
-  bitstring = SIGN(INSERT(type_in->pack_current, bitstring, 9, 11), 11);
+  bitstring = INSERT(type_in->pack_current, bitstring, 9, 11);
   bitstring = INSERT(type_in->avg_cell_voltage, bitstring, 20, 10);
   bitstring = INSERT(type_in->min_cell_voltage, bitstring, 30, 10);
   bitstring = INSERT(type_in->id_min_cell_voltage, bitstring, 40, 7);

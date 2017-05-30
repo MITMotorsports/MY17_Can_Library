@@ -139,8 +139,6 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
 
   begin.shutdown_driver_reset = false;
 
-  begin.lv_battery_voltage = 138;
-
   begin.heartbeat_front_can_node_dead = false;
   begin.heartbeat_rear_can_node_dead = false;
   begin.heartbeat_bms_dead = true;
@@ -154,6 +152,8 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
 
   begin.master_reset_not_initialized = false;
   begin.driver_reset_not_initialized = true;
+
+  begin.lv_battery_voltage = 1022;
 
   BOILERPLATE(Can_Vcu_DashHeartbeat);
 
@@ -175,7 +175,6 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
       begin.shutdown_precharge == end.shutdown_precharge &&
       begin.shutdown_master_reset == end.shutdown_master_reset &&
       begin.shutdown_driver_reset == end.shutdown_driver_reset &&
-      begin.lv_battery_voltage == end.lv_battery_voltage &&
       begin.heartbeat_front_can_node_dead == end.heartbeat_front_can_node_dead &&
       begin.heartbeat_rear_can_node_dead == end.heartbeat_rear_can_node_dead &&
       begin.heartbeat_bms_dead == end.heartbeat_bms_dead &&
@@ -186,7 +185,8 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
       begin.reset_latch_open == end. reset_latch_open &&
       begin.precharge_running == end.precharge_running &&
       begin.master_reset_not_initialized == end.master_reset_not_initialized &&
-      begin.driver_reset_not_initialized == end.driver_reset_not_initialized);
+      begin.driver_reset_not_initialized == end.driver_reset_not_initialized &&
+      begin.lv_battery_voltage == end.lv_battery_voltage);
 
   print(equal ? "Vcu_DashHeartbeat_PASS\r\n" : "Vcu_DashHeartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 

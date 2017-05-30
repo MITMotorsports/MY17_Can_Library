@@ -30,7 +30,6 @@ typedef struct {
   bool shutdown_precharge;
   bool shutdown_master_reset;
   bool shutdown_driver_reset;
-  uint8_t lv_battery_voltage;
   bool heartbeat_front_can_node_dead;
   bool heartbeat_rear_can_node_dead;
   bool heartbeat_bms_dead;
@@ -42,6 +41,7 @@ typedef struct {
   bool precharge_running;
   bool master_reset_not_initialized;
   bool driver_reset_not_initialized;
+  uint16_t lv_battery_voltage;
 } Can_Vcu_DashHeartbeat_T;
 
 typedef struct {
