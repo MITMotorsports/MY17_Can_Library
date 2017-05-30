@@ -445,7 +445,7 @@ FROM_CAN(Can_Bms_CellTemps) {
 TO_CAN(Can_Bms_PackStatus) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->pack_voltage, bitstring, 0, 9);
-  bitstring = INSERT(type_in->pack_current, bitstring, 9, 11);
+  bitstring = SIGN(INSERT(type_in->pack_current, bitstring, 9, 11), 11);
   bitstring = INSERT(type_in->avg_cell_voltage, bitstring, 20, 10);
   bitstring = INSERT(type_in->min_cell_voltage, bitstring, 30, 10);
   bitstring = INSERT(type_in->id_min_cell_voltage, bitstring, 40, 7);
