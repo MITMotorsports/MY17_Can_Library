@@ -323,7 +323,7 @@ TO_CAN(Can_Vcu_DashHeartbeat) {
   bitstring = INSERT(type_in->lv_battery_voltage, bitstring, 40, 10);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_DASH_HEARTBEAT__id;
-  can_out->len = 5;
+  can_out->len = 8;
 }
 
 FROM_CAN(Can_Vcu_DashHeartbeat) {
