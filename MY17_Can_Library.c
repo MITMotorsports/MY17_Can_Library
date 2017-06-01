@@ -408,6 +408,9 @@ TO_CAN(Can_Bms_Heartbeat) {
   uint64_t bitstring = 0;
   bitstring = INSERT(type_in->state, bitstring, 0, 3);
   bitstring = INSERT(type_in->soc, bitstring, 3, 10);
+  bitstring = INSERT(type_in->fan_enable, bitstring, 13, 1);
+  bitstring = INSERT(type_in->dcdc_enable, bitstring, 14, 1);
+  bitstring = INSERT(type_in->dcdc_fault, bitstring, 15, 1);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = BMS_HEARTBEAT__id;
   can_out->len = 8;
@@ -418,6 +421,9 @@ FROM_CAN(Can_Bms_Heartbeat) {
   to_bitstring(can_in->data, &bitstring);
   type_out->state = (Can_Bms_StateID_T)(EXTRACT(bitstring, 0, 3));
   type_out->soc = EXTRACT(bitstring, 3, 10);
+  type_out->fan_enable = EXTRACT(bitstring, 13, 1);
+  type_out->dcdc_enable = EXTRACT(bitstring, 14, 1);
+  type_out->dcdc_fault = EXTRACT(bitstring, 15, 1);
 }
 
 TO_CAN(Can_Bms_CellTemps) {

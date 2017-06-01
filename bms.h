@@ -11,6 +11,9 @@
 typedef struct {
   Can_Bms_StateID_T state;
   uint16_t soc;
+  bool fan_enable;
+  bool dcdc_enable;
+  bool dcdc_fault;
 } Can_Bms_Heartbeat_T;
 
 typedef struct {

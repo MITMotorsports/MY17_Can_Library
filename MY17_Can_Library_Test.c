@@ -219,12 +219,18 @@ void Can_Bms_Heartbeat_Test(PRINT print) {
   Can_Bms_Heartbeat_T begin;
   begin.state = CAN_BMS_STATE_BATTERY_FAULT;
   begin.soc = 90;
+  begin.fan_enable = true;
+  begin.dcdc_enable = false;
+  begin.dcdc_fault = true;
 
   BOILERPLATE(Can_Bms_Heartbeat);
 
   bool equal = (
       begin.state == end.state &&
-      begin.soc == end.soc);
+      begin.soc == end.soc &&
+      begin.fan_enable == end.fan_enable &&
+      begin.dcdc_enable == end.dcdc_enable &&
+      begin.dcdc_fault == end.dcdc_fault);
   print(equal ? "Bms_Heartbeat_PASS\r\n" : "Bms_Heartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 
