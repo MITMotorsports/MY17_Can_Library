@@ -61,9 +61,11 @@ typedef struct {
   bool active_current_reduction; // bit_21
   bool current_limited_via_speed; // bit_22
   bool current_limited_via_igbt_temp; // bit_23
+  bool current_limited_to_continuous_via_igbt_temp; // bit_24
   bool current_reduction_low_frequency; // bit_25
   bool current_reduction_via_motor_temp; // bit_26
   bool current_reduction_via_analog_input; // bit_27
+  bool current_acculator_limit_charged; // bit_27
   bool handwheel_input_selected; // bit_31
 } Can_MC_State_T;
 
