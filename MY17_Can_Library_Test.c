@@ -29,6 +29,7 @@ void Can_FrontCanNode_DriverOutput_Test(PRINT print) {
   begin.throttle_implausible = true;
   begin.brake_throttle_conflict = false;
   begin.brake_engaged = true;
+  begin.torque_before_control = 17000;
 
   BOILERPLATE(Can_FrontCanNode_DriverOutput);
 
@@ -38,7 +39,8 @@ void Can_FrontCanNode_DriverOutput_Test(PRINT print) {
       begin.steering_position == end.steering_position &&
       begin.throttle_implausible == end.throttle_implausible &&
       begin.brake_throttle_conflict == end.brake_throttle_conflict &&
-      begin.brake_engaged == end.brake_engaged);
+      begin.brake_engaged == end.brake_engaged &&
+      begin.torque_before_control == end.torque_before_control);
   print(equal ? "FrontCanNode_DriverOutput_PASS\r\n" : "FrontCanNode_DriverOutput_FAIL!!!!!!!!!!!!!!!!\r\n");
 }
 

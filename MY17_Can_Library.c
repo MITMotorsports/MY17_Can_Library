@@ -192,9 +192,10 @@ TO_CAN(Can_FrontCanNode_DriverOutput) {
   bitstring = INSERT(type_in->throttle_implausible, bitstring, 32, 1);
   bitstring = INSERT(type_in->brake_throttle_conflict, bitstring, 33, 1);
   bitstring = INSERT(type_in->brake_engaged, bitstring, 34, 1);
+  bitstring = INSERT(type_in->torque_before_control, bitstring, 40, 16);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = FRONT_CAN_NODE_DRIVER_OUTPUT__id;
-  can_out->len = 5;
+  can_out->len = 7;
 }
 
 FROM_CAN(Can_FrontCanNode_DriverOutput) {
@@ -206,6 +207,7 @@ FROM_CAN(Can_FrontCanNode_DriverOutput) {
   type_out->throttle_implausible = EXTRACT(bitstring, 32, 1);
   type_out->brake_throttle_conflict = EXTRACT(bitstring, 33, 1);
   type_out->brake_engaged = EXTRACT(bitstring, 34, 1);
+  type_out->torque_before_control = SIGN(EXTRACT(bitstring, 40, 16), 16);
 }
 
 TO_CAN(Can_FrontCanNode_RawValues) {
@@ -504,7 +506,7 @@ FROM_CAN(Can_Dash_Heartbeat) {
 
 TO_CAN(Can_Dash_Request) {
   uint64_t bitstring = 0;
-  bitstring = INSERT(type_in->type, bitstring, 0, 3);
+  bitstring = INSERT(type_in->type, bitstring, 0, 4);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = DASH_REQUEST__id;
   can_out->len = 1;
@@ -513,7 +515,7 @@ TO_CAN(Can_Dash_Request) {
 FROM_CAN(Can_Dash_Request) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->type = (Can_Dash_RequestID_T)(EXTRACT(bitstring, 0, 3));
+  type_out->type = (Can_Dash_RequestID_T)(EXTRACT(bitstring, 0, 4));
 }
 
 TO_CAN(Can_MC_DataReading) {

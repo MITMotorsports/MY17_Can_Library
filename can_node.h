@@ -15,6 +15,7 @@ typedef struct {
   bool throttle_implausible;
   bool brake_throttle_conflict;
   bool brake_engaged;
+  int16_t torque_before_control;
 } Can_FrontCanNode_DriverOutput_T;
 
 typedef struct {
