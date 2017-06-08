@@ -404,7 +404,7 @@ void Can_MC_State_Test(PRINT print) {
       begin.current_reduction_low_frequency = true;
       begin.current_reduction_via_motor_temp = false;
       begin.current_reduction_via_analog_input = false;
-      begin.current_acculator_limit_charged = true;
+      begin.current_accumulator_limit_charged = true;
       begin.handwheel_input_selected = true;
 
   BOILERPLATE(Can_MC_State);
@@ -437,8 +437,8 @@ void Can_MC_State_Test(PRINT print) {
         == end.current_reduction_via_motor_temp &&
       begin.current_reduction_via_analog_input
         == end.current_reduction_via_analog_input &&
-      begin.current_acculator_limit_charged
-        == end.current_acculator_limit_charged &&
+      begin.current_accumulator_limit_charged
+        == end.current_accumulator_limit_charged &&
       begin.handwheel_input_selected == end.handwheel_input_selected);
 
   print(equal ? "MC_State_PASS\r\n" : "MC_State_FAIL!!!!!!!!!!!!!!!!\r\n");

@@ -65,7 +65,7 @@ typedef struct {
   bool current_reduction_low_frequency; // bit_25
   bool current_reduction_via_motor_temp; // bit_26
   bool current_reduction_via_analog_input; // bit_27
-  bool current_acculator_limit_charged; // bit_27
+  bool current_accumulator_limit_charged; // bit_28
   bool handwheel_input_selected; // bit_31
 } Can_MC_State_T;
 

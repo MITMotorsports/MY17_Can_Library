@@ -658,7 +658,7 @@ TO_CAN(Can_MC_State) {
   BIT_SET(data_string, type_in->current_reduction_low_frequency, 25);
   BIT_SET(data_string, type_in->current_reduction_via_motor_temp, 26);
   BIT_SET(data_string, type_in->current_reduction_via_analog_input, 27);
-  BIT_SET(data_string, type_in->current_acculator_limit_charged, 28);
+  BIT_SET(data_string, type_in->current_accumulator_limit_charged, 28);
   BIT_SET(data_string, type_in->handwheel_input_selected, 31);
 
   uint32_t swapped_data_string = swap_uint32(data_string);
@@ -697,7 +697,7 @@ FROM_CAN(Can_MC_State) {
   type_out->current_reduction_low_frequency = BIT_GET(data_string, 25);
   type_out->current_reduction_via_motor_temp = BIT_GET(data_string, 26);
   type_out->current_reduction_via_analog_input = BIT_GET(data_string, 27);
-  type_out->current_acculator_limit_charged = BIT_GET(data_string, 28);
+  type_out->current_accumulator_limit_charged = BIT_GET(data_string, 28);
   type_out->handwheel_input_selected = BIT_GET(data_string, 31);
 }
 
