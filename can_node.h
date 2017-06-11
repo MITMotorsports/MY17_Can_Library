@@ -27,8 +27,8 @@ typedef struct {
 } Can_FrontCanNode_RawValues_T;
 
 typedef struct {
-  uint32_t front_right_wheel_speed;
-  uint32_t front_left_wheel_speed;
+  uint32_t front_right_wheel_speed_mRPM;
+  uint32_t front_left_wheel_speed_mRPM;
 } Can_FrontCanNode_WheelSpeed_T;
 
 typedef struct {
@@ -36,8 +36,8 @@ typedef struct {
 } Can_RearCanNode_Heartbeat_T;
 
 typedef struct {
-  uint32_t rear_right_wheel_speed;
-  uint32_t rear_left_wheel_speed;
+  uint32_t rear_right_wheel_speed_mRPM;
+  uint32_t rear_left_wheel_speed_mRPM;
 } Can_RearCanNode_WheelSpeed_T;
 
 #endif // _MY17_CAN_LIBRARY_CAN_NODE_H

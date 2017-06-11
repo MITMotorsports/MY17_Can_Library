@@ -65,14 +65,14 @@ void Can_FrontCanNode_RawValues_Test(PRINT print) {
 
 void Can_FrontCanNode_WheelSpeed_Test(PRINT print) {
   Can_FrontCanNode_WheelSpeed_T begin;
-  begin.front_right_wheel_speed = 100000;
-  begin.front_left_wheel_speed = 3000000000UL;
+  begin.front_right_wheel_speed_mRPM = 100000;
+  begin.front_left_wheel_speed_mRPM = 3000000000UL;
 
   BOILERPLATE(Can_FrontCanNode_WheelSpeed);
 
   bool equal = (
-      begin.front_right_wheel_speed == end.front_right_wheel_speed &&
-      begin.front_left_wheel_speed == end.front_left_wheel_speed);
+      begin.front_right_wheel_speed_mRPM == end.front_right_wheel_speed_mRPM &&
+      begin.front_left_wheel_speed_mRPM == end.front_left_wheel_speed_mRPM);
 
   print(equal ? "FrontCanNode_WheelSpeed_PASS\r\n" : "FrontCanNode_WheelSpeed_FAIL!!!!!!!!!!!!!!!!\r\n");
 
@@ -92,14 +92,14 @@ void Can_RearCanNode_Heartbeat_Test(PRINT print) {
 
 void Can_RearCanNode_WheelSpeed_Test(PRINT print) {
   Can_RearCanNode_WheelSpeed_T begin;
-  begin.rear_right_wheel_speed = 1000000;
-  begin.rear_left_wheel_speed = 30000000UL;
+  begin.rear_right_wheel_speed_mRPM = 1000000;
+  begin.rear_left_wheel_speed_mRPM = 30000000UL;
 
   BOILERPLATE(Can_RearCanNode_WheelSpeed);
 
   bool equal = (
-      begin.rear_right_wheel_speed == end.rear_right_wheel_speed &&
-      begin.rear_left_wheel_speed == end.rear_left_wheel_speed);
+      begin.rear_right_wheel_speed_mRPM == end.rear_right_wheel_speed_mRPM &&
+      begin.rear_left_wheel_speed_mRPM == end.rear_left_wheel_speed_mRPM);
 
   print(equal ? "RearCanNode_WheelSpeed_PASS\r\n" : "RearCanNode_WheelSpeed_FAIL!!!!!!!!!!!!!!!!\r\n");
 

@@ -234,8 +234,8 @@ FROM_CAN(Can_FrontCanNode_RawValues) {
 
 TO_CAN(Can_FrontCanNode_WheelSpeed) {
   uint64_t bitstring = 0;
-  bitstring = INSERT(type_in->front_right_wheel_speed, bitstring, 0, 32);
-  bitstring = INSERT(type_in->front_left_wheel_speed, bitstring, 32, 32);
+  bitstring = INSERT(type_in->front_right_wheel_speed_mRPM, bitstring, 0, 32);
+  bitstring = INSERT(type_in->front_left_wheel_speed_mRPM, bitstring, 32, 32);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = FRONT_CAN_NODE_WHEEL_SPEED__id;
   can_out->len = 8;
@@ -244,8 +244,8 @@ TO_CAN(Can_FrontCanNode_WheelSpeed) {
 FROM_CAN(Can_FrontCanNode_WheelSpeed) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->front_right_wheel_speed = EXTRACT(bitstring, 0, 32);
-  type_out->front_left_wheel_speed = EXTRACT(bitstring, 32, 32);
+  type_out->front_right_wheel_speed_mRPM = EXTRACT(bitstring, 0, 32);
+  type_out->front_left_wheel_speed_mRPM = EXTRACT(bitstring, 32, 32);
 }
 
 TO_CAN(Can_RearCanNode_Heartbeat) {
@@ -264,8 +264,8 @@ FROM_CAN(Can_RearCanNode_Heartbeat) {
 
 TO_CAN(Can_RearCanNode_WheelSpeed) {
   uint64_t bitstring = 0;
-  bitstring = INSERT(type_in->rear_right_wheel_speed, bitstring, 0, 32);
-  bitstring = INSERT(type_in->rear_left_wheel_speed, bitstring, 32, 32);
+  bitstring = INSERT(type_in->rear_right_wheel_speed_mRPM, bitstring, 0, 32);
+  bitstring = INSERT(type_in->rear_left_wheel_speed_mRPM, bitstring, 32, 32);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = REAR_CAN_NODE_WHEEL_SPEED__id;
   can_out->len = 8;
@@ -274,8 +274,8 @@ TO_CAN(Can_RearCanNode_WheelSpeed) {
 FROM_CAN(Can_RearCanNode_WheelSpeed) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->rear_right_wheel_speed = EXTRACT(bitstring, 0, 32);
-  type_out->rear_left_wheel_speed = EXTRACT(bitstring, 32, 32);
+  type_out->rear_right_wheel_speed_mRPM = EXTRACT(bitstring, 0, 32);
+  type_out->rear_left_wheel_speed_mRPM = EXTRACT(bitstring, 32, 32);
 }
 
 TO_CAN(Can_Vcu_BmsHeartbeat) {
