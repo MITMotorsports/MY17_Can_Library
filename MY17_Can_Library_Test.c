@@ -479,7 +479,7 @@ void Can_CurrentSensor_Power_Test(PRINT print) {
 
 void Can_CurrentSensor_Energy_Test(PRINT print) {
   Can_CurrentSensor_Energy_T begin;
-  begin.energy_Wh = 10000;
+  begin.energy_Wh = -10000000;
 
   BOILERPLATE(Can_CurrentSensor_Energy);
 
