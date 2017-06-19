@@ -747,7 +747,12 @@ FROM_CAN(Can_CurrentSensor_Power) {
 
 TO_CAN(Can_CurrentSensor_Energy) {
   uint64_t bitstring = 0;
-  bitstring = INSERT(type_in->energy_Wh, bitstring, 16, 32);
+
+  // Little Endian
+  // TODO change this on the can current sensor
+  int32_t swap_value = swap_int32(type_in->energy_Wh);
+
+  bitstring = INSERT(swap_value, bitstring, 16, 32);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = CURRENT_SENSOR_ENERGY__id;
   can_out->len = 6;
@@ -756,7 +761,12 @@ TO_CAN(Can_CurrentSensor_Energy) {
 FROM_CAN(Can_CurrentSensor_Energy) {
   uint64_t bitstring = 0;
   to_bitstring(can_in->data, &bitstring);
-  type_out->energy_Wh = SIGN((EXTRACT(bitstring, 16, 32)), 32);
+
+  // Little Endian
+  // TODO change this on the can current sensor
+  int32_t swap_value = (int32_t)(swap_uint32(EXTRACT(bitstring, 16, 32)));
+
+  type_out->energy_Wh = swap_value;
 }
 
 // Needed for actual implementation of the evil macros
