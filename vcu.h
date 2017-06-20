@@ -12,6 +12,13 @@ typedef struct {
   bool alwaysTrue;
 } Can_Vcu_BmsHeartbeat_T;
 
+typedef enum {
+  CAN_LIMP_NORMAL = 0,
+  CAN_LIMP_50,
+  CAN_LIMP_33,
+  CAN_LIMP_25
+} Can_Vcu_LimpState_T;
+
 typedef struct {
   bool rtd_light;
   bool ams_light;
@@ -42,6 +49,7 @@ typedef struct {
   bool master_reset_not_initialized;
   bool driver_reset_not_initialized;
   uint16_t lv_battery_voltage;
+  Can_Vcu_LimpState_T limp_state;
 } Can_Vcu_DashHeartbeat_T;
 
 typedef struct {

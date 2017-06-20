@@ -323,6 +323,7 @@ TO_CAN(Can_Vcu_DashHeartbeat) {
   bitstring = INSERT(type_in->master_reset_not_initialized, bitstring, 34, 1);
   bitstring = INSERT(type_in->driver_reset_not_initialized, bitstring, 35, 1);
   bitstring = INSERT(type_in->lv_battery_voltage, bitstring, 40, 10);
+  bitstring = INSERT(type_in->limp_state, bitstring, 50, 3);
   from_bitstring(&bitstring, can_out->data);
   can_out->id = VCU_DASH_HEARTBEAT__id;
   can_out->len = 8;
@@ -360,6 +361,7 @@ FROM_CAN(Can_Vcu_DashHeartbeat) {
   type_out->master_reset_not_initialized = EXTRACT(bitstring, 34, 1);
   type_out->driver_reset_not_initialized = EXTRACT(bitstring, 35, 1);
   type_out->lv_battery_voltage = EXTRACT(bitstring, 40, 10);
+  type_out->limp_state = (Can_Vcu_LimpState_T) (EXTRACT(bitstring, 50, 3));
 }
 
 TO_CAN(Can_Vcu_MCRequest) {
