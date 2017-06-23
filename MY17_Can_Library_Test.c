@@ -157,6 +157,8 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
 
   begin.lv_battery_voltage = 1022;
 
+  begin.limp_state = CAN_LIMP_33;
+
   BOILERPLATE(Can_Vcu_DashHeartbeat);
 
   bool equal = (
@@ -188,7 +190,8 @@ void Can_Vcu_DashHeartbeat_Test(PRINT print) {
       begin.precharge_running == end.precharge_running &&
       begin.master_reset_not_initialized == end.master_reset_not_initialized &&
       begin.driver_reset_not_initialized == end.driver_reset_not_initialized &&
-      begin.lv_battery_voltage == end.lv_battery_voltage);
+      begin.lv_battery_voltage == end.lv_battery_voltage &&
+      begin.limp_state == end.limp_state);
 
   print(equal ? "Vcu_DashHeartbeat_PASS\r\n" : "Vcu_DashHeartbeat_FAIL!!!!!!!!!!!!!!!!\r\n");
 
