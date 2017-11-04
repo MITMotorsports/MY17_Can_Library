@@ -124,8 +124,8 @@ with open(target_path, 'w') as f:
                 continue
             f.write(
                 "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position[0]) + ", " +
-                str(segment.position[1]-segment.position[0]) + ");\n")
-            length += segment.position[1]-segment.position[0]
+                str(segment.position[1]-segment.position[0]+1) + ");\n")
+            length += segment.position[1]-segment.position[0]+1
         f.write(
             "  from_bitstring(&bitstring, can_out->data);\n" +
             "  can_out->id = " + message.name + "__id;\n" +
