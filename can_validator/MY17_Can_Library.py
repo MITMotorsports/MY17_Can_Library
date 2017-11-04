@@ -27,7 +27,8 @@ field_name_mappings = {
     "heartbeat_on" :  "ok",
     "request_type" : "type",
     "steering_pot" : "steering_raw",
-    "soc_percentage" : "soc"
+    "soc_percentage" : "soc",
+    "pack_energy" : "energy_Wh"
 }
 
 msg_enum_name_mappings = {
@@ -102,35 +103,39 @@ with open(target_path, 'w') as f:
         if message.name in unused_messages:
             continue
         f.write(
-            "TO_CAN(" + get_msg_enum_name(message.name) + "){\n" +
+                "TO_CAN(" + get_msg_enum_name(message.name) + "){\n" +
             "  uint64_t bitstring = 0;\n")
-
         length = 0
         for segment_name, segment in message.segments.items():
             field_name = get_field_name(segment_name)
-
-            print(message.name)
-            print("CURRENT_SENSOR" in message.name)
-
             if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
                 field_name = "alwaysTrue"
             if "CURRENT_SENSOR" in message.name:
                 field_name = field_name.replace("pack_current", "current_mA")
                 field_name = field_name.replace("pack_voltage", "voltage_mV")
                 field_name = field_name.replace("pack_power", "power_W")
-            print(field_name)
 
             if field_name == "unused" or field_name == "reserved":
                 continue
-            f.write(
-                "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position[0]) + ", " +
-                str(segment.position[1]-segment.position[0]+1) + ");\n")
+            if message.is_big_endian:
+                f.write(
+                    "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position[0]) + ", " +
+                    str(segment.position[1]-segment.position[0]+1) + ");\n")
+            else:
+                f.write(
+                    "  " + segment.c_type + " " + field_name + "_swap_value = swap_" + segment.c_type[:-2] +
+                    "(type_in->" + field_name + ");\n" +
+                    "  bitstring = INSERT(" + field_name + "_swap_value, bitstring, " + str(segment.position[0]) + ", " +
+                    str(segment.position[1]-segment.position[0]+1) + ");\n\n"
+                )
+
             length += segment.position[1]-segment.position[0]+1
         f.write(
             "  from_bitstring(&bitstring, can_out->data);\n" +
             "  can_out->id = " + message.name + "__id;\n" +
             "  can_out->len = " + str(ceil(length / 8)) + ";\n" +
             "}\n\n")
+
 
         f.write(
             "FROM_CAN(" + get_msg_enum_name(message.name) + "){\n" +
@@ -142,9 +147,16 @@ with open(target_path, 'w') as f:
                 field_name = "alwaysTrue"
             if (field_name == "unused" or field_name == "reserved"):
                 continue
-            f.write(
-                "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
-                str(segment.position[1]-segment.position[0]) + ");\n")
+            if message.is_big_endian:
+                f.write(
+                    "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
+                    str(segment.position[1]-segment.position[0]+1) + ");\n")
+            else:
+                f.write(
+                    "  " + segment.c_type + " " + field_name + "_swap_value=(" + segment.c_type +  ")(swap_u" +
+                    segment.c_type[:-2] + "(EXTRACT(bitstring, " +
+                    str(segment.position[0]) + ", " + str(segment.position[1]-segment.position[0]+1) + ")));\n" +
+                    "  type_out->" + field_name + " = " + field_name + "_swap_value;\n")
         f.write("}\n\n")
 
 
