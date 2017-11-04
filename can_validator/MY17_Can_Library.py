@@ -26,10 +26,10 @@ field_name_mappings = {
     "error_type" : "type",
     "heartbeat_on" :  "ok",
     "request_type" : "type",
-    "pack_current" : "current_mA",
-    "pack_voltage" : "voltage_mV",
-    "pack_power" : "power_W"
+    "steering_pot" : "steering_raw",
+    "soc_percentage" : "soc"
 }
+
 msg_enum_name_mappings = {
     "Front_Can_Node" : "FrontCanNode",
     "Rear_Can_Node" : "RearCanNode",
@@ -44,10 +44,22 @@ msg_enum_name_mappings = {
     "Bms_Errors" : "Bms_Error"
 }
 
+unused_messages = [
+    "LV_BATTERY_VOLTAGE",
+    "ACCELEROMETER_HORIZONTAL",
+    "ACCELEROMETER_VERTICAL",
+    "GYRO_VERTICAL",
+    "GYRO_HORIZONTAL",
+    "MAGNETOMETER_HORIZONTAL",
+    "MAGNETOMETER_VERTICAL",
+    "VCU_MC_MESSAGE",
+    "MC_RESPONSE"
+]
+
 def get_field_name(segment_name):
-    field_name = segment_name.title()
+    field_name = segment_name.lower()
     for old, new in field_name_mappings.items():
-        field_name.replace(old, new)
+        field_name = field_name.replace(old, new)
     return field_name
 
 def get_msg_enum_name(message_name):
@@ -74,6 +86,8 @@ with open(target_path, 'w') as f:
         "  uint16_t first_byte = lastMessage.data[0];\n\n" +
         "  switch(id) {\n")
     for message in spec.messages.values():
+        if message.name in unused_messages:
+            continue
         f.write(
             "    case " + message.name + "__id:\n" +
             "      return " + get_msg_enum_name(message.name) + "_Msg;\n")
@@ -85,6 +99,8 @@ with open(target_path, 'w') as f:
 
     # Write CAN TO_CAN and FROM_CAN
     for message in spec.messages.values():
+        if message.name in unused_messages:
+            continue
         f.write(
             "TO_CAN(" + get_msg_enum_name(message.name) + "){\n" +
             "  uint64_t bitstring = 0;\n")
@@ -92,17 +108,27 @@ with open(target_path, 'w') as f:
         length = 0
         for segment_name, segment in message.segments.items():
             field_name = get_field_name(segment_name)
-            if (message.name == "VCU_BMS_HEARTBEAT" and field_name == "state"):
+
+            print(message.name)
+            print("CURRENT_SENSOR" in message.name)
+
+            if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
                 field_name = "alwaysTrue"
-            if (field_name == "unused" or field_name == "reserved"):
+            if "CURRENT_SENSOR" in message.name:
+                field_name = field_name.replace("pack_current", "current_mA")
+                field_name = field_name.replace("pack_voltage", "voltage_mV")
+                field_name = field_name.replace("pack_power", "power_W")
+            print(field_name)
+
+            if field_name == "unused" or field_name == "reserved":
                 continue
             f.write(
-                "  bistring = INSERT(type_in->" + segment_name.lower() + ", bitsring, " + str(segment.position[0]) + ", " +
+                "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position[0]) + ", " +
                 str(segment.position[1]-segment.position[0]) + ");\n")
             length += segment.position[1]-segment.position[0]
         f.write(
-            "  from_bitsring(&bitstring, can_out->data);\n" +
-            "  can_out->id = " + message.name + "__id\n" +
+            "  from_bitstring(&bitstring, can_out->data);\n" +
+            "  can_out->id = " + message.name + "__id;\n" +
             "  can_out->len = " + str(ceil(length / 8)) + ";\n" +
             "}\n\n")
 
@@ -111,8 +137,13 @@ with open(target_path, 'w') as f:
             "  uint64_t bitstring = 0;\n" +
             "  to_bitstring(can_in->data, &bitstring);\n")
         for segment_name, segment in message.segments.items():
+            field_name = get_field_name(segment_name)
+            if (message.name == "VCU_BMS_HEARTBEAT" and field_name == "state"):
+                field_name = "alwaysTrue"
+            if (field_name == "unused" or field_name == "reserved"):
+                continue
             f.write(
-                "  type_out->" + segment_name.lower() + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
+                "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
                 str(segment.position[1]-segment.position[0]) + ");\n")
         f.write("}\n\n")
 
@@ -124,4 +155,6 @@ with open(target_path, 'w') as f:
 
     # Write DEFINE statements
     for message in spec.messages.values():
+        if message.name in unused_messages:
+            continue
         f.write("DEFINE(" + get_msg_enum_name(message.name) + ")\n")
