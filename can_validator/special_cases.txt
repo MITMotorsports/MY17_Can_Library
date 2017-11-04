@@ -147,3 +147,33 @@ FROM_CAN(Can_MC_State) {
   type_out->current_accumulator_limit_charged = BIT_GET(data_string, 28);
   type_out->handwheel_input_selected = BIT_GET(data_string, 31);
 }
+
+TO_CAN(Can_MC_DataReading) {
+  uint64_t bitstring = 0;
+  bitstring = INSERT(type_in->type, bitstring, 0, 8);
+
+  // Little Endian
+  int16_t swap_value = swap_int16(type_in->value);
+
+  bitstring = INSERT(swap_value, bitstring, 8, 16);
+  from_bitstring(&bitstring, can_out->data);
+  can_out->id = MC_RESPONSE__id;
+  can_out->len = 3;
+}
+
+FROM_CAN(Can_MC_DataReading) {
+  uint64_t bitstring = 0;
+  to_bitstring(can_in->data, &bitstring);
+  type_out->type = (Can_MC_RegID_T)(EXTRACT(bitstring, 0, 8));
+
+  // Little Endian
+  int16_t swap_value = (int16_t)(swap_uint16(EXTRACT(bitstring, 8, 16)));
+
+  type_out->value = swap_value;
+}
+
+DEFINE(Can_Vcu_MCRequest)
+DEFINE(Can_Vcu_MCTorque)
+DEFINE(Can_MC_DataReading)
+DEFINE(Can_MC_ErrorAndWarning)
+DEFINE(Can_MC_State)
