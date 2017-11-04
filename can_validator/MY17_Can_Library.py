@@ -174,15 +174,28 @@ with open(output_path, 'w') as f:
             if field_name == "unused" or field_name == "reserved":
                 continue
             if message.is_big_endian:
-                f.write(
-                    "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
-                    str(segment.position[1]-segment.position[0]+1) + ");\n")
+                if segment.c_type.startswith("int"):  # Check if signed int
+                    f.write(
+                        "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
+                        str(segment.position[1]-segment.position[0]+1) + "), " + str(segment.position[1]-
+                                                                                     segment.position[0]+1)+ ");\n")
+                else:
+                    f.write(
+                        "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
+                        str(segment.position[1]-segment.position[0]+1) + ");\n")
             else:
-                f.write(
-                    "  " + segment.c_type + " " + field_name + "_swap_value=(" + segment.c_type +  ")(swap_u" +
-                    segment.c_type[:-2] + "(EXTRACT(bitstring, " +
-                    str(segment.position[0]) + ", " + str(segment.position[1]-segment.position[0]+1) + ")));\n" +
-                    "  type_out->" + field_name + " = " + field_name + "_swap_value;\n")
+                if segment.c_type.startswith("int"):  # Check if signed int
+                    # TODO Check if we can use the signed swap directly -- what's here is based off old CAN_Library code
+                    f.write(
+                        "  " + segment.c_type + " " + field_name + "_swap_value=(" + segment.c_type + ")(swap_u" +
+                        segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
+                        str(segment.position[1]-segment.position[0]+1) + ")));\n")
+                else:
+                    f.write(
+                        "  " + segment.c_type + " " + field_name + "_swap_value=swap_u" +
+                        segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
+                        str(segment.position[1]-segment.position[0]+1) + ")));\n")
+                f.write("  type_out->" + field_name + " = " + field_name + "_swap_value;\n")
         f.write("}\n\n")
 
     # Write TO_CAN and FROM_CAN functions that are not described by the spec
