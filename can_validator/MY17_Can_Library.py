@@ -167,6 +167,10 @@ with open(output_path, 'w') as f:
             field_name = get_field_name(segment_name)
             if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
                 field_name = "alwaysTrue"
+            if "CURRENT_SENSOR" in message.name:
+                field_name = field_name.replace("pack_current", "current_mA")
+                field_name = field_name.replace("pack_voltage", "voltage_mV")
+                field_name = field_name.replace("pack_power", "power_W")
             if field_name == "unused" or field_name == "reserved":
                 continue
             if message.is_big_endian:
