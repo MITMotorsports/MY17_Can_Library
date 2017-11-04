@@ -19,8 +19,8 @@ unused_messages = [
     "GYRO_HORIZONTAL",
     "MAGNETOMETER_HORIZONTAL",
     "MAGNETOMETER_VERTICAL",
-    "VCU_MC_MESSAGE",
-    "MC_RESPONSE"
+    "MC_RESPONSE",
+    "VCU_MC_MESSAGE"
 ]
 
 with open(output_path, 'w') as f:
@@ -47,6 +47,26 @@ with open(output_path, 'w') as f:
         f.write(
             "    case " + message.name + "__id:\n" +
             "      return " + common.get_msg_enum_name(message.name) + "_Msg;\n")
+    # Special cases
+    f.write(
+        "    case MC_RESPONSE__id:\n" +
+        "      if (first_byte == CAN_MC_REG_ERRORS_AND_WARNINGS) {\n" +
+        "        return Can_MC_ErrorAndWarning_Msg;\n" +
+        "      } else if (first_byte == CAN_MC_REG_STATE) {\n" +
+        "        return Can_MC_State_Msg;\n" +
+        "      } else {\n" +
+        "        return Can_MC_DataReading_Msg;\n" +
+        "      }\n")
+    f.write(
+        "    case VCU_MC_MESSAGE__id:\n" +
+        "      if (first_byte == CAN_MC_REG_MSG_REQUEST || first_byte == CAN_MC_REG_MSG_EVENT_REQUEST) {\n" +
+        "        return Can_Vcu_MCRequest_Msg;\n" +
+        "      } else if (first_byte == CAN_MC_REG_TORQUE_CMD) {\n" +
+        "        return Can_Vcu_MCTorque_Msg;\n" +
+        "      } else {\n" +
+        "        return Can_Unknown_Msg;\n" +
+        "      }\n")
+
     f.write(
         "    default:\n" +
         "      return Can_Unknown_Msg;\n" +
@@ -64,7 +84,7 @@ with open(output_path, 'w') as f:
 
         length = 0
         for segment_name, segment in message.segments.items():
-            field_name = get_field_name(segment_name)
+            field_name = common.get_field_name(segment_name)
 
             # Some segment names appear in multiple messages, but only need to be changed in some of these messages
             if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
@@ -144,4 +164,4 @@ with open(output_path, 'w') as f:
     for message in spec.messages.values():
         if message.name in unused_messages:
             continue
-        f.write("DEFINE(" + get_msg_enum_name(message.name) + ")\n")
+        f.write("DEFINE(" + common.get_msg_enum_name(message.name) + ")\n")
