@@ -1,3 +1,5 @@
+spec_path = "ParseCAN/fsae_can_spec.yml"
+
 # Maps parts of segment names to their corresponding parts of names in structs
 field_name_mappings = {
     "requested_torque": "torque",

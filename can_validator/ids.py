@@ -1,12 +1,11 @@
 import sys
-sys.path.append("CAN_Api/src")
-from CANSpec import CANSpec
+sys.path.append("ParseCAN")
+from ParseCAN import spec
 import common
 
-spec_path = "CAN_Api/fsae_can_spec.yml"
 output_path = "../ids.h"
 
-spec = CANSpec(spec_path)
+spec = spec.can(common.spec_path)
 
 # The VCU_MC_MESSAGE and MC_RESPONSE messages need to be combined into one enum, which will be stored here
 can_mc_reg_lines = []

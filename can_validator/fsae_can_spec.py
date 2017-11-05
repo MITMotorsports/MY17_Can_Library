@@ -1,12 +1,12 @@
 import sys
-sys.path.append("CAN_Api/src")
-from CANSpec import CANSpec
+sys.path.append("ParseCAN")
+from ParseCAN import spec
 import re
+import common
 
-spec_path = "CAN_Api/fsae_can_spec.yml"
 header_path = "fsae_can_spec.h"
 
-spec = CANSpec(spec_path)
+spec = spec.can(common.spec_path)
 
 with open(header_path, 'w') as f:
     clean_header_path = re.sub('[^A-Za-z0-9_]+', '_', header_path).upper()
