@@ -23,13 +23,40 @@ def write(output_paths, spec_path):
                 f.write("#include <stdbool.h>\n\n")
                 f.write('#include "ids.h"\n\n')
 
+                # Hardcode special cases
+                if key == 'vcu':
+                    f.write(
+                        "typedef enum {\n" +
+                        "  CAN_LIMP_NORMAL = 0,\n" +
+                        "  CAN_LIMP_50,\n" +
+                        "  CAN_LIMP_33,\n" +
+                        "  CAN_LIMP_25\n" +
+                        "} Can_Vcu_LimpState_T;\n\n" +
+                        "typedef struct {\n" +
+                        "  Can_MC_RegID_T requestType;\n" +
+                        "  uint8_t period;\n" +
+                        "} Can_Vcu_MCRequest_T;\n\n" +
+                        "typedef struct {\n" +
+                        "  int16_t torque_cmd;\n" +
+                        "} Can_Vcu_MCTorque_T;\n"
+                    )
+
                 for message in spec.messages.values():
-                    if message.name.lower().startswith(key):
+                    if message.name.lower().startswith(key) or message.name.lower().startswith('rear_' + key) or message.name.lower().startswith('front_' + key):
+                        if message.name == "VCU_MC_MESSAGE":
+                            continue
                         f.write("typedef struct {\n")
+                        # Hardcode special case
+                        if message.name == "VCU_DASH_HEARTBEAT":
+                            f.write("  Can_Vcu_LimpState_T limp_state;\n")
                         for segment_name, segment in message.segments.items():
                             if segment.c_type != "enum":
                                 field_name = common.get_field_name(segment_name)
+                                if field_name == 'reserved' or field_name == 'unused':
+                                    continue
                                 # Fix name mismatch
+                                if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
+                                    field_name = "alwaysTrue"
                                 if "CURRENT_SENSOR" in message.name:
                                     field_name = field_name.replace("pack_current", "current_mA")
                                     field_name = field_name.replace("pack_voltage", "voltage_mV")
