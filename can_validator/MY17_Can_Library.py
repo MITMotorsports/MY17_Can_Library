@@ -169,3 +169,6 @@ def write(output_path, spec_path, base_path, special_cases_path):
             if message.name in unused_messages:
                 continue
             f.write("DEFINE(" + common.get_msg_enum_name(message.name) + ")\n")
+
+if __name__ == "__main__":
+    write("../MY17_Can_Library.c", "ParseCAN/fsae_can_spec.yml", "../MY17_Can_Library_BASE.txt", "special_cases.txt")

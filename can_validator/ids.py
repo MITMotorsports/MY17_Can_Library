@@ -51,3 +51,6 @@ def write(output_path, spec_path):
 
 
         f.write('#endif // _MY17_CAN_LIBRARY_IDS_H')
+
+if __name__ == "__main__":
+    write("../ids.h", "ParseCAN/fsae_can_spec.yml")
