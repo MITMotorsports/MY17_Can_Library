@@ -1,23 +1,10 @@
 # Maps parts of segment names to their corresponding parts of names in structs
 field_name_mappings = {
-    "requested_torque": "torque",
-    "is_ok": "is_alive",
-    "wheel_speed": "wheel_speed_mRPM",
-    "right_throttle_pot": "accel_1_raw",
-    "left_throttle_pot": "accel_2_raw",
-    "front_brake_pressure": "brake_1_raw",
-    "rear_brake_pressure": "brake_2_raw",
-    "ave": "avg",
-    "min_cell_temp_id": "id_min_cell_temp",
-    "max_cell_temp_id": "id_max_cell_temp",
-    "min_cell_voltage_id": "id_min_cell_voltage",
-    "max_cell_voltage_id": "id_max_cell_voltage",
-    "error_type": "type",
     "heartbeat_on":  "ok",
+    "wheel_speed": "wheel_speed_mRPM",
     "request_type": "type",
-    "steering_pot": "steering_raw",
-    "soc_percentage": "soc",
-    "pack_energy": "energy_Wh"
+    "pack_energy": "energy_Wh",
+    "always_true": "alwaysTrue"
 }
 
 # Maps parts of message names to their corresponding parts of names in the Can_MsgID_T enum

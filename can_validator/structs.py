@@ -55,8 +55,6 @@ def write(output_paths, spec_path):
                                 if field_name == 'reserved' or field_name == 'unused':
                                     continue
                                 # Fix name mismatch
-                                if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
-                                    field_name = "alwaysTrue"
                                 if "CURRENT_SENSOR" in message.name:
                                     field_name = field_name.replace("pack_current", "current_mA")
                                     field_name = field_name.replace("pack_voltage", "voltage_mV")

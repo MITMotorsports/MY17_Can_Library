@@ -91,8 +91,6 @@ def write(output_path, spec_path, base_path, special_cases_path):
                 field_name = common.get_field_name(segment_name)
 
                 # Some segment names appear in multiple messages, but only need to be changed in some of these messages
-                if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
-                    field_name = "alwaysTrue"
                 if "CURRENT_SENSOR" in message.name:
                     field_name = field_name.replace("pack_current", "current_mA")
                     field_name = field_name.replace("pack_voltage", "voltage_mV")
@@ -126,8 +124,6 @@ def write(output_path, spec_path, base_path, special_cases_path):
                 "  to_bitstring(can_in->data, &bitstring);\n")
             for segment_name, segment in message.segments.items():
                 field_name = common.get_field_name(segment_name)
-                if message.name == "VCU_BMS_HEARTBEAT" and field_name == "state":
-                    field_name = "alwaysTrue"
                 if "CURRENT_SENSOR" in message.name:
                     field_name = field_name.replace("pack_current", "current_mA")
                     field_name = field_name.replace("pack_voltage", "voltage_mV")
