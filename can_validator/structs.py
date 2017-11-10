@@ -43,11 +43,11 @@ def write(output_paths, spec_path):
 
                 for message in spec.messages.values():
                     if message.name.lower().startswith(key) or message.name.lower().startswith('rear_' + key) or message.name.lower().startswith('front_' + key):
-                        if message.name == "VCU_MC_MESSAGE":
+                        if message.name.upper() == "VCU_MC_MESSAGE":
                             continue
                         f.write("typedef struct {\n")
                         # Hardcode special case
-                        if message.name == "VCU_DASH_HEARTBEAT":
+                        if message.name.upper() == "VCU_DASH_HEARTBEAT":
                             f.write("  Can_Vcu_LimpState_T limp_state;\n")
                         for segment_name, segment in message.segments.items():
                             if segment.c_type != "enum":
@@ -55,18 +55,18 @@ def write(output_paths, spec_path):
                                 if field_name == 'reserved' or field_name == 'unused':
                                     continue
                                 # Fix name mismatch
-                                if "CURRENT_SENSOR" in message.name:
+                                if "CURRENT_SENSOR" in message.name.upper():
                                     field_name = field_name.replace("pack_current", "current_mA")
                                     field_name = field_name.replace("pack_voltage", "voltage_mV")
                                     field_name = field_name.replace("pack_power", "power_W")
                                 f.write("  " + segment.c_type + " " + field_name + ";\n")
                             else:
-                                enum_name = common.get_msg_enum_name(message.name)
+                                enum_name = common.get_msg_enum_name(message.name.upper())
                                 # Fix name mismatch
                                 enum_name = enum_name.replace('Heartbeat', 'State')
                                 enum_name += "ID_T"
                                 f.write("  " + enum_name + " " + common.get_field_name(segment_name) + ";\n")
-                        f.write("} " + common.get_msg_enum_name(message.name) + "_T;\n\n")
+                        f.write("} " + common.get_msg_enum_name(message.name.upper()) + "_T;\n\n")
                 f.write("#endif // _MY17_CAN_LIBRARY_" + key.upper() + "_H")
     except KeyError as e:
         print("No path passed for " + e.args[0] + " header file, please add it to output_paths dictionary")

@@ -18,20 +18,20 @@ def write(output_path, spec_path):
         f.write('#ifndef ____' + clean_output_path + '\n')
         f.write('#define ____' + clean_output_path + '\n\n')
         for id, message in spec.messages.items():
-            f.write('#define ' + message.name + '__id ' + str(id) + '\n')
+            f.write('#define ' + message.name.upper() + '__id ' + str(id) + '\n')
             if message.frequency:
-                f.write('#define ' + message.name + '__freq ' + str(int(message.frequency)) + '\n')
+                f.write('#define ' + message.name.upper() + '__freq ' + str(int(message.frequency)) + '\n')
             else:
-                f.write('#define ' + message.name + '__freq ' + str(-1) + '\n')
+                f.write('#define ' + message.name.upper() + '__freq ' + str(-1) + '\n')
             for segment_name, segment in message.segments.items():
-                f.write('#define __' + message.name + '__' + segment_name + '__start ' + str(segment.position[0]) + '\n')
-                f.write('#define __' + message.name + '__' + segment_name + '__end ' + str(segment.position[1]) + '\n')
+                f.write('#define __' + message.name.upper() + '__' + segment_name.upper() + '__start ' + str(segment.position[0]) + '\n')
+                f.write('#define __' + message.name.upper() + '__' + segment_name.upper() + '__end ' + str(segment.position[1]) + '\n')
                 for value_name, value in segment.values.items():
                     if value.range[0] == value.range[1]:
-                        f.write('#define ____' + message.name + '__' + segment_name + '__' + value_name + ' ' + str(value.range[0]) + '\n')
+                        f.write('#define ____' + message.name.upper() + '__' + segment_name.upper() + '__' + value_name + ' ' + str(value.range[0]) + '\n')
                     else:
-                        f.write('#define ____' + message.name + '__' + segment_name + '__' + value_name + '__FROM ' + str(value.range[0]) + '\n')
-                        f.write('#define ____' + message.name + '__' + segment_name + '__' + value_name + '__TO ' + str(value.range[1]) + '\n')
+                        f.write('#define ____' + message.name.upper() + '__' + segment_name.upper() + '__' + value_name + '__FROM ' + str(value.range[0]) + '\n')
+                        f.write('#define ____' + message.name.upper() + '__' + segment_name.upper() + '__' + value_name + '__TO ' + str(value.range[1]) + '\n')
 
             f.write('\n')
         f.write('#endif // ____' + clean_output_path + '\n')

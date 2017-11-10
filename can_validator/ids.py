@@ -22,7 +22,7 @@ def write(output_path, spec_path):
         for message in spec.messages.values():
             for segment_name, segment in message.segments.items():
                 if segment.c_type == 'enum':
-                    if not (message.name == "VCU_MC_MESSAGE" or message.name == "MC_RESPONSE"):
+                    if not (message.name.upper() == "VCU_MC_MESSAGE" or message.name.upper() == "MC_RESPONSE"):
                         f.write('typedef enum {\n')
                         for value_name, value in segment.values.items():
                             message_name = common.get_msg_enum_name(message.name).upper()
@@ -31,19 +31,19 @@ def write(output_path, spec_path):
                             message_name = message_name.replace('HEARTBEAT', 'STATE')
                             f.write(
                                 "  " + message_name + "_" + value_name.upper() + " = " +
-                                  '____' + message.name + '__' + segment_name + '__' + value_name + ",\n")
-                        f.write("} " + common.get_msg_enum_name(message.name).replace('Heartbeat', 'State') + "ID_T;\n\n")
+                                  '____' + message.name.upper() + '__' + segment_name.upper() + '__' + value_name + ",\n")
+                        f.write("} " + common.get_msg_enum_name(message.name.upper()).replace('Heartbeat', 'State') + "ID_T;\n\n")
                     else:
                         for value_name, value in segment.values.items():
-                            if value_name.upper() == "TORQUE_CMD" and message.name == "VCU_MC_MESSAGE":
+                            if value_name.upper() == "TORQUE_CMD" and message.name.upper() == "VCU_MC_MESSAGE":
                                 # Both of the message have the same value name, but we only want the one from VCU_MC_MESSAGE
                                 continue
                             val_name = value_name.upper()
 
                             # Fix name mismatch
                             val_name = value_name.replace("ACTUAL_FILTERED", "AFTER_DISPLAY")
-                            can_mc_reg_lines.append("  CAN_MC_REG_" + val_name + " = " + '____' + message.name + '__' +
-                                segment_name + '__' + value_name + ",\n")
+                            can_mc_reg_lines.append("  CAN_MC_REG_" + val_name + " = " + '____' + message.name.upper() + '__' +
+                                segment_name.upper() + '__' + value_name + ",\n")
         f.write('typedef enum {\n')
         for line in can_mc_reg_lines:
             f.write(line)

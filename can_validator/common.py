@@ -1,8 +1,6 @@
 # Maps parts of segment names to their corresponding parts of names in structs
 field_name_mappings = {
-    "heartbeat_on":  "ok",
     "wheel_speed": "wheel_speed_mRPM",
-    "request_type": "type",
     "pack_energy": "energy_Wh",
     "always_true": "alwaysTrue"
 }

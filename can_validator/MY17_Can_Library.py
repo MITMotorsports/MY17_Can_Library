@@ -46,11 +46,11 @@ def write(output_path, spec_path, base_path, special_cases_path):
             "  uint16_t first_byte = lastMessage.data[0];\n\n" +
             "  switch(id) {\n")
         for message in spec.messages.values():
-            if message.name in unused_messages:
+            if message.name.upper() in unused_messages:
                 continue
             f.write(
-                "    case " + message.name + "__id:\n" +
-                "      return " + common.get_msg_enum_name(message.name) + "_Msg;\n")
+                "    case " + message.name.upper() + "__id:\n" +
+                "      return " + common.get_msg_enum_name(message.name.upper()) + "_Msg;\n")
         # Special cases
         f.write(
             "    case MC_RESPONSE__id:\n" +
@@ -78,12 +78,12 @@ def write(output_path, spec_path, base_path, special_cases_path):
             "}\n\n")
 
         for message in spec.messages.values():
-            if message.name in unused_messages:
+            if message.name.upper() in unused_messages:
                 continue
 
             # Write TO_CAN
             f.write(
-                "TO_CAN(" + common.get_msg_enum_name(message.name) + "){\n" +
+                "TO_CAN(" + common.get_msg_enum_name(message.name.upper()) + ") {\n" +
                 "  uint64_t bitstring = 0;\n")
 
             length = 0
@@ -91,7 +91,7 @@ def write(output_path, spec_path, base_path, special_cases_path):
                 field_name = common.get_field_name(segment_name)
 
                 # Some segment names appear in multiple messages, but only need to be changed in some of these messages
-                if "CURRENT_SENSOR" in message.name:
+                if "CURRENT_SENSOR" in message.name.upper():
                     field_name = field_name.replace("pack_current", "current_mA")
                     field_name = field_name.replace("pack_voltage", "voltage_mV")
                     field_name = field_name.replace("pack_power", "power_W")
@@ -113,18 +113,18 @@ def write(output_path, spec_path, base_path, special_cases_path):
                 length += segment.position[1]-segment.position[0]+1
             f.write(
                 "  from_bitstring(&bitstring, can_out->data);\n" +
-                "  can_out->id = " + message.name + "__id;\n" +
+                "  can_out->id = " + message.name.upper() + "__id;\n" +
                 "  can_out->len = " + str(ceil(length / 8)) + ";\n" +
                 "}\n\n")
 
             # Write FROM_CAN
             f.write(
-                "FROM_CAN(" + common.get_msg_enum_name(message.name) + "){\n" +
+                "FROM_CAN(" + common.get_msg_enum_name(message.name.upper()) + ") {\n" +
                 "  uint64_t bitstring = 0;\n" +
                 "  to_bitstring(can_in->data, &bitstring);\n")
             for segment_name, segment in message.segments.items():
                 field_name = common.get_field_name(segment_name)
-                if "CURRENT_SENSOR" in message.name:
+                if "CURRENT_SENSOR" in message.name.upper():
                     field_name = field_name.replace("pack_current", "current_mA")
                     field_name = field_name.replace("pack_voltage", "voltage_mV")
                     field_name = field_name.replace("pack_power", "power_W")
@@ -162,9 +162,9 @@ def write(output_path, spec_path, base_path, special_cases_path):
 
         # Write DEFINE statements
         for message in spec.messages.values():
-            if message.name in unused_messages:
+            if message.name.upper() in unused_messages:
                 continue
-            f.write("DEFINE(" + common.get_msg_enum_name(message.name) + ")\n")
+            f.write("DEFINE(" + common.get_msg_enum_name(message.name.upper()) + ")\n")
 
 if __name__ == "__main__":
     write("../MY17_Can_Library.c", "ParseCAN/fsae_can_spec.yml", "../MY17_Can_Library_BASE.txt", "special_cases.txt")
