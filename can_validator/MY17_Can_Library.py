@@ -2,18 +2,17 @@ import sys
 sys.path.append("ParseCAN")
 import ParseCAN
 from math import ceil
-import common
 
 unused_messages = [
-    "LV_BATTERY_VOLTAGE",
-    "ACCELEROMETER_HORIZONTAL",
-    "ACCELEROMETER_VERTICAL",
-    "GYRO_VERTICAL",
-    "GYRO_HORIZONTAL",
-    "MAGNETOMETER_HORIZONTAL",
-    "MAGNETOMETER_VERTICAL",
-    "MC_RESPONSE",
-    "VCU_MC_MESSAGE"
+    "Lv_Battery_Voltage",
+    "Accelerometer_Horizontal",
+    "Accelerometer_Vertical",
+    "Gyro_Vertical",
+    "Gyro_Horizontal",
+    "Magnetometer_Horizontal",
+    "Magnetometer_Vertical",
+    "Mc_Response",
+    "Vcu_Mc_Message"
 ]
 
 
@@ -46,11 +45,11 @@ def write(output_path, spec_path, base_path, special_cases_path):
             "  uint16_t first_byte = lastMessage.data[0];\n\n" +
             "  switch(id) {\n")
         for message in spec.messages.values():
-            if message.name.upper() in unused_messages:
+            if message.name in unused_messages:
                 continue
             f.write(
                 "    case " + message.name.upper() + "__id:\n" +
-                "      return " + common.get_msg_enum_name(message.name.upper()) + "_Msg;\n")
+                "      return Can_" + message.name + "_Msg;\n")
         # Special cases
         f.write(
             "    case MC_RESPONSE__id:\n" +
@@ -78,23 +77,17 @@ def write(output_path, spec_path, base_path, special_cases_path):
             "}\n\n")
 
         for message in spec.messages.values():
-            if message.name.upper() in unused_messages:
+            if message.name in unused_messages:
                 continue
 
             # Write TO_CAN
             f.write(
-                "TO_CAN(" + common.get_msg_enum_name(message.name.upper()) + ") {\n" +
+                "TO_CAN(Can_" + message.name + ") {\n" +
                 "  uint64_t bitstring = 0;\n")
 
             length = 0
             for segment_name, segment in message.segments.items():
-                field_name = common.get_field_name(segment_name)
-
-                # Some segment names appear in multiple messages, but only need to be changed in some of these messages
-                if "CURRENT_SENSOR" in message.name.upper():
-                    field_name = field_name.replace("pack_current", "current_mA")
-                    field_name = field_name.replace("pack_voltage", "voltage_mV")
-                    field_name = field_name.replace("pack_power", "power_W")
+                field_name = segment_name
 
                 if field_name == "unused" or field_name == "reserved":
                     continue
@@ -119,15 +112,11 @@ def write(output_path, spec_path, base_path, special_cases_path):
 
             # Write FROM_CAN
             f.write(
-                "FROM_CAN(" + common.get_msg_enum_name(message.name.upper()) + ") {\n" +
+                "FROM_CAN(Can_" + message.name + ") {\n" +
                 "  uint64_t bitstring = 0;\n" +
                 "  to_bitstring(can_in->data, &bitstring);\n")
             for segment_name, segment in message.segments.items():
-                field_name = common.get_field_name(segment_name)
-                if "CURRENT_SENSOR" in message.name.upper():
-                    field_name = field_name.replace("pack_current", "current_mA")
-                    field_name = field_name.replace("pack_voltage", "voltage_mV")
-                    field_name = field_name.replace("pack_power", "power_W")
+                field_name = segment_name
                 if field_name == "unused" or field_name == "reserved":
                     continue
                 if message.is_big_endian:
@@ -162,9 +151,9 @@ def write(output_path, spec_path, base_path, special_cases_path):
 
         # Write DEFINE statements
         for message in spec.messages.values():
-            if message.name.upper() in unused_messages:
+            if message.name in unused_messages:
                 continue
-            f.write("DEFINE(" + common.get_msg_enum_name(message.name.upper()) + ")\n")
+            f.write("DEFINE(Can_" + message.name + ")\n")
 
 if __name__ == "__main__":
     write("../MY17_Can_Library.c", "ParseCAN/fsae_can_spec.yml", "../MY17_Can_Library_BASE.txt", "special_cases.txt")

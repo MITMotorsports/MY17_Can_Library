@@ -1,10 +1,8 @@
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
-from math import ceil
-import common
 
-expected_keys = ["bms", "can_node", "current_sensor", "dash", "vcu"]
+expected_keys = ["bms", "cannode", "currentsensor", "dash", "vcu"]
 def write(output_paths, spec_path):
     """
     Write the header files for the main structs in the library.
@@ -42,31 +40,26 @@ def write(output_paths, spec_path):
                     )
 
                 for message in spec.messages.values():
-                    if message.name.lower().startswith(key) or message.name.lower().startswith('rear_' + key) or message.name.lower().startswith('front_' + key):
+                    if message.name.lower().startswith(key) or message.name.lower().startswith('rear' + key) or message.name.lower().startswith('front' + key):
                         if message.name.upper() == "VCU_MC_MESSAGE":
                             continue
                         f.write("typedef struct {\n")
                         # Hardcode special case
-                        if message.name.upper() == "VCU_DASH_HEARTBEAT":
+                        if message.name.upper() == "VCU_DASHHEARTBEAT":
                             f.write("  Can_Vcu_LimpState_T limp_state;\n")
                         for segment_name, segment in message.segments.items():
                             if segment.c_type != "enum":
-                                field_name = common.get_field_name(segment_name)
+                                field_name = segment_name
                                 if field_name == 'reserved' or field_name == 'unused':
                                     continue
-                                # Fix name mismatch
-                                if "CURRENT_SENSOR" in message.name.upper():
-                                    field_name = field_name.replace("pack_current", "current_mA")
-                                    field_name = field_name.replace("pack_voltage", "voltage_mV")
-                                    field_name = field_name.replace("pack_power", "power_W")
                                 f.write("  " + segment.c_type + " " + field_name + ";\n")
                             else:
-                                enum_name = common.get_msg_enum_name(message.name.upper())
+                                enum_name = "Can_" + message.name
                                 # Fix name mismatch
                                 enum_name = enum_name.replace('Heartbeat', 'State')
                                 enum_name += "ID_T"
-                                f.write("  " + enum_name + " " + common.get_field_name(segment_name) + ";\n")
-                        f.write("} " + common.get_msg_enum_name(message.name.upper()) + "_T;\n\n")
+                                f.write("  " + enum_name + " " + segment_name + ";\n")
+                        f.write("} Can_" + message.name + "_T;\n\n")
                 f.write("#endif // _MY17_CAN_LIBRARY_" + key.upper() + "_H")
     except KeyError as e:
         print("No path passed for " + e.args[0] + " header file, please add it to output_paths dictionary")
@@ -76,8 +69,8 @@ def write(output_paths, spec_path):
 if __name__ == "__main__":
     paths = {
         "bms": "../bms.h",
-        "can_node": "../can_node.h",
-        "current_sensor": "../current_sensor.h",
+        "cannode": "../can_node.h",
+        "currentsensor": "../current_sensor.h",
         "dash": "../dash.h",
         "vcu": "../vcu.h"
     }

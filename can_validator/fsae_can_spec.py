@@ -2,7 +2,6 @@ import sys
 sys.path.append("ParseCAN")
 import ParseCAN
 import re
-import common
 
 
 def write(output_path, spec_path):

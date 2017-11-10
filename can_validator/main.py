@@ -10,8 +10,8 @@ MY17_Can_Library.write("../MY17_Can_Library.c", spec_path, "../MY17_Can_Library_
 ids.write("../ids.h", spec_path)
 structs_paths = {
     "bms": "../bms.h",
-    "can_node": "../can_node.h",
-    "current_sensor": "../current_sensor.h",
+    "cannode": "../can_node.h",
+    "currentsensor": "../current_sensor.h",
     "dash": "../dash.h",
     "vcu": "../vcu.h"
 }
