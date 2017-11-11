@@ -1,6 +1,7 @@
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
+from common import fsae_can_spec_path, spec_path
 import re
 
 
@@ -35,5 +36,6 @@ def write(output_path, spec_path):
             f.write('\n')
         f.write('#endif // ____' + clean_output_path + '\n')
 
+
 if __name__ == "__main__":
-    write("fsae_can_spec.h", "ParseCAN/fsae_can_spec.yml")
+    write(fsae_can_spec_path, spec_path)

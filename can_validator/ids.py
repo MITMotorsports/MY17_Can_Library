@@ -1,9 +1,11 @@
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
+from common import ids_path, spec_path
 
 # The VCU_MC_MESSAGE and MC_RESPONSE messages need to be combined into one enum, which will be stored here
 can_mc_reg_lines = []
+
 
 def write(output_path, spec_path):
     """
@@ -46,8 +48,8 @@ def write(output_path, spec_path):
             f.write(line)
         f.write("} Can_MC_RegID_T;\n\n")
 
-
         f.write('#endif // _MY17_CAN_LIBRARY_IDS_H')
 
+
 if __name__ == "__main__":
-    write("../ids.h", "ParseCAN/fsae_can_spec.yml")
+    write(ids_path, spec_path)

@@ -2,6 +2,7 @@ import sys
 sys.path.append("ParseCAN")
 import ParseCAN
 from math import ceil
+from common import can_lib_c_path, spec_path, can_lib_c_base_path, can_lib_c_special_cases_path, unused_messages
 
 
 def write(output_path, spec_path, base_path, special_cases_path, unused_messages):
@@ -149,5 +150,6 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                 continue
             f.write("DEFINE(Can_" + message.name + ")\n")
 
+
 if __name__ == "__main__":
-    write("../MY17_Can_Library.c", "ParseCAN/fsae_can_spec.yml", "../MY17_Can_Library_BASE.txt", "special_cases.txt")
+    write(can_lib_c_path, spec_path, can_lib_c_base_path, can_lib_c_special_cases_path, unused_messages)

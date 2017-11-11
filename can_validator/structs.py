@@ -1,6 +1,7 @@
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
+from common import struct_paths, spec_path
 
 expected_keys = ["bms", "cannode", "currentsensor", "dash", "vcu"]
 def write(output_paths, spec_path):
@@ -67,11 +68,4 @@ def write(output_paths, spec_path):
 
 
 if __name__ == "__main__":
-    paths = {
-        "bms": "../bms.h",
-        "cannode": "../can_node.h",
-        "currentsensor": "../current_sensor.h",
-        "dash": "../dash.h",
-        "vcu": "../vcu.h"
-    }
-    write(paths, "ParseCAN/fsae_can_spec.yml")
+    write(struct_paths, spec_path)

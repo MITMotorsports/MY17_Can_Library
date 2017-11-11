@@ -1,6 +1,7 @@
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
+from common import can_lib_h_path, spec_path, struct_paths, unused_messages
 
 def write(output_path, spec_path, struct_paths, unused_messages):
     """
@@ -85,22 +86,4 @@ def write(output_path, spec_path, struct_paths, unused_messages):
 
 
 if __name__ == "__main__":
-    unused_messages = [
-        "Lv_Battery_Voltage",
-        "Accelerometer_Horizontal",
-        "Accelerometer_Vertical",
-        "Gyro_Vertical",
-        "Gyro_Horizontal",
-        "Magnetometer_Horizontal",
-        "Magnetometer_Vertical",
-        "Mc_Response",
-        "Vcu_Mc_Message"
-    ]
-    struct_paths = [
-        "../bms.h",
-        "../can_node.h",
-        "../current_sensor.h",
-        "../dash.h",
-        "../vcu.h"
-    ]
-    write("../MY17_Can_Library.h", "ParseCAN/fsae_can_spec.yml", struct_paths, unused_messages)
+    write(can_lib_h_path, spec_path, struct_paths.values(), unused_messages)
