@@ -1,7 +1,12 @@
+"""
+Generate MY17_Can_Libary.h file.
+Run this file to write just MY17_Can_Libary.h or main.py to write all files.
+"""
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
 from common import can_lib_h_path, spec_path, struct_paths, unused_messages
+
 
 def write(output_path, spec_path, struct_paths, unused_messages):
     """
@@ -16,17 +21,15 @@ def write(output_path, spec_path, struct_paths, unused_messages):
     with open(output_path, 'w') as f:
         # Setup file
         f.write("#ifndef _MY17_CAN_LIBRARY_H\n" +
-            "#define _MY17_CAN_LIBRARY_H\n\n" +
-            "#include <stdint.h>\n" +
-            "#include <stdbool.h>\n\n"
-        )
+                "#define _MY17_CAN_LIBRARY_H\n\n" +
+                "#include <stdint.h>\n" +
+                "#include <stdbool.h>\n\n")
 
         # Create enum
         f.write("typedef enum {\n" +
-            "  Can_No_Msg,\n" +
-            "  Can_Unknown_Msg,\n" +
-            "  Can_Error_Msg,\n"
-        )
+                "  Can_No_Msg,\n" +
+                "  Can_Unknown_Msg,\n" +
+                "  Can_Error_Msg,\n")
         for message in spec.messages.values():
             f.write("  Can_" + message.name + "_Msg,\n")
         # Add motor controller special cases
@@ -35,8 +38,7 @@ def write(output_path, spec_path, struct_paths, unused_messages):
             "  Can_MC_DataReading_Msg,\n" +
             "  Can_MC_State_Msg,\n" +
             "  Can_Vcu_MCRequest_Msg,\n" +
-            "  Can_Vcu_MCTorque_Msg,\n"
-        )
+            "  Can_Vcu_MCTorque_Msg,\n")
         f.write("} Can_MsgID_T;\n\n")
 
         # Finish initial setup
@@ -55,12 +57,11 @@ def write(output_path, spec_path, struct_paths, unused_messages):
             'Can_ErrorID_T Can_Unknown_Read(Frame *frame);\n' +
             'Can_ErrorID_T Can_Error_Read(void);\n\n' +
             'void to_bitstring(uint8_t in[], uint64_t *out);\n' +
-            'void from_bitstring(uint64_t *in, uint8_t out[]);\n\n'
-        )
+            'void from_bitstring(uint64_t *in, uint8_t out[]);\n\n')
 
         # Add structs includes
         for path in struct_paths:
-            f.write('#include "' + path.replace("..","").replace("/","") + '"\n')
+            f.write('#include "' + path.replace("..", "").replace("/", "") + '"\n')
         f.write('#include "mc.h"\n\n')
 
         # Write DECLARE statements
@@ -75,14 +76,12 @@ def write(output_path, spec_path, struct_paths, unused_messages):
             "DECLARE(Can_Vcu_MCTorque)\n" +
             "DECLARE(Can_MC_DataReading)\n" +
             "DECLARE(Can_MC_ErrorAndWarning)\n" +
-            "DECLARE(Can_MC_State)\n\n"
-        )
+            "DECLARE(Can_MC_State)\n\n")
 
         # Finish up
         f.write(
             "#undef DECLARE\n" +
-            "#endif // _MY17_CAN_LIBRARY_H"
-        )
+            "#endif // _MY17_CAN_LIBRARY_H")
 
 
 if __name__ == "__main__":

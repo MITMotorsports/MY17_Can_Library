@@ -1,3 +1,7 @@
+"""
+Generate ids.h file.
+Run this file to write just ids.h or main.py to write all files.
+"""
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
@@ -32,17 +36,19 @@ def write(output_path, spec_path):
                             message_name = message_name.replace('HEARTBEAT', 'STATE')
                             f.write(
                                 "  " + message_name + "_" + value_name.upper() + " = " +
-                                  '____' + message.name.upper() + '__' + segment_name.upper() + '__' + value_name + ",\n")
+                                '____' + message.name.upper() + '__' + segment_name.upper() + '__' + value_name +
+                                ",\n")
                         f.write("} Can_" + message.name.replace('Heartbeat', 'State') + "ID_T;\n\n")
                     else:
                         for value_name, value in segment.values.items():
                             if value_name == "TORQUE_CMD" and message.name == "Vcu_Mc_Message":
-                                # Both of the message have the same value name, but we only want the one from VCU_MC_MESSAGE
+                                # Both of the message have the same value name, but we only want the one from
+                                # VCU_MC_MESSAGE
                                 continue
                             val_name = value_name.upper()
 
-                            can_mc_reg_lines.append("  CAN_MC_REG_" + val_name + " = " + '____' + message.name.upper() + '__' +
-                                segment_name.upper() + '__' + value_name + ",\n")
+                            can_mc_reg_lines.append("  CAN_MC_REG_" + val_name + " = " + '____' + message.name.upper()
+                                                    + '__' + segment_name.upper() + '__' + value_name + ",\n")
         f.write('typedef enum {\n')
         for line in can_mc_reg_lines:
             f.write(line)

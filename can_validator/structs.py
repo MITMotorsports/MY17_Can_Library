@@ -1,9 +1,15 @@
+"""
+Generate header files that set up structs (bms.h, can_node.h, etc.).
+Run this file to write just these files or main.py to write all files.
+"""
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
 from common import struct_paths, spec_path
 
 expected_keys = ["bms", "cannode", "currentsensor", "dash", "vcu"]
+
+
 def write(output_paths, spec_path):
     """
     Write the header files for the main structs in the library.
@@ -37,11 +43,11 @@ def write(output_paths, spec_path):
                         "} Can_Vcu_MCRequest_T;\n\n" +
                         "typedef struct {\n" +
                         "  int16_t torque_cmd;\n" +
-                        "} Can_Vcu_MCTorque_T;\n"
-                    )
+                        "} Can_Vcu_MCTorque_T;\n")
 
                 for message in spec.messages.values():
-                    if message.name.lower().startswith(key) or message.name.lower().startswith('rear' + key) or message.name.lower().startswith('front' + key):
+                    if (message.name.lower().startswith(key) or message.name.lower().startswith('rear' + key) or
+                            message.name.lower().startswith('front' + key)):
                         if message.name.upper() == "VCU_MC_MESSAGE":
                             continue
                         f.write("typedef struct {\n")

@@ -1,3 +1,7 @@
+"""
+Generate MY17_Can_Libary.c file.
+Run this file to write just MY17_Can_Libary.c or main.py to write all files.
+"""
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
@@ -84,14 +88,14 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
 
                 if message.is_big_endian:
                     f.write(
-                        "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position[0]) + ", " +
-                        str(segment.position[1]-segment.position[0]+1) + ");\n")
+                        "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position[0]) +
+                        ", " + str(segment.position[1]-segment.position[0]+1) + ");\n")
                 else:
                     f.write(
                         "  " + segment.c_type + " " + field_name + "_swap_value = swap_" + segment.c_type[:-2] +
                         "(type_in->" + field_name + ");\n" +
-                        "  bitstring = INSERT(" + field_name + "_swap_value, bitstring, " + str(segment.position[0]) + ", " +
-                        str(segment.position[1]-segment.position[0]+1) + ");\n\n")
+                        "  bitstring = INSERT(" + field_name + "_swap_value, bitstring, " + str(segment.position[0]) +
+                        ", " + str(segment.position[1]-segment.position[0]+1) + ");\n\n")
 
                 length += segment.position[1]-segment.position[0]+1
             f.write(
@@ -112,13 +116,13 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                 if message.is_big_endian:
                     if segment.c_type.startswith("int"):  # Check if signed int
                         f.write(
-                            "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
-                            str(segment.position[1]-segment.position[0]+1) + "), " + str(segment.position[1]-
-                                                                                         segment.position[0]+1)+ ");\n")
+                            "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position[0]) +
+                            ", " + str(segment.position[1]-segment.position[0]+1) + "), " +
+                            str(segment.position[1] - segment.position[0]+1) + ");\n")
                     elif segment.c_type == "enum":
                         enum_name = "Can_" + message.name.replace("Heartbeat", "State") + "ID_T"
                         f.write(
-                            "  type_out->" + field_name + " = (" + enum_name +")EXTRACT(bitstring, " +
+                            "  type_out->" + field_name + " = (" + enum_name + ")EXTRACT(bitstring, " +
                             str(segment.position[0]) + ", " + str(segment.position[1]-segment.position[0]+1) + ");\n")
                     else:
                         f.write(
@@ -126,7 +130,7 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                             str(segment.position[1]-segment.position[0]+1) + ");\n")
                 else:
                     if segment.c_type.startswith("int"):  # Check if signed int
-                        # TODO Check if we can use the signed swap directly -- what's here is based off old CAN_Library code
+                        # TODO Check if we can use the signed swap directly (what's here is just based off old code)
                         f.write(
                             "  " + segment.c_type + " " + field_name + "_swap_value=(" + segment.c_type + ")(swap_u" +
                             segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
