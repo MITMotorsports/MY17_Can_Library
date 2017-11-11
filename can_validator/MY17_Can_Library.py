@@ -125,6 +125,11 @@ def write(output_path, spec_path, base_path, special_cases_path):
                             "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
                             str(segment.position[1]-segment.position[0]+1) + "), " + str(segment.position[1]-
                                                                                          segment.position[0]+1)+ ");\n")
+                    elif segment.c_type == "enum":
+                        enum_name = "Can_" + message.name.replace("Heartbeat", "State") + "ID_T"
+                        f.write(
+                            "  type_out->" + field_name + " = (" + enum_name +")EXTRACT(bitstring, " +
+                            str(segment.position[0]) + ", " + str(segment.position[1]-segment.position[0]+1) + ");\n")
                     else:
                         f.write(
                             "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
