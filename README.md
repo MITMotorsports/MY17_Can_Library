@@ -2,11 +2,11 @@ Helper wrapper around MIT EVT's Can_Validator library for use in MY17 control sy
 
 Compatible with both AtMega boards and ARM boards.
 
-Before using this library, run the `main.py` file in `can_validator`. This file
+Make sure to run `git submodule init` and `git submodule update` after cloning.
+
+Before using this library, run the `main.py` file in `can_validator` (with Python 3). This file
 generates all of the necessary source files that are listed in `.gitignore`.
-These files are dependent on the CAN spec (which itself can be found in the
-[ParseCAN repository](https://github.com/MITMotorsports/ParseCAN) as
-`fsae_can_spec.yml`.) If you want to change one of these files, don't edit them
+These files are dependent on the CAN spec. If you want to change one of these files, don't edit them
 directly, but instead figure out what needs to change in the CAN spec. (If that
 still doesn't work, edit the generator scripts in `can_validator` rather than
 the generated files.) Source files that aren't ignored aren't generated from the
