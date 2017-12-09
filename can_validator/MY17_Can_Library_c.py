@@ -88,16 +88,16 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
 
                 if message.is_big_endian:
                     f.write(
-                        "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position[0]) +
-                        ", " + str(segment.position[1]-segment.position[0]+1) + ");\n")
+                        "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position) +
+                        ", " + str(segment.length) + ");\n")
                 else:
                     f.write(
                         "  " + segment.c_type + " " + field_name + "_swap_value = swap_" + segment.c_type[:-2] +
                         "(type_in->" + field_name + ");\n" +
-                        "  bitstring = INSERT(" + field_name + "_swap_value, bitstring, " + str(segment.position[0]) +
-                        ", " + str(segment.position[1]-segment.position[0]+1) + ");\n\n")
+                        "  bitstring = INSERT(" + field_name + "_swap_value, bitstring, " + str(segment.position) +
+                        ", " + str(segment.length) + ");\n\n")
 
-                length += segment.position[1]-segment.position[0]+1
+                length += segment.length
             f.write(
                 "  from_bitstring(&bitstring, can_out->data);\n" +
                 "  can_out->id = " + message.name.upper() + "__id;\n" +
@@ -116,30 +116,31 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                 if message.is_big_endian:
                     if segment.c_type.startswith("int"):  # Check if signed int
                         f.write(
-                            "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position[0]) +
-                            ", " + str(segment.position[1]-segment.position[0]+1) + "), " +
-                            str(segment.position[1] - segment.position[0]+1) + ");\n")
+                            "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position) +
+                            ", " + str(segment.length) + "), " +
+                            str(segment.length) + ");\n")
                     elif segment.c_type == "enum":
                         enum_name = "Can_" + message.name.replace("Heartbeat", "State") + "ID_T"
+                        # Fix name mismatch
+                        if enum_name == "Can_Vcu_DashStateID_T":
+                            enum_name = "Can_Vcu_LimpState_T"
                         f.write(
                             "  type_out->" + field_name + " = (" + enum_name + ")EXTRACT(bitstring, " +
-                            str(segment.position[0]) + ", " + str(segment.position[1]-segment.position[0]+1) + ");\n")
+                            str(segment.position) + ", " + str(segment.length) + ");\n")
                     else:
                         f.write(
-                            "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
-                            str(segment.position[1]-segment.position[0]+1) + ");\n")
+                            "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position) + ", " +
+                            str(segment.length) + ");\n")
                 else:
                     if segment.c_type.startswith("int"):  # Check if signed int
-                        # TODO Check if we can use the signed swap directly (what's here is just based off old code)
                         f.write(
-                            "  " + segment.c_type + " " + field_name + "_swap_value=(" + segment.c_type + ")(swap_u" +
-                            segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
-                            str(segment.position[1]-segment.position[0]+1) + ")));\n")
+                            "  " + segment.c_type + " " + field_name + "_swap_value=(swap_" + segment.c_type[:-2] +
+                            "(EXTRACT(bitstring, " + str(segment.position) + ", " + str(segment.length) + ")));\n")
                     else:
                         f.write(
                             "  " + segment.c_type + " " + field_name + "_swap_value=swap_u" +
-                            segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position[0]) + ", " +
-                            str(segment.position[1]-segment.position[0]+1) + ")));\n")
+                            segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position) + ", " +
+                            str(segment.length) + ")));\n")
                     f.write("  type_out->" + field_name + " = " + field_name + "_swap_value;\n")
             f.write("}\n\n")
 

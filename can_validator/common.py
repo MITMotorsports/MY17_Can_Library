@@ -1,4 +1,4 @@
-spec_path = "ParseCAN/fsae_can_spec.yml"
+spec_path = "fsae_can_spec.yml"
 
 fsae_can_spec_path = "fsae_can_spec.h"
 can_lib_c_path = "../MY17_Can_Library.c"
