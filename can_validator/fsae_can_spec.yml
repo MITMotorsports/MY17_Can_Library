@@ -12,6 +12,7 @@ FrontCanNode_DriverOutput:
       position: 0
       length: 16
       c_type: int16_t
+      signed: true
       unit: null
     brake_pressure:
       position: 16
@@ -47,6 +48,7 @@ FrontCanNode_DriverOutput:
       position: 40
       length: 16
       c_type: int16_t
+      signed: true
       unit: null
 
 RearCanNode_Heartbeat:
@@ -398,11 +400,13 @@ Bms_CellTemps:
       position: 0
       length: 15
       c_type: int16_t
+      signed: true
       unit: null
     min_cell_temp:
       position: 15
       length: 15
       c_type: int16_t
+      signed: true
       unit: null
     id_min_cell_temp:
       position: 30
@@ -413,6 +417,7 @@ Bms_CellTemps:
       position: 39
       length: 15
       c_type: int16_t
+      signed: true
       unit: null
     id_max_cell_temp:
       position: 54
@@ -435,6 +440,7 @@ Bms_PackStatus:
       position: 9
       length: 11
       c_type: int16_t
+      signed: true
       unit: null
     avg_cell_voltage:
       position: 20
@@ -587,6 +593,7 @@ CurrentSensor_Current:
       position: 16
       length: 32
       c_type: int32_t
+      signed: true
       unit: mA
 
 CurrentSensor_Voltage:
@@ -598,6 +605,7 @@ CurrentSensor_Voltage:
       position: 16
       length: 32
       c_type: int32_t
+      signed: true
       unit: mV
 
 CurrentSensor_Power:
@@ -609,6 +617,7 @@ CurrentSensor_Power:
       position: 16
       length: 32
       c_type: int32_t
+      signed: true
       unit: W
 
 CurrentSensor_Energy:
@@ -620,6 +629,7 @@ CurrentSensor_Energy:
       position: 16
       length: 32
       c_type: int32_t
+      signed: true
       unit: Wh
 
 #############################################################
