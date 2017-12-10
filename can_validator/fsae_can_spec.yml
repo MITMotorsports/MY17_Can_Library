@@ -13,73 +13,52 @@ FrontCanNode_DriverOutput:
       length: 16
       c_type: int16_t
       unit: null
-      # values:
-      #  POSITIVE_TORQUE: [0x0000, 0x7FFF]
-      #  NEGATIVE_TORQUE: [0x8000, 0xFFFF]
     brake_pressure:
       position: 16
       length: 8
       c_type: uint8_t
       unit: null
-      # values:
-      #  BRAKE_PRESSURE: [0x00, 0xFF]
-    steering_position:
+    steering_position: # Steering travel leftwards
       position: 24
       length: 8
       c_type: uint8_t
       unit: null
-      # values:
-      #  STEERING_TRAVGL_LEFTWARDS: [0x00, 0xFF]
-    throttle_implausible:
+    throttle_implausible: # True is implausible
       position: 32
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  PLAUSIBLE: 0x0
-      #  IMPLAUSIBLE: 0x1
-    brake_throttle_conflict:
+    brake_throttle_conflict: # True is conflict
       position: 33
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  NO_CONFLICT: 0x0
-      #  CONFLICT: 0x1
     brake_engaged:
       position: 34
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  RELEASED: 0x0
-      #  ENGAGED: 0x1
     reserved:
       position: 35
       length: 5
       c_type: null
       unit: null
-      # values:
     torque_before_control:
       position: 40
       length: 16
       c_type: int16_t
       unit: null
-      # values:
 
 RearCanNode_Heartbeat:
   can_id: 0x031
   frequency: 1HZ
   is_big_endian: true
   segments:
-    is_alive:
+    is_alive: # True is okay
       position: 0
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  NOT_OK: 0x0
-      #  OK: 0x1
 
 RearCanNode_WheelSpeed:
   can_id: 0x032
@@ -91,15 +70,11 @@ RearCanNode_WheelSpeed:
       length: 32
       c_type: uint32_t
       unit: null
-      # values:
-      #  REAR_RIGHT_WHEEL_SPEED: [0x000, 0xFFFFFFFF]
     rear_left_wheel_speed_mRPM:
       position: 32
       length: 32
       c_type: uint32_t
       unit: null
-      # values:
-      #  REAR_LEFT_WHEEL_SPEED: [0x000, 0xFFFFFFFF]
 
 #################### LOGGING_ONLY #########################
 FrontCanNode_RawValues:
@@ -107,41 +82,31 @@ FrontCanNode_RawValues:
   frequency: 10HZ
   is_big_endian: true
   segments:
-    accel_1_raw:
+    accel_1_raw: # Right throttle pot
       position: 0
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  RIGHT_THROTTLE_POT: [0x00, 0xFF]
-    accel_2_raw:
+    accel_2_raw: # Left throttle pot
       position: 10
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  LEFT_THROTTLE_POT: [0x00, 0xFF]
-    brake_1_raw:
+    brake_1_raw: # Front brake pressure
       position: 20
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  FRONT_BRAKE_PRESSURE: [0x00, 0xFF]
-    brake_2_raw:
+    brake_2_raw: # Rear brake pressure
       position: 30
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  REAR_BRAKE_PRESSURE: [0x00, 0xFF]
     steering_raw:
       position: 40
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  STEERING_POT: [0x00, 0xFF]
 
 #################### LOGGING_ONLY #########################
 FrontCanNode_WheelSpeed:
@@ -154,15 +119,11 @@ FrontCanNode_WheelSpeed:
       length: 32
       c_type: uint32_t
       unit: null
-      # values:
-      #  FRONT_RIGHT_WHEEL_SPEED: [0x000, 0xFFFFFFFF]
     front_left_wheel_speed_mRPM:
       position: 32
       length: 32
       c_type: uint32_t
       unit: null
-      # values:
-      #  FRONT_LEFT_WHEEL_SPEED: [0x000, 0xFFFFFFFF]
 
 #############################################################
 #                   VCU SPEC                                #
@@ -179,257 +140,168 @@ Vcu_BmsHeartbeat:
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  DISCHARGE: 0x0
 
 Vcu_DashHeartbeat:
   can_id: 0x51
   frequency: 10HZ
   is_big_endian: true
   segments:
-    rtd_light:
+    rtd_light: # True is on
       position: 0
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    ams_light:
+    ams_light: # True is on
       position: 1
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    imd_light:
+    imd_light: # True is on
       position: 2
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    hv_light:
+    hv_light: # True is on
       position: 3
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    traction_control:
+    traction_control: # True is on
       position: 4
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    limp_mode:
+    limp_mode: # True is on
       position: 5
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    lv_warning:
+    lv_warning: # True is on
       position: 6
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    active_aero:
+    active_aero: # True is on
       position: 7
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    regen:
+    regen: # True is on
       position: 8
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    shutdown_esd_drain:
+    shutdown_esd_drain: # True is open
       position: 9
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
-    shutdown_bms:
+    shutdown_bms: # True is open
       position: 10
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
-    shutdown_imd:
+    shutdown_imd: # True is open
       position: 11
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
-    shutdown_bspd:
+    shutdown_bspd: # True is open
       position: 12
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
-    shutdown_vcu:
+    shutdown_vcu: # True is open
       position: 13
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
-    shutdown_precharge:
+    shutdown_precharge: # True is open
       position: 14
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
-    shutdown_master_reset:
+    shutdown_master_reset: # True is open
       position: 15
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
-    shutdown_driver_reset:
+    shutdown_driver_reset: # True is open
       position: 16
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
     unused:
       position: 17
       length: 8
       c_type: null
       unit: null
       # values:
-    heartbeat_front_can_node_dead:
+    heartbeat_front_can_node_dead: # True is open
       position: 25
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ALIVE: 0x0
-      #  DEAD: 0x1
     heartbeat_rear_can_node_dead:
       position: 26
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ALIVE: 0x0
-      #  DEAD: 0x1
     heartbeat_bms_dead:
       position: 27
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ALIVE: 0x0
-      #  DEAD: 0x1
     heartbeat_dash_dead:
       position: 28
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ALIVE: 0x0
-      #  DEAD: 0x1
     heartbeat_mc_dead:
       position: 29
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ALIVE: 0x0
-      #  DEAD: 0x1
     heartbeat_current_sensor_dead:
       position: 30
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ALIVE: 0x0
-      #  DEAD: 0x1
     tsms_off:
       position: 31
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ON: 0x0
-      #  OFF: 0x1
     reset_latch_open:
       position: 32
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  CLOSED: 0x0
-      #  OPEN: 0x1
     precharge_running:
       position: 33
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  FALSE: 0x0
-      #  TRUE: 0x1
     master_reset_not_initialized:
       position: 34
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  FALSE: 0x0
-      #  TRUE: 0x1
     driver_reset_not_initialized:
       position: 35
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  FALSE: 0x0
-      #  TRUE: 0x1
     reserved:
       position: 36
       length: 4
       c_type: null
       unit: null
-      # values:
     lv_battery_voltage:
       position: 40
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  LV_BATTERY_VOLTAGE: [0x000, 0x3FF]
     limp_state:
       position: 50
       length: 3
@@ -454,20 +326,16 @@ Vcu_Mc_Message:
         MSG_REQUEST: 0x3D
         MSG_EVENT_REQUEST: 0x51
         TORQUE_CMD: 0x90
-    data_1:
+    data_1: # Data low byte
       position: 8
       length: 8
       c_type: uint8_t
       unit: null
-      # values:
-      #  DATA_LOW_BYTE: [0x00, 0xFF]
-    data_2:
+    data_2: # Data high byte
       position: 16
       length: 8
       c_type: uint8_t
       unit: null
-      # values:
-      #  DATA_HIGH_BYTE: [0x00, 0xFF]
 
 #############################################################
 #                      BMS SPEC                             #
@@ -499,37 +367,26 @@ Bms_Heartbeat:
         DISCHARGE: 0x4
         BATTERY_FAULT: 0x5
         BMS_FAULT: 0x6
-    soc:
+    soc: # Percentage
       position: 3
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  SOC_PERCENTAGE: [0x000, 0x3FF]
-    fan_enable:
+    fan_enable: # True is on
       position: 13
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
-    dcdc_enable:
+    dcdc_enable: # True is on
       position: 14
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  OFF: 0x0
-      #  ON: 0x1
     dcdc_fault:
       position: 15
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  NO_FAULT: 0x0
-      #  FAULT: 0x1
 
 #################### DASH_ONLY #########################
 Bms_CellTemps:
@@ -542,31 +399,26 @@ Bms_CellTemps:
       length: 15
       c_type: int16_t
       unit: null
-      # values:
     min_cell_temp:
       position: 15
       length: 15
       c_type: int16_t
       unit: null
-      # values:
     id_min_cell_temp:
       position: 30
       length: 9
       c_type: uint16_t
       unit: null
-      # values:
     max_cell_temp:
       position: 39
       length: 15
       c_type: int16_t
       unit: null
-      # values:
     id_max_cell_temp:
       position: 54
       length: 9
       c_type: uint16_t
       unit: null
-      # values:
 
 #################### DASH_ONLY #########################
 Bms_PackStatus:
@@ -579,51 +431,36 @@ Bms_PackStatus:
       length: 9
       c_type: uint16_t
       unit: null
-      # values:
-      #  PACK_VOLTAGE: [0x000, 0x1FF]
     pack_current:
       position: 9
       length: 11
       c_type: int16_t
       unit: null
-      # values:
-      #  POSITIVE_PACK_CURRENT: [0x000, 0x3FF]
-      #  NEGATIVE_PACK_CURRENT: [0x400, 0x7FF]
     avg_cell_voltage:
       position: 20
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  AVG_CELL_VOLTAGE: [0x000, 0x3FF]
     min_cell_voltage:
       position: 30
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  MIN_CELL_VOLTAGE: [0x000, 0x3FF]
     id_min_cell_voltage:
       position: 40
       length: 7
       c_type: uint8_t
       unit: null
-      # values:
-      #  MIN_CELL_VOLTAGE_ID: [0x00, 0x7F]
     max_cell_voltage:
       position: 47
       length: 10
       c_type: uint16_t
       unit: null
-      # values:
-      #  MAX_CELL_VOLTAGE: [0x000, 0x3FF]
     id_max_cell_voltage:
       position: 57
       length: 7
       c_type: uint8_t
       unit: null
-      # values:
-      #  MAX_CELL_VOLTAGE_ID: [0x00, 0x7F]
 
 #################### LOGGING_ONLY #########################
 Bms_Error:
@@ -735,15 +572,12 @@ Mc_Response:
       length: 16
       c_type: int16_t # Guessing by position range
       unit: null
-      # values:
-      #  DATA: [0x0000, 0xFFFF]
 
 #############################################################
 #                  Current Sensor SPEC                      #
 #           May need to listen to can_ids: None             #
 #############################################################
 
-# Units of mA
 CurrentSensor_Current:
   can_id: 0x521
   frequency: 20HZ
@@ -753,11 +587,8 @@ CurrentSensor_Current:
       position: 16
       length: 32
       c_type: int32_t
-      unit: null
-      # values:
-      #  PACK_CURRENT: [0x00000000, 0xFFFFFFFF]
+      unit: mA
 
-# Units of mV
 CurrentSensor_Voltage:
   can_id: 0x522
   frequency: 20HZ
@@ -767,11 +598,8 @@ CurrentSensor_Voltage:
       position: 16
       length: 32
       c_type: int32_t
-      unit: null
-      # values:
-      #  PACK_VOLTAGE: [0x00000000, 0xFFFFFFFF]
+      unit: mV
 
-# Units of W
 CurrentSensor_Power:
   can_id: 0x526
   frequency: 20HZ
@@ -781,11 +609,8 @@ CurrentSensor_Power:
       position: 16
       length: 32
       c_type: int32_t
-      unit: null
-      # values:
-      #  PACK_POWER: [0x00000000, 0xFFFFFFFF]
+      unit: W
 
-# Units of Wh
 CurrentSensor_Energy:
   can_id: 0x528
   frequency: 20HZ
@@ -795,16 +620,13 @@ CurrentSensor_Energy:
       position: 16
       length: 32
       c_type: int32_t
-      unit: null
-      # values:
-      #  PACK_ENERGY: [0x00000000, 0xFFFFFFFF]
+      unit: Wh
 
 #############################################################
 #                  Black Box SPEC                           #
 #           May need to listen to can_ids: All              #
 #############################################################
 
-# Units of mV
 #################### LOGGING_ONLY #########################
 Lv_Battery_Voltage:
   can_id: 0x333
@@ -815,9 +637,7 @@ Lv_Battery_Voltage:
       position: 0
       length: 16
       c_type: uint16_t
-      unit: null
-      # values:
-      #  BATTERY_VOLTAGE: [0x0000, 0xFFFF]
+      unit: mV
 
 #################### LOGGING_ONLY #########################
 Accelerometer_Horizontal:
@@ -830,15 +650,11 @@ Accelerometer_Horizontal:
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  X_AXIS: [0x00000000, 0xFFFFFFFF]
     y_axis:
       position: 32
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  Y_AXIS: [0x00000000, 0xFFFFFFFF]
 
 #################### LOGGING_ONLY #########################
 Accelerometer_Vertical:
@@ -851,8 +667,6 @@ Accelerometer_Vertical:
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  Z_AXIS: [0x00000000, 0xFFFFFFFF]
 
 #################### LOGGING_ONLY #########################
 Gyro_Horizontal:
@@ -865,15 +679,11 @@ Gyro_Horizontal:
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  X_AXIS: [0x00000000, 0xFFFFFFFF]
     y_axis:
       position: 32
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  Y_AXIS: [0x00000000, 0xFFFFFFFF]
 
 #################### LOGGING_ONLY #########################
 Gyro_Vertical:
@@ -886,8 +696,6 @@ Gyro_Vertical:
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  Z_AXIS: [0x00000000, 0xFFFFFFFF]
 
 #################### LOGGING_ONLY #########################
 Magnetometer_Horizontal:
@@ -900,15 +708,11 @@ Magnetometer_Horizontal:
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  X_AXIS: [0x00000000, 0xFFFFFFFF]
     y_axis:
       position: 32
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  Y_AXIS: [0x00000000, 0xFFFFFFFF]
 
 #################### LOGGING_ONLY #########################
 Magnetometer_Vertical:
@@ -921,5 +725,3 @@ Magnetometer_Vertical:
       length: 32
       c_type: int32_t # Guessing by position range
       unit: null
-      # values:
-      #  Z_AXIS: [0x00000000, 0xFFFFFFFF]

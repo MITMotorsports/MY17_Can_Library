@@ -32,6 +32,7 @@ def write(output_path, spec_path, struct_paths, unused_messages):
                 "  Can_Error_Msg,\n")
         for message in spec.messages.values():
             f.write("  Can_" + message.name + "_Msg,\n")
+
         # Add motor controller special cases
         f.write(
             "  Can_MC_ErrorAndWarning_Msg,\n" +

@@ -1,3 +1,7 @@
+"""
+Contains shared information between generator files.
+"""
+
 spec_path = "fsae_can_spec.yml"
 
 fsae_can_spec_path = "fsae_can_spec.h"

@@ -64,6 +64,7 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
             "        return Can_Unknown_Msg;\n" +
             "      }\n")
 
+        # Finish up
         f.write(
             "    default:\n" +
             "      return Can_Unknown_Msg;\n" +
@@ -86,16 +87,17 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                 if field_name == "unused" or field_name == "reserved":
                     continue
 
-                if message.is_big_endian:
-                    f.write(
-                        "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position) +
-                        ", " + str(segment.length) + ");\n")
-                else:
+                if not message.is_big_endian and (segment.c_type.startswith("int") or
+                                                  segment.c_type.startswith("uint")):
                     f.write(
                         "  " + segment.c_type + " " + field_name + "_swap_value = swap_" + segment.c_type[:-2] +
                         "(type_in->" + field_name + ");\n" +
                         "  bitstring = INSERT(" + field_name + "_swap_value, bitstring, " + str(segment.position) +
                         ", " + str(segment.length) + ");\n\n")
+                else:
+                    f.write(
+                        "  bitstring = INSERT(type_in->" + field_name + ", bitstring, " + str(segment.position) +
+                        ", " + str(segment.length) + ");\n")
 
                 length += segment.length
             f.write(
@@ -113,35 +115,41 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                 field_name = segment_name
                 if field_name == "unused" or field_name == "reserved":
                     continue
-                if message.is_big_endian:
-                    if segment.c_type.startswith("int"):  # Check if signed int
-                        f.write(
-                            "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position) +
-                            ", " + str(segment.length) + "), " +
-                            str(segment.length) + ");\n")
-                    elif segment.c_type == "enum":
-                        enum_name = "Can_" + message.name.replace("Heartbeat", "State") + "ID_T"
-                        # Fix name mismatch
-                        if enum_name == "Can_Vcu_DashStateID_T":
-                            enum_name = "Can_Vcu_LimpState_T"
-                        f.write(
-                            "  type_out->" + field_name + " = (" + enum_name + ")EXTRACT(bitstring, " +
-                            str(segment.position) + ", " + str(segment.length) + ");\n")
-                    else:
-                        f.write(
-                            "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position) + ", " +
-                            str(segment.length) + ");\n")
+                if segment.c_type == "enum":
+                    # Fix name mismatch
+                    enum_name = "Can_" + message.name.replace("Heartbeat", "State") + "ID_T"
+                    if enum_name == "Can_Vcu_DashStateID_T":
+                        enum_name = "Can_Vcu_LimpState_T"
+
+                    f.write(
+                        "  type_out->" + field_name + " = (" + enum_name + ")EXTRACT(bitstring, " +
+                        str(segment.position) + ", " + str(segment.length) + ");\n")
+                elif segment.c_type == "bool":
+                    f.write(
+                        "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position) + ", " +
+                        str(segment.length) + ");\n")
                 else:
-                    if segment.c_type.startswith("int"):  # Check if signed int
-                        f.write(
-                            "  " + segment.c_type + " " + field_name + "_swap_value=(swap_" + segment.c_type[:-2] +
-                            "(EXTRACT(bitstring, " + str(segment.position) + ", " + str(segment.length) + ")));\n")
+                    if not message.is_big_endian:
+                        if segment.c_type.startswith("int"):  # Check if signed int
+                            f.write(
+                                "  " + segment.c_type + " " + field_name + "_swap_value=(swap_" + segment.c_type[:-2] +
+                                "(EXTRACT(bitstring, " + str(segment.position) + ", " + str(segment.length) + ")));\n")
+                        else:
+                            f.write(
+                                "  " + segment.c_type + " " + field_name + "_swap_value=swap_u" +
+                                segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position) + ", " +
+                                str(segment.length) + ")));\n")
+                        f.write("  type_out->" + field_name + " = " + field_name + "_swap_value;\n")
                     else:
-                        f.write(
-                            "  " + segment.c_type + " " + field_name + "_swap_value=swap_u" +
-                            segment.c_type[:-2] + "(EXTRACT(bitstring, " + str(segment.position) + ", " +
-                            str(segment.length) + ")));\n")
-                    f.write("  type_out->" + field_name + " = " + field_name + "_swap_value;\n")
+                        if segment.c_type.startswith("int"):  # Check if signed int
+                            f.write(
+                                "  type_out->" + field_name + " = SIGN(EXTRACT(bitstring, " + str(segment.position) +
+                                ", " + str(segment.length) + "), " +
+                                str(segment.length) + ");\n")
+                        else:
+                            f.write(
+                                    "  type_out->" + field_name + " = EXTRACT(bitstring, " + str(segment.position) +
+                                    ", " + str(segment.length) + ");\n")
             f.write("}\n\n")
 
         # Write TO_CAN and FROM_CAN functions that are not described by the spec

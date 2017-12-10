@@ -51,9 +51,6 @@ def write(output_paths, spec_path):
                         if message.name.upper() == "VCU_MC_MESSAGE":
                             continue
                         f.write("typedef struct {\n")
-                        # Hardcode special case
-                        # if message.name.upper() == "VCU_DASHHEARTBEAT":
-                        #    f.write("  Can_Vcu_LimpState_T limp_state;\n")
                         for segment_name, segment in message.segments.items():
                             if segment.c_type != "enum":
                                 field_name = segment_name
@@ -62,11 +59,13 @@ def write(output_paths, spec_path):
                                 f.write("  " + segment.c_type + " " + field_name + ";\n")
                             else:
                                 enum_name = "Can_" + message.name
-                                # Fix name mismatch
+
+                                # Fix name mismatch (for backwards compatibility)
                                 enum_name = enum_name.replace('Heartbeat', 'State')
                                 enum_name += "ID_T"
                                 if enum_name == "Can_Vcu_DashStateID_T":
                                     enum_name = "Can_Vcu_LimpState_T"
+
                                 f.write("  " + enum_name + " " + segment_name + ";\n")
                         f.write("} Can_" + message.name + "_T;\n\n")
                 f.write("#endif // _MY17_CAN_LIBRARY_" + key.upper() + "_H")

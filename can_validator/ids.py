@@ -27,7 +27,7 @@ def write(output_path, spec_path):
         for message in spec.messages.values():
             for segment_name, segment in message.segments.items():
                 if segment.c_type == 'enum':
-                    if not (message.name == "Vcu_Mc_Message" or message.name == "Mc_Response"):
+                    if not (message.name == "Vcu_Mc_Message" or message.name == "Mc_Response"):  # MC special cases
                         f.write('typedef enum {\n')
                         for value_name, value in segment.values.items():
                             message_name = "CAN_" + message.name.upper()
