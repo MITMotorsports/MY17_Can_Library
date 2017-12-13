@@ -9,8 +9,8 @@ can_lib_c_path = "../MY17_Can_Library.c"
 can_lib_h_path = "../MY17_Can_Library.h"
 ids_path = "../ids.h"
 
-can_lib_c_base_path = "templates/MY17_Can_Library_BASE.txt"
-can_lib_c_special_cases_path = "templates/special_cases.txt"
+can_lib_c_base_path = "templates/MY17_Can_Library_BASE.c"
+can_lib_c_special_cases_path = "templates/special_cases.c"
 
 unused_messages = [
     "Lv_Battery_Voltage",
