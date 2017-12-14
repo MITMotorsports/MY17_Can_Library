@@ -24,6 +24,11 @@ unused_messages = [
     "Vcu_Mc_Message"
 ]
 
+unused_segments = [
+    "unused",
+    "reserved"
+]
+
 struct_paths = {
     "bms": "../bms.h",
     "cannode": "../can_node.h",

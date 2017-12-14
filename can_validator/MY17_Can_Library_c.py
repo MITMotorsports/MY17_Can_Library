@@ -6,10 +6,10 @@ import sys
 sys.path.append("ParseCAN")
 import ParseCAN
 from math import ceil
-from common import can_lib_c_path, spec_path, can_lib_c_base_path, can_lib_c_special_cases_path, unused_messages
+from common import can_lib_c_path, spec_path, can_lib_c_base_path, can_lib_c_special_cases_path, unused_messages, unused_segments
 
 
-def write(output_path, spec_path, base_path, special_cases_path, unused_messages):
+def write(output_path, spec_path, base_path, special_cases_path, unused_messages, unused_segments):
     """
     Generate MY17_Can_Libary.c file.
 
@@ -84,7 +84,7 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
             for segment_name, segment in message.segments.items():
                 field_name = segment_name
 
-                if field_name == "unused" or field_name == "reserved":
+                if field_name in unused_segments:
                     continue
 
                 if not message.is_big_endian and (segment.c_type.startswith("int") or
@@ -113,7 +113,7 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                 "  to_bitstring(can_in->data, &bitstring);\n")
             for segment_name, segment in message.segments.items():
                 field_name = segment_name
-                if field_name == "unused" or field_name == "reserved":
+                if field_name in unused_segments:
                     continue
                 if segment.c_type == "enum":
                     # Fix name mismatch
@@ -165,4 +165,4 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
 
 
 if __name__ == "__main__":
-    write(can_lib_c_path, spec_path, can_lib_c_base_path, can_lib_c_special_cases_path, unused_messages)
+    write(can_lib_c_path, spec_path, can_lib_c_base_path, can_lib_c_special_cases_path, unused_messages, unused_segments)

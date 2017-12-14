@@ -5,12 +5,12 @@ Run this file to write just these files or main.py to write all files.
 import sys
 sys.path.append("ParseCAN")
 import ParseCAN
-from common import struct_paths, spec_path
+from common import struct_paths, spec_path, unused_segments
 
 expected_keys = ["bms", "cannode", "currentsensor", "dash", "vcu"]
 
 
-def write(output_paths, spec_path):
+def write(output_paths, spec_path, unused_segments):
     """
     Write the header files for the main structs in the library.
 
@@ -54,7 +54,7 @@ def write(output_paths, spec_path):
                         for segment_name, segment in message.segments.items():
                             if segment.c_type != "enum":
                                 field_name = segment_name
-                                if field_name == 'reserved' or field_name == 'unused':
+                                if field_name in unused_segments:
                                     continue
                                 f.write("  " + segment.c_type + " " + field_name + ";\n")
                             else:
@@ -75,4 +75,4 @@ def write(output_paths, spec_path):
 
 
 if __name__ == "__main__":
-    write(struct_paths, spec_path)
+    write(struct_paths, spec_path, unused_segments)
