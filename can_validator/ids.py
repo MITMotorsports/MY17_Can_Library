@@ -30,15 +30,24 @@ def write(output_path, spec_path):
                     if not (message.name == "Vcu_Mc_Message" or message.name == "Mc_Response"):  # MC special cases
                         f.write('typedef enum {\n')
                         for value_name, value in segment.values.items():
-                            message_name = "CAN_" + message.name.upper()
+                            # Vcu_DashHeartbeat has the limp_state enum, which breaks the rules for both field and enum
+                            # naming
+                            if message.name != 'Vcu_DashHeartbeat':
+                                message_name = "CAN_" + message.name.upper()
+                                # Fix name mismatch
+                                message_name = message_name.replace('HEARTBEAT', 'STATE')
+                                message_name += "_" + value_name.upper()
+                            else:
+                                message_name = "CAN_" + value_name.upper()
 
-                            # Fix name mismatch
-                            message_name = message_name.replace('HEARTBEAT', 'STATE')
                             f.write(
-                                "  " + message_name + "_" + value_name.upper() + " = " +
+                                "  " + message_name + " = " +
                                 '____' + message.name.upper() + '__' + segment_name.upper() + '__' + value_name +
                                 ",\n")
-                        f.write("} Can_" + message.name.replace('Heartbeat', 'State') + "ID_T;\n\n")
+                        if message.name != 'Vcu_DashHeartbeat':
+                            f.write("} Can_" + message.name.replace('Heartbeat', 'State') + "ID_T;\n\n")
+                        else:
+                            f.write("} Can_Vcu_LimpState_T;\n\n")
                     else:
                         for value_name, value in segment.values.items():
                             if value_name == "TORQUE_CMD" and message.name == "Vcu_Mc_Message":

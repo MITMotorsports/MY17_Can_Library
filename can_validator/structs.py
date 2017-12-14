@@ -31,12 +31,6 @@ def write(output_paths, spec_path, unused_segments):
                 # Hardcode special cases
                 if key == 'vcu':
                     f.write(
-                        "typedef enum {\n" +
-                        "  CAN_LIMP_NORMAL = 0,\n" +
-                        "  CAN_LIMP_50,\n" +
-                        "  CAN_LIMP_33,\n" +
-                        "  CAN_LIMP_25\n" +
-                        "} Can_Vcu_LimpState_T;\n\n" +
                         "typedef struct {\n" +
                         "  Can_MC_RegID_T requestType;\n" +
                         "  uint8_t period;\n" +
