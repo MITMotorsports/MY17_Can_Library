@@ -30,14 +30,15 @@ def write(output_paths, spec_path, unused_segments):
 
                 # Hardcode special cases
                 if key == 'vcu':
-                    f.write(
-                        "typedef struct {\n" +
-                        "  Can_MC_RegID_T requestType;\n" +
-                        "  uint8_t period;\n" +
-                        "} Can_Vcu_MCRequest_T;\n\n" +
-                        "typedef struct {\n" +
-                        "  int16_t torque_cmd;\n" +
-                        "} Can_Vcu_MCTorque_T;\n")
+                    f.write("""typedef struct {
+  Can_MC_RegID_T requestType;
+  uint8_t period;
+} Can_Vcu_MCRequest_T;
+
+typedef struct {
+  int16_t torque_cmd;
+} Can_Vcu_MCTorque_T;
+""")
 
                 for message in spec.messages.values():
                     if (message.name.lower().startswith(key) or message.name.lower().startswith('rear' + key) or

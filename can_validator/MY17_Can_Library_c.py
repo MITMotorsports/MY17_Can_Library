@@ -27,17 +27,19 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
             f.writelines(lines)
 
         # Write switch statement
-        f.write(
-            "Can_MsgID_T Can_MsgType(void) {\n" +
-            "  lastError = Can_RawRead(&lastMessage);\n" +
-            "  if (lastError == Can_Error_NO_RX) {\n" +
-            "    return Can_No_Msg;\n" +
-            "  } else if (lastError != Can_Error_NONE) {\n" +
-            "    return Can_Error_Msg;\n" +
-            "  }\n\n" +
-            "  uint16_t id = lastMessage.id;\n" +
-            "  uint16_t first_byte = lastMessage.data[0];\n\n" +
-            "  switch(id) {\n")
+        f.write("""Can_MsgID_T Can_MsgType(void) {
+  lastError = Can_RawRead(&lastMessage);
+  if (lastError == Can_Error_NO_RX) {
+    return Can_No_Msg;
+  } else if (lastError != Can_Error_NONE) {
+    return Can_Error_Msg;
+  }
+
+  uint16_t id = lastMessage.id;
+  uint16_t first_byte = lastMessage.data[0];
+
+  switch(id) {
+""")
         for message in spec.messages.values():
             if message.name in unused_messages:
                 continue
@@ -45,24 +47,24 @@ def write(output_path, spec_path, base_path, special_cases_path, unused_messages
                 "    case " + message.name.upper() + "__id:\n" +
                 "      return Can_" + message.name + "_Msg;\n")
         # Special cases
-        f.write(
-            "    case MC_RESPONSE__id:\n" +
-            "      if (first_byte == CAN_MC_REG_ERRORS_AND_WARNINGS) {\n" +
-            "        return Can_MC_ErrorAndWarning_Msg;\n" +
-            "      } else if (first_byte == CAN_MC_REG_STATE) {\n" +
-            "        return Can_MC_State_Msg;\n" +
-            "      } else {\n" +
-            "        return Can_MC_DataReading_Msg;\n" +
-            "      }\n")
-        f.write(
-            "    case VCU_MC_MESSAGE__id:\n" +
-            "      if (first_byte == CAN_MC_REG_MSG_REQUEST || first_byte == CAN_MC_REG_MSG_EVENT_REQUEST) {\n" +
-            "        return Can_Vcu_MCRequest_Msg;\n" +
-            "      } else if (first_byte == CAN_MC_REG_TORQUE_CMD) {\n" +
-            "        return Can_Vcu_MCTorque_Msg;\n" +
-            "      } else {\n" +
-            "        return Can_Unknown_Msg;\n" +
-            "      }\n")
+        f.write("""    case MC_RESPONSE__id:
+      if (first_byte == CAN_MC_REG_ERRORS_AND_WARNINGS) {
+        return Can_MC_ErrorAndWarning_Msg;
+      } else if (first_byte == CAN_MC_REG_STATE) {
+        return Can_MC_State_Msg;
+      } else {
+        return Can_MC_DataReading_Msg;
+      }""")
+        f.write("""
+    case VCU_MC_MESSAGE__id:
+      if (first_byte == CAN_MC_REG_MSG_REQUEST || first_byte == CAN_MC_REG_MSG_EVENT_REQUEST) {
+        return Can_Vcu_MCRequest_Msg;
+      } else if (first_byte == CAN_MC_REG_TORQUE_CMD) {
+        return Can_Vcu_MCTorque_Msg;
+      } else {
+        return Can_Unknown_Msg;
+      }
+""")
 
         # Finish up
         f.write(

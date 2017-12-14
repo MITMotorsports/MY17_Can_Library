@@ -20,45 +20,57 @@ def write(output_path, spec_path, struct_paths, unused_messages):
     spec = ParseCAN.spec.can(spec_path)
     with open(output_path, 'w') as f:
         # Setup file
-        f.write("#ifndef _MY17_CAN_LIBRARY_H\n" +
-                "#define _MY17_CAN_LIBRARY_H\n\n" +
-                "#include <stdint.h>\n" +
-                "#include <stdbool.h>\n\n")
+        f.write("""#ifndef _MY17_CAN_LIBRARY_H
+#define _MY17_CAN_LIBRARY_H
+
+#include <stdint.h>
+#include <stdbool.h>
+
+""")
 
         # Create enum
-        f.write("typedef enum {\n" +
-                "  Can_No_Msg,\n" +
-                "  Can_Unknown_Msg,\n" +
-                "  Can_Error_Msg,\n")
+        f.write("""typedef enum {
+  Can_No_Msg,
+  Can_Unknown_Msg,
+  Can_Error_Msg,
+""")
         for message in spec.messages.values():
             f.write("  Can_" + message.name + "_Msg,\n")
 
         # Add motor controller special cases
-        f.write(
-            "  Can_MC_ErrorAndWarning_Msg,\n" +
-            "  Can_MC_DataReading_Msg,\n" +
-            "  Can_MC_State_Msg,\n" +
-            "  Can_Vcu_MCRequest_Msg,\n" +
-            "  Can_Vcu_MCTorque_Msg,\n")
-        f.write("} Can_MsgID_T;\n\n")
+        f.write("""  Can_MC_ErrorAndWarning_Msg,
+  Can_MC_DataReading_Msg,
+  Can_MC_State_Msg,
+  Can_Vcu_MCRequest_Msg,
+  Can_Vcu_MCTorque_Msg,
+} Can_MsgID_T;
+""")
 
         # Finish initial setup
-        f.write(
-            'Can_MsgID_T Can_MsgType(void);\n\n'
-            '#include "can_raw.h"\n\n' +
-            '#define TO_CAN(name) \\\n' +
-            '  void name ## _ToCan(name ## _T *type_in, Frame *can_out)\n\n' +
-            '#define FROM_CAN(name) \\\n' +
-            '  void name ## _FromCan(Frame *can_in, name ## _T *type_out)\n\n' +
-            '#define DECLARE(name) \\\n' +
-            '  Can_ErrorID_T name ##_Read(name ## _T *type); \\\n' +
-            '  Can_ErrorID_T name ##_Write(name ## _T *type); \\\n' +
-            '  TO_CAN(name); \\\n' +
-            '  FROM_CAN(name);\n\n' +
-            'Can_ErrorID_T Can_Unknown_Read(Frame *frame);\n' +
-            'Can_ErrorID_T Can_Error_Read(void);\n\n' +
-            'void to_bitstring(uint8_t in[], uint64_t *out);\n' +
-            'void from_bitstring(uint64_t *in, uint8_t out[]);\n\n')
+        f.write("""
+Can_MsgID_T Can_MsgType(void);
+
+#include "can_raw.h"
+
+#define TO_CAN(name) \\
+  void name ## _ToCan(name ## _T *type_in, Frame *can_out)
+
+#define FROM_CAN(name) \\
+  void name ## _FromCan(Frame *can_in, name ## _T *type_out)
+
+#define DECLARE(name) \\
+  Can_ErrorID_T name ##_Read(name ## _T *type); \\
+  Can_ErrorID_T name ##_Write(name ## _T *type); \\
+  TO_CAN(name); \\
+  FROM_CAN(name);
+
+Can_ErrorID_T Can_Unknown_Read(Frame *frame);
+Can_ErrorID_T Can_Error_Read(void);
+
+void to_bitstring(uint8_t in[], uint64_t *out);
+void from_bitstring(uint64_t *in, uint8_t out[]);
+
+""")
 
         # Add structs includes
         for path in struct_paths:
@@ -72,12 +84,13 @@ def write(output_path, spec_path, struct_paths, unused_messages):
             f.write("DECLARE(Can_" + message.name + ")\n")
 
         # Special cases (motor controller messages)
-        f.write(
-            "DECLARE(Can_Vcu_MCRequest)\n" +
-            "DECLARE(Can_Vcu_MCTorque)\n" +
-            "DECLARE(Can_MC_DataReading)\n" +
-            "DECLARE(Can_MC_ErrorAndWarning)\n" +
-            "DECLARE(Can_MC_State)\n\n")
+        f.write("""DECLARE(Can_Vcu_MCRequest)
+DECLARE(Can_Vcu_MCTorque)
+DECLARE(Can_MC_DataReading)
+DECLARE(Can_MC_ErrorAndWarning)
+DECLARE(Can_MC_State)
+
+""")
 
         # Finish up
         f.write(
