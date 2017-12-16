@@ -327,7 +327,7 @@ Vcu_Mc_Message:
       enum:
         MSG_REQUEST: 0x3D
         MSG_EVENT_REQUEST: 0x51
-        TORQUE_CMD: 0x90
+        VCU_TORQUE_CMD: 0x90
     data_1: # Data low byte
       position: 8
       length: 8
