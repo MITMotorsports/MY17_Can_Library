@@ -43,7 +43,7 @@ typedef struct {
                 for message in spec.messages.values():
                     if (message.name.lower().startswith(key) or message.name.lower().startswith('rear' + key) or
                             message.name.lower().startswith('front' + key)):
-                        if message.name.upper() == "VCU_MC_MESSAGE":
+                        if message.name.upper() == "VCU_MC_MESSAGE":  # MC special case
                             continue
                         f.write("typedef struct {\n")
                         for segment_name, segment in message.segments.items():

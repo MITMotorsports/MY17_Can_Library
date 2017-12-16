@@ -238,7 +238,6 @@ Vcu_DashHeartbeat:
       length: 8
       c_type: null
       unit: null
-      # values:
     heartbeat_front_can_node_dead: # True is open
       position: 25
       length: 1
@@ -511,9 +510,6 @@ Dash_Heartbeat:
       length: 1
       c_type: bool
       unit: null
-      # values:
-      #  ON: 0x1
-      #  OFF: 0x0
 
 Dash_Request:
   can_id: 0x71
