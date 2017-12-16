@@ -1,0 +1,3 @@
+[submodule "can_validator/ParseCAN"]
+	path = can_validator/ParseCAN
+	url = https://github.com/MITMotorsports/ParseCAN.git
