@@ -22,4 +22,4 @@ messages, see `mc.h`, `can_validator\templates\special_cases.txt`, or the motor
 controller manual.
 
 # Use
-You'll need to include `MY17_Can_Library.h` and define your architecture (define either `CAN_ARCHITECTURE_ARM` or `CAN_ARCHITECTURE_AVR`). Make sure to call `CanInit` with the appropriate baudrate, and then you can then call `Can_MsgType` to receive the latest CAN message. From there you can check what time of CAN message it is and handle it accordingly. See other MY17 projects for examples.
+You'll need to include `MY17_Can_Library.h` and define your architecture (define either `CAN_ARCHITECTURE_ARM` or `CAN_ARCHITECTURE_AVR`). Make sure to call `CanInit` with the appropriate baudrate, and then you can then call `Can_MsgType` to receive the latest CAN message. From there you can check what type of CAN message it is and handle it accordingly. See other MY17 projects for examples.
